@@ -9,6 +9,7 @@ class Physics {
   btSequentialImpulseConstraintSolver* solver;
   btDiscreteDynamicsWorld* dynamicsWorld;
 
+public:
   /**
    * Creates a new physics simulation system.
    * 
