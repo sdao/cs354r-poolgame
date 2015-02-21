@@ -97,7 +97,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_assignment2_OBJECTS = assignment2-MinimalOgre.$(OBJEXT)
+am_assignment2_OBJECTS = assignment2-MinimalOgre.$(OBJEXT) \
+	assignment2-GameObject.$(OBJEXT) assignment2-Physics.$(OBJEXT)
 assignment2_OBJECTS = $(am_assignment2_OBJECTS)
 am__DEPENDENCIES_1 =
 assignment2_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -190,13 +191,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing aclocal-1.14
+ACLOCAL = ${SHELL} /u/sdao/repos/cs354r-poolgame/missing aclocal-1.14
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing autoconf
-AUTOHEADER = ${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing autoheader
-AUTOMAKE = ${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing automake-1.14
+AUTOCONF = ${SHELL} /u/sdao/repos/cs354r-poolgame/missing autoconf
+AUTOHEADER = ${SHELL} /u/sdao/repos/cs354r-poolgame/missing autoheader
+AUTOMAKE = ${SHELL} /u/sdao/repos/cs354r-poolgame/missing automake-1.14
 AWK = gawk
 BULLET_CFLAGS = 
 BULLET_LIBS = 
@@ -235,7 +236,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing makeinfo
+MAKEINFO = ${SHELL} /u/sdao/repos/cs354r-poolgame/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -265,10 +266,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame
-abs_srcdir = /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame
-abs_top_builddir = /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame
-abs_top_srcdir = /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame
+abs_builddir = /u/sdao/repos/cs354r-poolgame
+abs_srcdir = /u/sdao/repos/cs354r-poolgame
+abs_top_builddir = /u/sdao/repos/cs354r-poolgame
+abs_top_srcdir = /u/sdao/repos/cs354r-poolgame
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -300,7 +301,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/install-sh
+install_sh = ${SHELL} /u/sdao/repos/cs354r-poolgame/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -320,9 +321,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-noinst_HEADERS = MinimalOgre.h
+noinst_HEADERS = MinimalOgre.h Component.h GameObject.h Physics.h
 assignment2_CPPFLAGS = -I$(top_srcdir) -std=c++11
-assignment2_SOURCES = MinimalOgre.cpp
+assignment2_SOURCES = MinimalOgre.cpp GameObject.cpp Physics.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system
@@ -442,7 +443,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/assignment2-GameObject.Po
 include ./$(DEPDIR)/assignment2-MinimalOgre.Po
+include ./$(DEPDIR)/assignment2-Physics.Po
 
 .cpp.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -478,6 +481,34 @@ assignment2-MinimalOgre.obj: MinimalOgre.cpp
 #	$(AM_V_CXX)source='MinimalOgre.cpp' object='assignment2-MinimalOgre.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-MinimalOgre.obj `if test -f 'MinimalOgre.cpp'; then $(CYGPATH_W) 'MinimalOgre.cpp'; else $(CYGPATH_W) '$(srcdir)/MinimalOgre.cpp'; fi`
+
+assignment2-GameObject.o: GameObject.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-GameObject.o -MD -MP -MF $(DEPDIR)/assignment2-GameObject.Tpo -c -o assignment2-GameObject.o `test -f 'GameObject.cpp' || echo '$(srcdir)/'`GameObject.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-GameObject.Tpo $(DEPDIR)/assignment2-GameObject.Po
+#	$(AM_V_CXX)source='GameObject.cpp' object='assignment2-GameObject.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-GameObject.o `test -f 'GameObject.cpp' || echo '$(srcdir)/'`GameObject.cpp
+
+assignment2-GameObject.obj: GameObject.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-GameObject.obj -MD -MP -MF $(DEPDIR)/assignment2-GameObject.Tpo -c -o assignment2-GameObject.obj `if test -f 'GameObject.cpp'; then $(CYGPATH_W) 'GameObject.cpp'; else $(CYGPATH_W) '$(srcdir)/GameObject.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-GameObject.Tpo $(DEPDIR)/assignment2-GameObject.Po
+#	$(AM_V_CXX)source='GameObject.cpp' object='assignment2-GameObject.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-GameObject.obj `if test -f 'GameObject.cpp'; then $(CYGPATH_W) 'GameObject.cpp'; else $(CYGPATH_W) '$(srcdir)/GameObject.cpp'; fi`
+
+assignment2-Physics.o: Physics.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Physics.o -MD -MP -MF $(DEPDIR)/assignment2-Physics.Tpo -c -o assignment2-Physics.o `test -f 'Physics.cpp' || echo '$(srcdir)/'`Physics.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Physics.Tpo $(DEPDIR)/assignment2-Physics.Po
+#	$(AM_V_CXX)source='Physics.cpp' object='assignment2-Physics.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Physics.o `test -f 'Physics.cpp' || echo '$(srcdir)/'`Physics.cpp
+
+assignment2-Physics.obj: Physics.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Physics.obj -MD -MP -MF $(DEPDIR)/assignment2-Physics.Tpo -c -o assignment2-Physics.obj `if test -f 'Physics.cpp'; then $(CYGPATH_W) 'Physics.cpp'; else $(CYGPATH_W) '$(srcdir)/Physics.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Physics.Tpo $(DEPDIR)/assignment2-Physics.Po
+#	$(AM_V_CXX)source='Physics.cpp' object='assignment2-Physics.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Physics.obj `if test -f 'Physics.cpp'; then $(CYGPATH_W) 'Physics.cpp'; else $(CYGPATH_W) '$(srcdir)/Physics.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

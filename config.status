@@ -437,7 +437,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame'
+ac_pwd='/u/sdao/repos/cs354r-poolgame'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -952,12 +952,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/install-sh"
-S["MAKEINFO"]="${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing automake-1.14"
-S["AUTOCONF"]="${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing autoconf"
-S["ACLOCAL"]="${SHELL} /u/jmunoz80/Documents/cs354R/Assignment2/cs354r-poolgame/missing aclocal-1.14"
+S["install_sh"]="${SHELL} /u/sdao/repos/cs354r-poolgame/install-sh"
+S["MAKEINFO"]="${SHELL} /u/sdao/repos/cs354r-poolgame/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /u/sdao/repos/cs354r-poolgame/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /u/sdao/repos/cs354r-poolgame/missing automake-1.14"
+S["AUTOCONF"]="${SHELL} /u/sdao/repos/cs354r-poolgame/missing autoconf"
+S["ACLOCAL"]="${SHELL} /u/sdao/repos/cs354r-poolgame/missing aclocal-1.14"
 S["VERSION"]="0.1"
 S["PACKAGE"]="SampleApp"
 S["CYGPATH_W"]="echo"

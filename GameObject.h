@@ -1,17 +1,23 @@
 #ifndef _gameobject_h_
 #define _gameobject_h_
 
-#include "RootGameObject.h"
+#include <vector>
+#include <OgreEntity.h>
+
+//#include "RootGameObject.h"
 #include "Component.h"
 
-public class GameObject : RootGameObject{
+class GameObject /* : RootGameObject */ {
 
-	//Physics component
-	//Audio component
-	vector<Component*> components;
-	Entity* mesh; //Entity component
+	std::vector<Component*> components; // List of generic components.
+	Ogre::Entity* mesh; //Entity component
 
-	GameObject(Ogre::SceneManager*, string, string, Ogre::Vector3, Ogre::Vector3, Ogre::Vector3);
+	GameObject(Ogre::SceneManager*,
+	           std::string,
+	           std::string,
+	           Ogre::Vector3,
+	           Ogre::Vector3,
+	           Ogre::Vector3);
 
 	void update();
 };
