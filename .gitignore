@@ -1,3 +1,32 @@
+# Temporary files
+*.*~
+*.swp
+
+# Build output
+assignment2
+*.o
+
+# Autotools/make stuff
+.deps/
+*.in
+Makefile
+aclocal.m4
+autom4te.cache/
+compile
+config.*
+configure
+depcomp
+install-sh
+libtool
+ltmain.sh
+m4/
+missing
+stamp-h1
+
+# Ogre stuff
+*.log
+ogre.cfg
+
 # Compiled Object files
 *.slo
 *.lo
