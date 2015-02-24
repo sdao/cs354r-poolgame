@@ -3,8 +3,9 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Physics.h"
+#include "PhysicsCollider.h"
 
-class PhysicsSphereCollider : public Component {
+class PhysicsSphereCollider : public PhysicsCollider {
   
   btCollisionShape* collisionShape;
   btDefaultMotionState* motionState;
@@ -12,6 +13,6 @@ class PhysicsSphereCollider : public Component {
   
   PhysicsSphereCollider(GameObject& go, Physics& physics, float radius, float mass);
   ~PhysicsSphereCollider();
-  void update() const;
-  
+  void update() const override;
+
 };
