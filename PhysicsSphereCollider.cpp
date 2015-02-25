@@ -11,15 +11,16 @@ PhysicsSphereCollider::PhysicsSphereCollider(GameObject& go,
   collisionShape->calculateLocalInertia(mass, localInertia);
     
   btTransform startTransform;
-	startTransform.setIdentity();
-	startTransform.setOrigin(btVector3(0, 0, 0)); // TODO: get from gameobject transform.
+  startTransform.setIdentity();
+  startTransform.setOrigin(btVector3(0, 0, 0)); // TODO: get from gameobject transform.
     
   motionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,
-	                                                motionState,
-	                                                collisionShape,
-	                                                localInertia);
-	rigidBody = new btRigidBody(rbInfo);
+  btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,
+                                                  motionState,
+                                                  collisionShape,
+                                                  localInertia);
+  rigidBody = new btRigidBody(rbInfo);
+  rigidBody->setUserPointer(this);
   physics.getDynamicsWorld()->addRigidBody(rigidBody);
 }
 
@@ -32,3 +33,4 @@ PhysicsSphereCollider::~PhysicsSphereCollider() {
 void PhysicsSphereCollider::update() const {
   // TODO: set gameobject transform using the motionstate.
 }
+
