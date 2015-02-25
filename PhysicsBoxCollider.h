@@ -11,7 +11,8 @@ class PhysicsBoxCollider : public PhysicsCollider {
   btDefaultMotionState* motionState;
   btRigidBody* rigidBody;
   GameObject* gameObject;
-  
+
+public: 
   PhysicsBoxCollider(GameObject* go, Physics& physics, const Ogre::Vector3& dim, float mass);
   ~PhysicsBoxCollider();
   void update() const override;

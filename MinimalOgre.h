@@ -38,7 +38,9 @@ This source file is part of the
 #include "GameObject.h"
 #include "Player.h"
 //#include "Balls.h"
+#include "Physics.h"
 #include <vector>
+#include <memory>
 
 class MinimalOgre : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener
 {
@@ -86,8 +88,9 @@ protected:
 
 	// Assignment2 Data Starts
 	GameState state;
+	Physics physics;
 	//Player player;
-	std::vector<GameObject> SceneObjects;
+	std::vector<std::shared_ptr<GameObject>> sceneObjects;
 	//TODO Sounds?
 };
 

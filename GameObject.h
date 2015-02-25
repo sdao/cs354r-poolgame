@@ -2,6 +2,7 @@
 #define _gameobject_h_
 
 #include <vector>
+#include <memory>
 #include <OgreEntity.h>
 
 #include "RootGameObject.h"
@@ -10,7 +11,7 @@
 class GameObject : public RootGameObject {
 
 	protected:
-		std::vector<Component*> components; // List of generic components.
+		std::vector<std::shared_ptr<Component>> components; // List of generic components.
 		Ogre::Entity* mesh; //Entity component
 
 	public:
@@ -25,8 +26,16 @@ class GameObject : public RootGameObject {
 		           const Ogre::Vector3&,
 		           const Ogre::Vector3&);
 
+		GameObject(Ogre::SceneManager*,
+			   Ogre::Entity* entity,
+			   const std::string&,
+			   const Ogre::Vector3& = Ogre::Vector3::ZERO,
+		           const Ogre::Vector3& = Ogre::Vector3::ZERO,
+		           const Ogre::Vector3& = Ogre::Vector3::UNIT_SCALE);
+
 		void update();
 		void setMaterial(std::string&);
+		void addComponent(std::shared_ptr<Component>);
 };
 
 #endif

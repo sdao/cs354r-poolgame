@@ -11,7 +11,8 @@ class PhysicsSphereCollider : public PhysicsCollider {
   btDefaultMotionState* motionState;
   btRigidBody* rigidBody;
   GameObject* gameObject;
-  
+ 
+public: 
   PhysicsSphereCollider(GameObject* go, Physics& physics, float radius, float mass);
   ~PhysicsSphereCollider();
   void update() const override;

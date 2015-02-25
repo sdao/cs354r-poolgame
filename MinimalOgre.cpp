@@ -15,6 +15,8 @@ This source file is part of the
 -----------------------------------------------------------------------------
 */
 #include "MinimalOgre.h"
+#include "PhysicsSphereCollider.h"
+#include <iostream>
  
 //-------------------------------------------------------------------------------------
 MinimalOgre::MinimalOgre(void)
@@ -33,7 +35,9 @@ MinimalOgre::MinimalOgre(void)
     mMouse(0),
     mKeyboard(0),
 	mOverlaySystem(0),
-	state(GameState::Play)
+	state(GameState::Play),
+	physics(),
+	sceneObjects()
 {
 }
 //-------------------------------------------------------------------------------------
@@ -194,6 +198,18 @@ bool MinimalOgre::go(void)
 	//create Pockets
 
 	//create balls
+	Ogre::Entity* tempSphere = mSceneMgr->createEntity("sph",
+		Ogre::SceneManager::PT_SPHERE);
+	tempSphere->setMaterialName("Examples/BumpyMetal");
+	auto sph = std::make_shared<GameObject>(mSceneMgr, tempSphere, "sph");
+	auto sphCollider = std::make_shared<PhysicsSphereCollider>(
+		&*sph,
+		physics,
+		1.0f,
+                1.0f
+	);
+	sph->addComponent(sphCollider);
+	sceneObjects.push_back(sph);
 
 	//create player
 
@@ -290,6 +306,17 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
             mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
         }
+    }
+
+    // Run physics.
+    physics.stepSimulation(evt.timeSinceLastEvent);
+
+    // Update components.
+    // TODO: is this the right place?
+    //std::cout << "going to update components\n";
+    for (auto go : sceneObjects) {
+      std::cout << "updating a go\n";
+      go->update();
     }
  
     return true;
