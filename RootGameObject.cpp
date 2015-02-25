@@ -12,6 +12,10 @@ void RootGameObject::setPosition(const Ogre::Vector3& position){
 	node->setPosition(position);
 }
 
+const Ogre::Vector3 RootGameObject::getPosition() const {
+	return node->getPosition();
+}
+
 void RootGameObject::rotate(const Ogre::Vector3& axis, const Ogre::Radian& rads){
 	node->rotate(axis, rads);
 }

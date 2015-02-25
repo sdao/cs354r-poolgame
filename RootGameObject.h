@@ -16,6 +16,7 @@ class RootGameObject{
 
 		void translate(const Ogre::Vector3&);
 		void setPosition(const Ogre::Vector3&);
+		const Ogre::Vector3 getPosition() const;
 		void rotate(const Ogre::Vector3&, const Ogre::Radian&);
 
 		void scale (const Ogre::Vector3&);

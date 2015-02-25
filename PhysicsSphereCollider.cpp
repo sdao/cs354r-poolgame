@@ -10,10 +10,11 @@ PhysicsSphereCollider::PhysicsSphereCollider(GameObject* go,
   
   btVector3 localInertia(0, 0, 0);
   collisionShape->calculateLocalInertia(mass, localInertia);
-    
+  
+  Ogre::Vector3 objPosition = gameObject->getPosition();
   btTransform startTransform;
   startTransform.setIdentity();
-  startTransform.setOrigin(btVector3(0, 0, 0)); // TODO: get from gameobject transform.
+  startTransform.setOrigin(btVector3(objPosition.x, objPosition.y, objPosition.z));
     
   motionState = new btDefaultMotionState(startTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,
