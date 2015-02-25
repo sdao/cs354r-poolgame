@@ -7,7 +7,7 @@
 #include "RootGameObject.h"
 #include "Component.h"
 
-class GameObject : RootGameObject {
+class GameObject : public RootGameObject {
 
 	protected:
 		std::vector<Component*> components; // List of generic components.

@@ -1,9 +1,10 @@
 #include "PhysicsSphereCollider.h"
 
-PhysicsSphereCollider::PhysicsSphereCollider(GameObject& go,
+PhysicsSphereCollider::PhysicsSphereCollider(GameObject* go,
                                              Physics& physics,
                                              float radius,
                                              float mass)
+  : gameObject(go)
 {
   collisionShape = new btSphereShape(btScalar(radius));
   
@@ -31,6 +32,10 @@ PhysicsSphereCollider::~PhysicsSphereCollider() {
 }
 
 void PhysicsSphereCollider::update() const {
-  // TODO: set gameobject transform using the motionstate.
+  btTransform newTransform;
+  motionState->getWorldTransform(newTransform);
+  btVector3 origin = newTransform.getOrigin();
+  // TODO: potentially update rotation as well. We don't really need it now.
+  gameObject->setPosition(Ogre::Vector3(origin.x(), origin.y(), origin.z()));
 }
 
