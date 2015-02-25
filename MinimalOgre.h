@@ -33,7 +33,13 @@ This source file is part of the
  
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
- 
+
+#include "GameEnums.h"
+#include "GameObject.h"
+#include "Player.h"
+//#include "Balls.h"
+#include <vector>
+
 class MinimalOgre : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener
 {
 public:
@@ -77,6 +83,12 @@ protected:
     // Ogre::WindowEventListener
     virtual void windowResized(Ogre::RenderWindow* rw);
     virtual void windowClosed(Ogre::RenderWindow* rw);
+
+	// Assignment2 Data Starts
+	GameState state;
+	//Player player;
+	std::vector<GameObject> SceneObjects;
+	//TODO Sounds?
 };
- 
+
 #endif // #ifndef __MinimalOgre_h_

@@ -32,7 +32,8 @@ MinimalOgre::MinimalOgre(void)
     mInputManager(0),
     mMouse(0),
     mKeyboard(0),
-	mOverlaySystem(0)
+	mOverlaySystem(0),
+	state(GameState::Play)
 {
 }
 //-------------------------------------------------------------------------------------
@@ -139,11 +140,65 @@ bool MinimalOgre::go(void)
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 //-------------------------------------------------------------------------------------
     // Create the scene
-    Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "ogrehead.mesh");
+    //Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "ogrehead.mesh");
  
-    Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-    headNode->attachObject(ogreHead);
- 
+    //Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+    //headNode->attachObject(ogreHead);
+
+	//Player player(mSceneMgr, "ogrehead.mesh", "Player");
+
+	//create walls
+
+	//make the walls
+	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
+	Ogre::MeshManager::getSingletonPtr()->createPlane("wallMesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 300, 300, 5, 5, true, 1, 1.0 , 1.0, Ogre::Vector3::UNIT_X);
+
+
+	for(int i = 0; i < 6; i++){
+		Ogre::Entity* wall = mSceneMgr->createEntity("wallEntity" + i , "wallMesh");
+		wall->setMaterialName("Examples/GrassFloor");
+		wall->setCastShadows(false);
+		Ogre::SceneNode* wallnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("wallEntity" + i);
+		wallnode->attachObject(wall);
+
+		switch(i){
+			case 0:
+				wallnode->translate(0, -150, -100);
+				break;
+			case 1:
+				wallnode->translate(0, 150, -100);
+				wallnode->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(180)));
+				break;
+			case 2:
+				wallnode->translate(150, 0, -100);
+				wallnode->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(90)));
+				break;
+			case 3:
+				wallnode->translate(-150, 0, -100);
+				wallnode->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(270)));
+				break;
+			case 4:
+				wallnode->translate(0, 0, -250);
+				wallnode->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(90)));
+				break;
+			case 5:
+				wallnode->translate(0, 0, 50);
+				wallnode->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(270)));
+				break;
+			default:
+				break;
+		}
+
+	}
+	//TODO should we save the walls in the vector gameObjects?
+	//create Pockets
+
+	//create balls
+
+	//create player
+
+	//attack camera to player or vice versa
+
     // Set ambient light
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
  
@@ -331,12 +386,42 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
     }
  
     mCameraMan->injectKeyDown(arg);
+
+	switch(state){
+		case Main:
+			break;
+		case Play:
+			//pass keypress to player Object
+			break;
+		case Pause:
+			break;
+		case End:
+			break;
+		default:
+			break;
+	}
+
     return true;
 }
  
 bool MinimalOgre::keyReleased( const OIS::KeyEvent &arg )
 {
     mCameraMan->injectKeyUp(arg);
+
+	switch(state){
+		case Main:
+			break;
+		case Play:
+			//pass keyrelease to player Object
+			break;
+		case Pause:
+			break;
+		case End:
+			break;
+		default:
+			break;
+	}
+
     return true;
 }
  
