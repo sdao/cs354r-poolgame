@@ -1,16 +1,16 @@
 #include "PhysicsBoxCollider.h"
 
-PhysicsBoxCollider::PhysicsBoxCollider(GameObject* go,
+PhysicsBoxCollider::PhysicsBoxCollider(std::shared_ptr<GameObject> go,
                                              Physics& physics,
                                              const Ogre::Vector3& dim,
                                              float mass)
-  : gameObject(go)
+  : gameObject(go), isDynamic(mass > 0.0f)
 {
   collisionShape =
     new btBoxShape(btVector3(dim.x * 0.5f, dim.y * 0.5f, dim.z * 0.5f));
   
   btVector3 localInertia(0, 0, 0);
-  if (mass > 0.0f) {
+  if (isDynamic) {
     collisionShape->calculateLocalInertia(mass, localInertia);
   }
 
@@ -24,8 +24,15 @@ PhysicsBoxCollider::PhysicsBoxCollider(GameObject* go,
                                                   motionState,
                                                   collisionShape,
                                                   localInertia);
+  rbInfo.m_friction = 0.7f;
   rigidBody = new btRigidBody(rbInfo);
   rigidBody->setUserPointer(this);
+  if (!isDynamic) {
+    // Assume kinematic.
+    rigidBody->setCollisionFlags(rigidBody->getCollisionFlags()
+      | btCollisionObject::CF_KINEMATIC_OBJECT);
+    rigidBody->setActivationState(DISABLE_DEACTIVATION);
+  }
   physics.getDynamicsWorld()->addRigidBody(rigidBody);
 }
 
@@ -35,11 +42,19 @@ PhysicsBoxCollider::~PhysicsBoxCollider() {
   delete collisionShape;
 }
 
-void PhysicsBoxCollider::update() const {
-  btTransform newTransform;
-  motionState->getWorldTransform(newTransform);
-  btVector3 origin = newTransform.getOrigin();
-  // TODO: potentially update rotation as well. We don't really need it now.
-  gameObject->setPosition(Ogre::Vector3(origin.x(), origin.y(), origin.z()));
+void PhysicsBoxCollider::update(float deltaTime) const {
+   if (isDynamic) {
+    btTransform newTransform;
+    motionState->getWorldTransform(newTransform);
+    btVector3 origin = newTransform.getOrigin();
+    // TODO: potentially update rotation as well. We don't really need it now.
+    gameObject->setPosition(Ogre::Vector3(origin.x(), origin.y(), origin.z()));
+  } else {
+    btTransform oldTransform;
+    motionState->getWorldTransform(oldTransform);
+    Ogre::Vector3 cur = gameObject->getPosition();
+    oldTransform.setOrigin(btVector3(cur.x, cur.y, cur.z));
+    motionState->setWorldTransform(oldTransform);
+  }
 }
 

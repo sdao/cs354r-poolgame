@@ -4,17 +4,19 @@
 #include "GameObject.h"
 #include "Physics.h"
 #include "PhysicsCollider.h"
+#include <memory>
 
 class PhysicsBoxCollider : public PhysicsCollider {
   
   btCollisionShape* collisionShape;
   btDefaultMotionState* motionState;
   btRigidBody* rigidBody;
-  GameObject* gameObject;
+  std::shared_ptr<GameObject> gameObject;
+  bool isDynamic;
 
 public: 
-  PhysicsBoxCollider(GameObject* go, Physics& physics, const Ogre::Vector3& dim, float mass);
+  PhysicsBoxCollider(std::shared_ptr<GameObject> go, Physics& physics, const Ogre::Vector3& dim, float mass);
   ~PhysicsBoxCollider();
-  void update() const override;
+  void update(float deltaTime) const override;
 
 };

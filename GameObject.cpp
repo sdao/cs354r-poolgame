@@ -48,9 +48,9 @@ GameObject::GameObject(Ogre::SceneManager* mSceneMgr,
 }
 
 
-void GameObject::update() {
+void GameObject::update(float deltaTime) {
 	for (auto comp : components) {
-	  comp->update();
+	  comp->update(deltaTime);
 	}
 }
 

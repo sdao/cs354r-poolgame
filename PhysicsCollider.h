@@ -7,7 +7,7 @@
 class PhysicsCollider : public Component {
 public:  
   virtual ~PhysicsCollider();
-  virtual void update() const = 0;
+  virtual void update(float deltaTime) const = 0;
   virtual void didCollide(const PhysicsCollider& other) const;
 
 };

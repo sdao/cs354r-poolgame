@@ -17,6 +17,7 @@ This source file is part of the
 #include "MinimalOgre.h"
 #include "PhysicsSphereCollider.h"
 #include "PhysicsBoxCollider.h"
+#include "ConstantVelocity.h"
 #include "Ball.h"
 #include <iostream>
 #include <random>
@@ -179,7 +180,7 @@ bool MinimalOgre::go(void)
 			case 0:
 				go->translate(0, -150, -100);
 				box = std::make_shared<PhysicsBoxCollider>(
-					&*go,
+					go,
 					physics,
 					Ogre::Vector3(300.0f, 1.0f, 300.0f),
 					0.0f
@@ -219,12 +220,12 @@ bool MinimalOgre::go(void)
 	//create balls
 	std::mt19937 rng;
 	std::uniform_real_distribution<float> dist(-50.0f, 50.0f);
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 100; i++) {
 		const std::string sphereEntityName = "sph";
 		auto sph = std::make_shared<Ball>(mSceneMgr, sphereEntityName + Ogre::StringConverter::toString(i), 10.0f, Ogre::Vector3(0 + dist(rng), dist(rng), -100.0f + dist(rng)));
 		sph->setMaterial("Examples/BumpyMetal");
 		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
-			&*sph,
+			sph,
 			physics,
 			10.0f, /* collider radius */
                 	1.0f
@@ -232,6 +233,21 @@ bool MinimalOgre::go(void)
 		sph->addComponent(sphCollider);
 		sceneObjects.push_back(sph);
 	}
+
+	auto sph = std::make_shared<Ball>(mSceneMgr, "kinematic", 20.0f, Ogre::Vector3(0, -130.0f, -100.0f));
+	sph->setMaterial("Examples/GrassFloor");
+	auto constantVel = std::make_shared<ConstantVelocity>(
+		sph,
+		Ogre::Vector3(10.0f, 0.0f, 0.0f));
+	auto kinCollider = std::make_shared<PhysicsSphereCollider>(
+		sph,
+		physics,
+		20.0f,
+		0.0f /* static/kinematic object */
+	);
+	sph->addComponent(constantVel);
+	sph->addComponent(kinCollider);
+	sceneObjects.push_back(sph);
 
 	//create player
 
@@ -337,7 +353,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
     // TODO: is this the right place?
     //std::cout << "going to update components\n";
     for (auto go : sceneObjects) {
-      go->update();
+      go->update(evt.timeSinceLastFrame);
     }
  
     return true;

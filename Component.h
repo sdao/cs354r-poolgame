@@ -3,7 +3,7 @@
 
 class Component {
 public:
-	virtual void update() const = 0;
+	virtual void update(float deltaTime) const = 0;
 	virtual ~Component() {}
 };
 

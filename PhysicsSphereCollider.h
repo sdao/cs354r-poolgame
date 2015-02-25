@@ -4,17 +4,19 @@
 #include "GameObject.h"
 #include "Physics.h"
 #include "PhysicsCollider.h"
+#include <memory>
 
 class PhysicsSphereCollider : public PhysicsCollider {
   
   btCollisionShape* collisionShape;
   btDefaultMotionState* motionState;
   btRigidBody* rigidBody;
-  GameObject* gameObject;
+  std::shared_ptr<GameObject> gameObject;
+  bool isDynamic;
  
 public: 
-  PhysicsSphereCollider(GameObject* go, Physics& physics, float radius, float mass);
+  PhysicsSphereCollider(std::shared_ptr<GameObject> go, Physics& physics, float radius, float mass);
   ~PhysicsSphereCollider();
-  void update() const override;
+  void update(float deltaTime) const override;
 
 };

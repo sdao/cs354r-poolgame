@@ -33,7 +33,7 @@ class GameObject : public RootGameObject {
 		           const Ogre::Vector3& = Ogre::Vector3::ZERO,
 		           const Ogre::Vector3& = Ogre::Vector3::UNIT_SCALE);
 
-		void update();
+		void update(float deltaTime);
 		void setMaterial(const std::string&);
 		void addComponent(std::shared_ptr<Component>);
 };
