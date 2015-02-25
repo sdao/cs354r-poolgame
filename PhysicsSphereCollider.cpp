@@ -9,10 +9,12 @@ PhysicsSphereCollider::PhysicsSphereCollider(GameObject* go,
   : gameObject(go)
 {
   collisionShape = new btSphereShape(btScalar(radius));
-  
+ 
   btVector3 localInertia(0, 0, 0);
-  collisionShape->calculateLocalInertia(mass, localInertia);
-  
+  if (mass > 0.0f) {  
+    collisionShape->calculateLocalInertia(mass, localInertia);
+  }
+
   Ogre::Vector3 objPosition = gameObject->getPosition();
   btTransform startTransform;
   startTransform.setIdentity();

@@ -8,6 +8,10 @@ void RootGameObject::translate(const Ogre::Vector3& trans){
 	node->translate(trans);
 }
 
+void RootGameObject::translate(float x, float y, float z) {
+	node->translate(x, y, z);
+}
+
 void RootGameObject::setPosition(const Ogre::Vector3& position){
 	node->setPosition(position);
 }

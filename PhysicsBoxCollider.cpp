@@ -10,8 +10,10 @@ PhysicsBoxCollider::PhysicsBoxCollider(GameObject* go,
     new btBoxShape(btVector3(dim.x * 0.5f, dim.y * 0.5f, dim.z * 0.5f));
   
   btVector3 localInertia(0, 0, 0);
-  collisionShape->calculateLocalInertia(mass, localInertia);
-  
+  if (mass > 0.0f) {
+    collisionShape->calculateLocalInertia(mass, localInertia);
+  }
+
   Ogre::Vector3 objPosition = gameObject->getPosition();
   btTransform startTransform;
   startTransform.setIdentity();

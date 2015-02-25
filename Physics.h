@@ -14,9 +14,9 @@ public:
    * Creates a new physics simulation system.
    * 
    * @param gravity acceleration due to gravity in the local coordinate system
-   *                (by default, is 9.8 m/s^2, appropriate for metric units)
+   *                (by default, is 980 cm/s^2, appropriate for metric units)
    */
-  Physics(float gravity = 9.8);
+  Physics(float gravity = 980.0);
   ~Physics();
   
   void stepSimulation(float timestep);

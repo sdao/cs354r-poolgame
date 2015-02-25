@@ -15,6 +15,7 @@ class RootGameObject{
 		RootGameObject(Ogre::SceneManager*, const std::string);
 
 		void translate(const Ogre::Vector3&);
+		void translate(float x, float y, float z);
 		void setPosition(const Ogre::Vector3&);
 		const Ogre::Vector3 getPosition() const;
 		void rotate(const Ogre::Vector3&, const Ogre::Radian&);

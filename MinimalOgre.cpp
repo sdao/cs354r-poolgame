@@ -16,6 +16,7 @@ This source file is part of the
 */
 #include "MinimalOgre.h"
 #include "PhysicsSphereCollider.h"
+#include "PhysicsBoxCollider.h"
 #include <iostream>
  
 //-------------------------------------------------------------------------------------
@@ -162,37 +163,52 @@ bool MinimalOgre::go(void)
 		Ogre::Entity* wall = mSceneMgr->createEntity("wallEntity" + i , "wallMesh");
 		wall->setMaterialName("Examples/GrassFloor");
 		wall->setCastShadows(false);
-		Ogre::SceneNode* wallnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("wallEntity" + i);
-		wallnode->attachObject(wall);
+
+		auto go = std::make_shared<GameObject>(mSceneMgr, wall,
+			"wallEntity" + i);
+		//Ogre::SceneNode* wallnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("wallEntity" + i);
+		//wallnode->attachObject(wall);
+		
+		// TODO: BAD! VERY BAD!
+		std::shared_ptr<PhysicsBoxCollider> box;
 
 		switch(i){
 			case 0:
-				wallnode->translate(0, -150, -100);
+				go->translate(0, -150, -100);
+				box = std::make_shared<PhysicsBoxCollider>(
+					&*go,
+					physics,
+					Ogre::Vector3(300.0f, 1.0f, 300.0f),
+					0.0f
+				);
+
+				go->addComponent(box);
 				break;
 			case 1:
-				wallnode->translate(0, 150, -100);
-				wallnode->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(180)));
+				go->translate(0, 150, -100);
+				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(180)));
 				break;
 			case 2:
-				wallnode->translate(150, 0, -100);
-				wallnode->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(90)));
+				go->translate(150, 0, -100);
+				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(90)));
 				break;
 			case 3:
-				wallnode->translate(-150, 0, -100);
-				wallnode->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(270)));
+				go->translate(-150, 0, -100);
+				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(270)));
 				break;
 			case 4:
-				wallnode->translate(0, 0, -250);
-				wallnode->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(90)));
+				go->translate(0, 0, -250);
+				go->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(90)));
 				break;
 			case 5:
-				wallnode->translate(0, 0, 50);
-				wallnode->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(270)));
+				go->translate(0, 0, 50);
+				go->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(270)));
 				break;
 			default:
 				break;
 		}
 
+		sceneObjects.push_back(go);
 	}
 	//TODO should we save the walls in the vector gameObjects?
 	//create Pockets
@@ -201,11 +217,11 @@ bool MinimalOgre::go(void)
 	Ogre::Entity* tempSphere = mSceneMgr->createEntity("sph",
 		Ogre::SceneManager::PT_SPHERE);
 	tempSphere->setMaterialName("Examples/BumpyMetal");
-	auto sph = std::make_shared<GameObject>(mSceneMgr, tempSphere, "sph");
+	auto sph = std::make_shared<GameObject>(mSceneMgr, tempSphere, "sph", Ogre::Vector3(0, 0, -100.0f));
 	auto sphCollider = std::make_shared<PhysicsSphereCollider>(
 		&*sph,
 		physics,
-		1.0f,
+		100.0f,
                 1.0f
 	);
 	sph->addComponent(sphCollider);
