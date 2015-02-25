@@ -17,7 +17,9 @@ This source file is part of the
 #include "MinimalOgre.h"
 #include "PhysicsSphereCollider.h"
 #include "PhysicsBoxCollider.h"
+#include "Ball.h"
 #include <iostream>
+#include <random>
  
 //-------------------------------------------------------------------------------------
 MinimalOgre::MinimalOgre(void)
@@ -164,8 +166,9 @@ bool MinimalOgre::go(void)
 		wall->setMaterialName("Examples/GrassFloor");
 		wall->setCastShadows(false);
 
+		const std::string wallEntityName = "wallEntity";
 		auto go = std::make_shared<GameObject>(mSceneMgr, wall,
-			"wallEntity" + i);
+			wallEntityName + Ogre::StringConverter::toString(i));
 		//Ogre::SceneNode* wallnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("wallEntity" + i);
 		//wallnode->attachObject(wall);
 		
@@ -214,18 +217,21 @@ bool MinimalOgre::go(void)
 	//create Pockets
 
 	//create balls
-	Ogre::Entity* tempSphere = mSceneMgr->createEntity("sph",
-		Ogre::SceneManager::PT_SPHERE);
-	tempSphere->setMaterialName("Examples/BumpyMetal");
-	auto sph = std::make_shared<GameObject>(mSceneMgr, tempSphere, "sph", Ogre::Vector3(0, 0, -100.0f));
-	auto sphCollider = std::make_shared<PhysicsSphereCollider>(
-		&*sph,
-		physics,
-		100.0f,
-                1.0f
-	);
-	sph->addComponent(sphCollider);
-	sceneObjects.push_back(sph);
+	std::mt19937 rng;
+	std::uniform_real_distribution<float> dist(-50.0f, 50.0f);
+	for (int i = 0; i < 5; i++) {
+		const std::string sphereEntityName = "sph";
+		auto sph = std::make_shared<Ball>(mSceneMgr, sphereEntityName + Ogre::StringConverter::toString(i), 10.0f, Ogre::Vector3(0 + dist(rng), dist(rng), -100.0f + dist(rng)));
+		sph->setMaterial("Examples/BumpyMetal");
+		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
+			&*sph,
+			physics,
+			10.0f, /* collider radius */
+                	1.0f
+		);
+		sph->addComponent(sphCollider);
+		sceneObjects.push_back(sph);
+	}
 
 	//create player
 
@@ -325,13 +331,12 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
 
     // Run physics.
-    physics.stepSimulation(evt.timeSinceLastEvent);
+    physics.stepSimulation(evt.timeSinceLastFrame);
 
     // Update components.
     // TODO: is this the right place?
     //std::cout << "going to update components\n";
     for (auto go : sceneObjects) {
-      std::cout << "updating a go\n";
       go->update();
     }
  

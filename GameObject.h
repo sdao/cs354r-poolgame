@@ -15,16 +15,16 @@ class GameObject : public RootGameObject {
 		Ogre::Entity* mesh; //Entity component
 
 	public:
-		GameObject(Ogre::SceneManager*,
+		/*GameObject(Ogre::SceneManager*,
 			   const std::string&,
-			   const std::string&);
+			   const std::string&);*/
 
 		GameObject(Ogre::SceneManager*,
 		           const std::string&,
 		           const std::string&,
-		           const Ogre::Vector3&,
-		           const Ogre::Vector3&,
-		           const Ogre::Vector3&);
+		           const Ogre::Vector3& = Ogre::Vector3::ZERO,
+		           const Ogre::Vector3& = Ogre::Vector3::ZERO,
+		           const Ogre::Vector3& = Ogre::Vector3::UNIT_SCALE);
 
 		GameObject(Ogre::SceneManager*,
 			   Ogre::Entity* entity,
@@ -34,7 +34,7 @@ class GameObject : public RootGameObject {
 		           const Ogre::Vector3& = Ogre::Vector3::UNIT_SCALE);
 
 		void update();
-		void setMaterial(std::string&);
+		void setMaterial(const std::string&);
 		void addComponent(std::shared_ptr<Component>);
 };
 

@@ -1,5 +1,7 @@
 #include "GameObject.h"
+#include <iostream>
 
+/*
 GameObject::GameObject(Ogre::SceneManager* mSceneMgr,
                        const std::string& meshname,
                        const std::string& entityname) : 
@@ -8,14 +10,15 @@ GameObject::GameObject(Ogre::SceneManager* mSceneMgr,
 	mesh = mSceneMgr->createEntity(entityname, meshname);
 	node->attachObject(mesh);
 }
+*/
 
 GameObject::GameObject(Ogre::SceneManager* mSceneMgr,
                        const std::string& meshname,
                        const std::string& entityname,
-                       const Ogre::Vector3& position = Ogre::Vector3::ZERO,
-                       const Ogre::Vector3& rotation = Ogre::Vector3::ZERO,
-                       const Ogre::Vector3& scale = Ogre::Vector3(1, 1, 1)) : 
-			RootGameObject(mSceneMgr, entityname)
+                       const Ogre::Vector3& position,
+                       const Ogre::Vector3& rotation,
+                       const Ogre::Vector3& scale) : 
+		       RootGameObject(mSceneMgr, entityname)
 {
 	mesh = mSceneMgr->createEntity(entityname, meshname);
 	node->attachObject(mesh);
@@ -51,7 +54,7 @@ void GameObject::update() {
 	}
 }
 
-void GameObject::setMaterial(std::string& name){
+void GameObject::setMaterial(const std::string& name){
 	mesh->setMaterialName(name);
 }
 

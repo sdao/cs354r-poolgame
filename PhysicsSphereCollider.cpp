@@ -37,7 +37,6 @@ PhysicsSphereCollider::~PhysicsSphereCollider() {
 }
 
 void PhysicsSphereCollider::update() const {
-  std::cout << "updating\n";
   btTransform newTransform;
   motionState->getWorldTransform(newTransform);
   btVector3 origin = newTransform.getOrigin();
