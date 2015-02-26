@@ -18,6 +18,8 @@ class RootGameObject{
 		void translate(float x, float y, float z);
 		void setPosition(const Ogre::Vector3&);
 		const Ogre::Vector3 getPosition() const;
+		void setWorldPosition(const Ogre::Vector3&);
+		const Ogre::Vector3 getWorldPosition() const;
 		void rotate(const Ogre::Vector3&, const Ogre::Radian&);
 
 		void scale (const Ogre::Vector3&);

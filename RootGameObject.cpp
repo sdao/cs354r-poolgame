@@ -20,6 +20,14 @@ const Ogre::Vector3 RootGameObject::getPosition() const {
 	return node->getPosition();
 }
 
+void RootGameObject::setWorldPosition(const Ogre::Vector3& position) {
+	node->_setDerivedPosition(position);
+}
+
+const Ogre::Vector3 RootGameObject::getWorldPosition() const {
+	return node->_getDerivedPosition();
+}
+
 void RootGameObject::rotate(const Ogre::Vector3& axis, const Ogre::Radian& rads){
 	node->rotate(axis, rads);
 }

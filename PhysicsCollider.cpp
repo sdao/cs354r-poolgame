@@ -19,7 +19,7 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
     collisionShape->calculateLocalInertia(mass, localInertia);
   }
 
-  Ogre::Vector3 objPosition = gameObject->getPosition();
+  Ogre::Vector3 objPosition = gameObject->getWorldPosition();
   btTransform startTransform;
   startTransform.setIdentity();
   startTransform.setOrigin(btVector3(objPosition.x, objPosition.y, objPosition.z));
@@ -52,11 +52,11 @@ void PhysicsCollider::update(float deltaTime) const {
     motionState->getWorldTransform(newTransform);
     btVector3 origin = newTransform.getOrigin();
     // TODO: potentially update rotation as well. We don't really need it now.
-    gameObject->setPosition(Ogre::Vector3(origin.x(), origin.y(), origin.z()));
+    gameObject->setWorldPosition(Ogre::Vector3(origin.x(), origin.y(), origin.z()));
   } else {
     btTransform oldTransform;
     motionState->getWorldTransform(oldTransform);
-    Ogre::Vector3 cur = gameObject->getPosition();
+    Ogre::Vector3 cur = gameObject->getWorldPosition();
     oldTransform.setOrigin(btVector3(cur.x, cur.y, cur.z));
     motionState->setWorldTransform(oldTransform);
   }
