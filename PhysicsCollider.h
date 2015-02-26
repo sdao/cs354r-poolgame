@@ -5,9 +5,21 @@
 #include "Physics.h"
 
 class PhysicsCollider : public Component {
-public:  
+protected:
+  btCollisionShape* collisionShape;
+  btDefaultMotionState* motionState;
+  btRigidBody* rigidBody;
+  std::shared_ptr<GameObject> gameObject;
+  bool isDynamic;
+
+public:
+  PhysicsCollider(btCollisionShape* cs,
+                  std::shared_ptr<GameObject> go,
+                  Physics& physics,
+                  float mass = 1.0f,
+                  float friction = 0.5f);
   virtual ~PhysicsCollider();
-  virtual void update(float deltaTime) const = 0;
+  void update(float deltaTime) const;
   virtual void didCollide(const PhysicsCollider& other) const;
 
 };
