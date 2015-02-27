@@ -32,7 +32,10 @@ class RootGameObject{
 		void scale (const Ogre::Vector3&);
 		void setScale(const Ogre::Vector3&);
 		
-
+		Ogre::Vector3 localToWorldPosition(const Ogre::Vector3& v)
+			const;
+		Ogre::Vector3 worldToLocalPosition(const Ogre::Vector3& v)
+			const;
 };
 
 #endif

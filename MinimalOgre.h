@@ -91,7 +91,7 @@ protected:
 	GameState state;
 	Physics physics;
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
-	Player* player;
+	std::shared_ptr<Player> player;
 	//std::vector<GameObject> SceneObjects;
 	//TODO Sounds?
 };
