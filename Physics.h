@@ -1,6 +1,10 @@
 #pragma once
 
 #include <btBulletDynamicsCommon.h>
+#include <OgreVector3.h>
+
+// Forward declarations.
+class PhysicsCollider;
 
 class Physics {
   btBroadphaseInterface* broadphase;
@@ -21,4 +25,7 @@ public:
   
   void stepSimulation(float timestep);
   btDynamicsWorld* getDynamicsWorld();
+  PhysicsCollider* rayCast(const Ogre::Vector3& start,
+                           const Ogre::Vector3& direction,
+                           float maxDist) const;
 };
