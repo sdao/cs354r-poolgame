@@ -3,17 +3,21 @@
 
 #include "GameObject.h"
 #include "GameEnums.h"
-
+#include <OISKeyboard.h>
+#include <OISMouse.h>
 //#include <OgreSceneManager.h>
 
-class Player : GameObject {
+class Player : public GameObject {
 	protected:
-		PlayerState pState;	
+		PlayerState pState;
+		bool* inputKeys;
 
 	public:
-		Player(Ogre::SceneManager*, const std::string&, const std::string&);
-		//void getKeyPress();
-		//void getKeyRelease();
+		Player(Ogre::SceneManager*, Ogre::Camera*, const std::string&, const std::string&);
+		void update();
+		void getKeyPress(const OIS::KeyEvent&);
+		void getKeyRelease(const OIS::KeyEvent&);
+		void getMouseEvent(const OIS::MouseEvent&);
 };
 
 #endif

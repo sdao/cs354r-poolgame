@@ -90,8 +90,9 @@ protected:
 	// Assignment2 Data Starts
 	GameState state;
 	Physics physics;
-	//Player player;
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
+	Player* player;
+	//std::vector<GameObject> SceneObjects;
 	//TODO Sounds?
 };
 

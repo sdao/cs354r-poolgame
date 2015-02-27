@@ -124,7 +124,7 @@ bool MinimalOgre::go(void)
     mCamera = mSceneMgr->createCamera("PlayerCam");
  
     // Position it at 500 in Z direction
-    mCamera->setPosition(Ogre::Vector3(0,0,80));
+    //mCamera->setPosition(Ogre::Vector3(0,0,80));
     // Look back along -Z
     mCamera->lookAt(Ogre::Vector3(0,0,-300));
     mCamera->setNearClipDistance(5);
@@ -155,7 +155,6 @@ bool MinimalOgre::go(void)
     //Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
     //headNode->attachObject(ogreHead);
 
-	//Player player(mSceneMgr, "ogrehead.mesh", "Player");
 
 	//create walls
 
@@ -254,7 +253,9 @@ bool MinimalOgre::go(void)
 	sceneObjects.push_back(sph);
 
 	//create player
-
+	player = new Player(mSceneMgr, mCamera, "ogrehead.mesh", "Player");
+	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
+	player->setScale(Ogre::Vector3(0.5, 0.5, 0.5));
 	//attack camera to player or vice versa
 
     // Set ambient light
@@ -364,6 +365,9 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     // Run physics.
     physics.stepSimulation(evt.timeSinceLastFrame);
+
+	//update player
+	player->update();
 
     // Update components.
     // TODO: is this the right place?
@@ -478,13 +482,14 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
         mShutDown = true;
     }
  
-    mCameraMan->injectKeyDown(arg);
+    //mCameraMan->injectKeyDown(arg);
 
 	switch(state){
 		case Main:
 			break;
 		case Play:
 			//pass keypress to player Object
+			player->getKeyPress(arg);
 			break;
 		case Pause:
 			break;
@@ -506,6 +511,8 @@ bool MinimalOgre::keyReleased( const OIS::KeyEvent &arg )
 			break;
 		case Play:
 			//pass keyrelease to player Object
+			player->getKeyRelease(arg);
+			break;
 			break;
 		case Pause:
 			break;
@@ -520,8 +527,10 @@ bool MinimalOgre::keyReleased( const OIS::KeyEvent &arg )
  
 bool MinimalOgre::mouseMoved( const OIS::MouseEvent &arg )
 {
-    if (mTrayMgr->injectMouseMove(arg)) return true;
-    mCameraMan->injectMouseMove(arg);
+    //if (mTrayMgr->injectMouseMove(arg)) return true;
+    //mCameraMan->injectMouseMove(arg);
+	//if(player.isInState(PlayerState::Play))
+	player->getMouseEvent(arg);
     return true;
 }
  
