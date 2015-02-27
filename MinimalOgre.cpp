@@ -261,7 +261,7 @@ bool MinimalOgre::go(void)
 	assert(!boxColliderPtr);
 
 	//create player
-	player = new Player(mSceneMgr, mCamera, "ogrehead.mesh", "Player");
+	player = new Player(mSceneMgr, mCamera, "Barrel.mesh", "Player");
 	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
 	player->setScale(Ogre::Vector3(0.5, 0.5, 0.5));
 	//attack camera to player or vice versa

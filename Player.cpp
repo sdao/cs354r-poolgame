@@ -4,9 +4,10 @@ Player::Player(Ogre::SceneManager* mSceneMgr, Ogre::Camera* mCamera, const std::
 	GameObject(mSceneMgr, meshName, name),
 	pState(PlayerState::Hit)
 {
-	mCamera->setPosition(Ogre::Vector3(0, 0, -80));
-	mCamera->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
+	mCamera->setPosition(Ogre::Vector3(0, -80, 20));
+	mCamera->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(76)));
 	node->createChildSceneNode("ChildCamera")->attachObject(mCamera);
+	node->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(-90)));
 	inputKeys = new bool[4];
 }
 
@@ -17,19 +18,19 @@ void Player::update(){
 				   << node->getOrientation().z << std::endl;
 	//W
 	if(inputKeys[0]){
-		moveDirection += Ogre::Vector3::UNIT_Z;
+		moveDirection += Ogre::Vector3::UNIT_Y;
 	}
 	//A
 	if(inputKeys[1]){
-		moveDirection += Ogre::Vector3::UNIT_X;
+		moveDirection += Ogre::Vector3::NEGATIVE_UNIT_X;
 	}
 	//S
 	if(inputKeys[2]){
-		moveDirection += Ogre::Vector3::NEGATIVE_UNIT_Z;
+		moveDirection += Ogre::Vector3::NEGATIVE_UNIT_Y;
 	}
 	//D
 	if(inputKeys[3]){
-		moveDirection += Ogre::Vector3::NEGATIVE_UNIT_X;
+		moveDirection += Ogre::Vector3::UNIT_X;
 	}
 
 	translate(moveDirection, Ogre::Node::TransformSpace::TS_LOCAL);
@@ -73,7 +74,7 @@ void Player::getMouseEvent(const OIS::MouseEvent& arg){
 		   Ogre::Node::TransformSpace::TS_WORLD);
 	}
 	//rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(arg.state.Y.rel * 0.15f));
-	pitch(Ogre::Degree(arg.state.Y.rel * 0.5f));
+	pitch(Ogre::Degree(-arg.state.Y.rel * 0.5f));
 	
 	//rot.z = 0.0f;
 	//node->setOrientation(rot);
