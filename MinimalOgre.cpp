@@ -34,6 +34,7 @@ MinimalOgre::MinimalOgre(void)
     mTrayMgr(0),
     mCameraMan(0),
     mDetailsPanel(0),
+    scoreboard(0),
     mCursorWasVisible(false),
     mShutDown(false),
     mInputManager(0),
@@ -312,6 +313,18 @@ bool MinimalOgre::go(void)
     mDetailsPanel->setParamValue(9, "Bilinear");
     mDetailsPanel->setParamValue(10, "Solid");
     mDetailsPanel->hide();
+
+    Ogre::StringVector scores;
+    scores.push_back("Score:");
+    scores.push_back("Balls Remaining:");
+    scores.push_back("Time Left:");
+
+    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 400, scores);
+    scoreboard->setParamValue(0, "10000 You're Awesome!");
+    scoreboard->setParamValue(1, "0 Good Job!");
+    scoreboard->setParamValue(2, "Infinite!");
+    scoreboard->hide();
+
  
     mRoot->addFrameListener(this);
 //-------------------------------------------------------------------------------------
@@ -381,6 +394,19 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
         {
             mTrayMgr->removeWidgetFromTray(mDetailsPanel);
             mDetailsPanel->hide();
+        }
+    }
+    else if (arg.key == OIS::KC_O)   // toggle visibility of even rarer debugging details
+    {
+        if (scoreboard->getTrayLocation() == OgreBites::TL_NONE)
+        {
+            mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
+            scoreboard->show();
+        }
+        else
+        {
+            mTrayMgr->removeWidgetFromTray(scoreboard);
+            scoreboard->hide();
         }
     }
     else if (arg.key == OIS::KC_T)   // cycle texture filtering mode
