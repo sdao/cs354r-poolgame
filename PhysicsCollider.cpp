@@ -50,7 +50,7 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
 
 void PhysicsCollider::didCollide(const PhysicsCollider& other) const {
   // TODO: have some default collision behavior.
-  std::cout << "BAM!\n";
+  //std::cout << "BAM!\n";
 }
 
 void PhysicsCollider::update(const UpdateInfo& info) const {

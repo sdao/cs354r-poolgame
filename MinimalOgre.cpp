@@ -24,6 +24,7 @@ This source file is part of the
 #include <random>
 #include <cassert>
 #include "BGMusic.h"
+#include "CueStickController.h"
  
 //-------------------------------------------------------------------------------------
 MinimalOgre::MinimalOgre(void)
@@ -45,7 +46,8 @@ MinimalOgre::MinimalOgre(void)
 	mOverlaySystem(0),
 	state(GameState::Play),
 	physics(),
-	sceneObjects()
+	sceneObjects(),
+	player()
 {
 }
 //-------------------------------------------------------------------------------------
@@ -261,10 +263,18 @@ bool MinimalOgre::go(void)
 	assert(!boxColliderPtr);
 
 	//create player
-	player = new Player(mSceneMgr, mCamera, "Barrel.mesh", "Player");
+	player = std::make_shared<Player>(mSceneMgr,
+					  mCamera,
+					  "Barrel.mesh",
+					  "Player");
+	sceneObjects.push_back(player);
 	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
 	player->setScale(Ogre::Vector3(0.5, 0.5, 0.5));
 	//attack camera to player or vice versa
+	
+	// putting the cue controller on the player
+	auto cueController = std::make_shared<CueStickController>(player);
+	player->addComponent(cueController);
 
     // Set ambient light
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));

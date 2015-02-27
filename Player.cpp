@@ -9,6 +9,9 @@ Player::Player(Ogre::SceneManager* mSceneMgr, Ogre::Camera* mCamera, const std::
 	node->createChildSceneNode("ChildCamera")->attachObject(mCamera);
 	node->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(-90)));
 	inputKeys = new bool[4];
+	for(int i = 0 ; i < 4 ; i++){
+		inputKeys[i] =  false;
+	}
 }
 
 void Player::update(){
