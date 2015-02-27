@@ -10,5 +10,6 @@ Ball::Ball(Ogre::SceneManager* mgr,
 {
   float scale = r / 50.0f;  // Default sphere radius = 50.
   setScale(Ogre::Vector3(scale, scale, scale));
+  setTag(0x1);
 }
 

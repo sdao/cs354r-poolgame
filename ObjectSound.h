@@ -9,7 +9,7 @@ class ObjectSound : public Component {
 public:  
 	ObjectSound();
 	virtual ~ObjectSound();
-	virtual void update(const UpdateInfo& info) const override;
+	virtual void update(const UpdateInfo& info) override;
 	bool loadMedia();
 	void collision();
 	void closeMedia();

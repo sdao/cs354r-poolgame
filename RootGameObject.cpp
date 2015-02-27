@@ -1,6 +1,6 @@
 #include "RootGameObject.h"
 
-RootGameObject::RootGameObject(Ogre::SceneManager* sceneMgr, const std::string name){
+RootGameObject::RootGameObject(Ogre::SceneManager* sceneMgr, const std::string name) : tag(0) {
 	node = sceneMgr->getRootSceneNode()->createChildSceneNode(name + "node");
 }
 
@@ -51,15 +51,24 @@ void RootGameObject::scale(const Ogre::Vector3& scale){
 void RootGameObject::setScale(const Ogre::Vector3& scale){
 	node->setScale(scale);
 }
-
-		
+	
 Ogre::Vector3 RootGameObject::localToWorldPosition(const Ogre::Vector3& v)
 	const
 {
 	return node->convertLocalToWorldPosition(v);
 }
+
 Ogre::Vector3 RootGameObject::worldToLocalPosition(const Ogre::Vector3& v)
 	const
 {
 	return node->convertWorldToLocalPosition(v);
 }
+
+void RootGameObject::setTag(int newTag) {
+	tag = newTag;
+}
+
+int RootGameObject::getTag() const {
+	return tag;
+}
+

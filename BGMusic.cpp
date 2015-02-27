@@ -53,7 +53,7 @@ void BGMusic::closeMedia()
     SDL_Quit();
 }
 
-void BGMusic::update(const UpdateInfo& info) const {
+void BGMusic::update(const UpdateInfo& info) {
     // Determine key strokes for pause/play
 }
 

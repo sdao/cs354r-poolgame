@@ -14,8 +14,11 @@ protected:
 public:
 	Component() : gameObject() {}
 	Component(std::weak_ptr<GameObject> go) : gameObject(go) {}
-	virtual void update(const UpdateInfo& info) const = 0;
+	virtual void update(const UpdateInfo& info) = 0;
 	virtual ~Component() {}
+	std::weak_ptr<GameObject> getGameObject() const {
+		return gameObject;
+	}
 };
 
 #endif

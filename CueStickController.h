@@ -3,8 +3,10 @@
 #include "Component.h"
 
 class CueStickController : public Component {
+  std::weak_ptr<GameObject> currentObj;
+
 public:
   CueStickController(std::weak_ptr<GameObject> go);
-  virtual void update(const UpdateInfo& update) const override;
+  virtual void update(const UpdateInfo& update) override;
 };
 

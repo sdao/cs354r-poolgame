@@ -25,9 +25,9 @@ public:
                   std::weak_ptr<GameObject> go,
                   Physics& physics,
                   float mass = 1.0f,
-                  float friction = 0.5f);
+                  float friction = 20.0f);
   virtual ~PhysicsCollider();
-  void update(const UpdateInfo& info) const;
+  void update(const UpdateInfo& info);
   virtual void didCollide(const PhysicsCollider& other) const;
 
   /**

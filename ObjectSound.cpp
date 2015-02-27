@@ -54,7 +54,7 @@ void ObjectSound::collision()
     Mix_PlayChannel( -1, bounce, 0 );
 }
 
-void ObjectSound::update(const UpdateInfo& info) const {
+void ObjectSound::update(const UpdateInfo& info) {
     //Mix_PlayChannel( -1, bounce, 0 );
 }
 

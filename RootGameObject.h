@@ -10,6 +10,7 @@ class RootGameObject{
 
 	protected:
 		Ogre::SceneNode* node;
+		int tag;
 
 	public:
 		RootGameObject(Ogre::SceneManager*, const std::string);
@@ -36,6 +37,9 @@ class RootGameObject{
 			const;
 		Ogre::Vector3 worldToLocalPosition(const Ogre::Vector3& v)
 			const;
+
+		void setTag(int newTag);
+		int getTag() const;
 };
 
 #endif

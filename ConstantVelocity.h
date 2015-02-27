@@ -9,6 +9,6 @@ class ConstantVelocity : public Component {
 
 public:
   ConstantVelocity(std::weak_ptr<GameObject> go, const Ogre::Vector3& v);
-  virtual void update(const UpdateInfo& info) const override;
+  virtual void update(const UpdateInfo& info) override;
 };
 

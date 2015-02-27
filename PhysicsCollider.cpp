@@ -53,7 +53,7 @@ void PhysicsCollider::didCollide(const PhysicsCollider& other) const {
   //std::cout << "BAM!\n";
 }
 
-void PhysicsCollider::update(const UpdateInfo& info) const {
+void PhysicsCollider::update(const UpdateInfo& info) {
   std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
   if (isDynamic) {
     btTransform newTransform;
