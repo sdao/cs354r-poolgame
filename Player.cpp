@@ -4,8 +4,8 @@ Player::Player(Ogre::SceneManager* mSceneMgr, Ogre::Camera* mCamera, const std::
 	GameObject(mSceneMgr, meshName, name),
 	pState(PlayerState::Hit)
 {
-	mCamera->setPosition(Ogre::Vector3(0, -80, 20));
-	mCamera->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(76)));
+	mCamera->setPosition(Ogre::Vector3(0, 20, 3));
+	mCamera->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(90)));
 	node->createChildSceneNode("ChildCamera")->attachObject(mCamera);
 	node->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(-90)));
 	inputKeys = new bool[4];

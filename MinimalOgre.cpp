@@ -265,11 +265,11 @@ bool MinimalOgre::go(void)
 	//create player
 	player = std::make_shared<Player>(mSceneMgr,
 					  mCamera,
-					  "Barrel.mesh",
+					  "column.mesh",
 					  "Player");
 	sceneObjects.push_back(player);
 	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
-	player->setScale(Ogre::Vector3(0.5, 0.5, 0.5));
+	player->setScale(Ogre::Vector3(0.03, 0.3, 0.03));
 	//attack camera to player or vice versa
 	
 	// putting the cue controller on the player
