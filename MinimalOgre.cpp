@@ -21,6 +21,7 @@ This source file is part of the
 #include "Ball.h"
 #include <iostream>
 #include <random>
+#include "BGMusic.h"
  
 //-------------------------------------------------------------------------------------
 MinimalOgre::MinimalOgre(void)
@@ -245,8 +246,10 @@ bool MinimalOgre::go(void)
 		20.0f,
 		0.0f /* static/kinematic object */
 	);
+    auto bgMusic = std::make_shared<BGMusic>();
 	sph->addComponent(constantVel);
 	sph->addComponent(kinCollider);
+    sph->addComponent(bgMusic);
 	sceneObjects.push_back(sph);
 
 	//create player
