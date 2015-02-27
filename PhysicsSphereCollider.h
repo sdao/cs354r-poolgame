@@ -8,5 +8,8 @@
 
 class PhysicsSphereCollider : public PhysicsCollider { 
 public: 
-  PhysicsSphereCollider(std::shared_ptr<GameObject> go, Physics& physics, float radius, float mass);
+  PhysicsSphereCollider(std::weak_ptr<GameObject> go,
+                        Physics& physics,
+                        float radius,
+                        float mass);
 };

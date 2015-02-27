@@ -1,5 +1,6 @@
 #include "PhysicsCollider.h"
 #include <iostream>
+#include <cassert>
 
 PhysicsCollider::~PhysicsCollider() {
   delete rigidBody;
@@ -8,21 +9,27 @@ PhysicsCollider::~PhysicsCollider() {
 }
 
 PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
-                                 std::shared_ptr<GameObject> go,
+                                 std::weak_ptr<GameObject> go,
                                  Physics& physics,
                                  float mass,
                                  float friction)
-  : collisionShape(cs), isDynamic(mass > 0.0f), gameObject(go)
+  : collisionShape(cs), isDynamic(mass > 0.0f), Component(go)
 {
+  // Need to take temporary ownership of go.
+  std::shared_ptr<GameObject> gameObjPtr = go.lock();
+  assert(gameObjPtr);
+
   btVector3 localInertia(0, 0, 0);
   if (isDynamic) {  
     collisionShape->calculateLocalInertia(mass, localInertia);
   }
 
-  Ogre::Vector3 objPosition = gameObject->getWorldPosition();
+  Ogre::Vector3 objPosition = gameObjPtr->getWorldPosition();
   btTransform startTransform;
   startTransform.setIdentity();
-  startTransform.setOrigin(btVector3(objPosition.x, objPosition.y, objPosition.z));
+  startTransform.setOrigin(
+    btVector3(objPosition.x, objPosition.y, objPosition.z)
+  );
     
   motionState = new btDefaultMotionState(startTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass,
@@ -46,17 +53,21 @@ void PhysicsCollider::didCollide(const PhysicsCollider& other) const {
   std::cout << "BAM!\n";
 }
 
-void PhysicsCollider::update(float deltaTime) const {
+void PhysicsCollider::update(const UpdateInfo& info) const {
+  std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
   if (isDynamic) {
     btTransform newTransform;
     motionState->getWorldTransform(newTransform);
     btVector3 origin = newTransform.getOrigin();
+
     // TODO: potentially update rotation as well. We don't really need it now.
-    gameObject->setWorldPosition(Ogre::Vector3(origin.x(), origin.y(), origin.z()));
+    gameObjectPtr->setWorldPosition(
+     Ogre::Vector3(origin.x(), origin.y(), origin.z())
+    );
   } else {
     btTransform oldTransform;
     motionState->getWorldTransform(oldTransform);
-    Ogre::Vector3 cur = gameObject->getWorldPosition();
+    Ogre::Vector3 cur = gameObjectPtr->getWorldPosition();
     oldTransform.setOrigin(btVector3(cur.x, cur.y, cur.z));
     motionState->setWorldTransform(oldTransform);
   }

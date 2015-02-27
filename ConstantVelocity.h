@@ -5,11 +5,10 @@
 #include <memory>
 
 class ConstantVelocity : public Component {
-  std::shared_ptr<GameObject> gameObject;
   Ogre::Vector3 velocity;
 
 public:
-  ConstantVelocity(std::shared_ptr<GameObject> go, const Ogre::Vector3& v);
-  virtual void update(float deltaTime) const override;
+  ConstantVelocity(std::weak_ptr<GameObject> go, const Ogre::Vector3& v);
+  virtual void update(const UpdateInfo& info) const override;
 };
 

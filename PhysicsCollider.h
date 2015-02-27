@@ -9,7 +9,6 @@ protected:
   btCollisionShape* collisionShape;
   btDefaultMotionState* motionState;
   btRigidBody* rigidBody;
-  std::shared_ptr<GameObject> gameObject;
   bool isDynamic;
 
 public:
@@ -23,12 +22,12 @@ public:
    * @param friction the friction coefficient of the object
    */
   PhysicsCollider(btCollisionShape* cs,
-                  std::shared_ptr<GameObject> go,
+                  std::weak_ptr<GameObject> go,
                   Physics& physics,
                   float mass = 1.0f,
                   float friction = 0.5f);
   virtual ~PhysicsCollider();
-  void update(float deltaTime) const;
+  void update(const UpdateInfo& info) const;
   virtual void didCollide(const PhysicsCollider& other) const;
 
   /**

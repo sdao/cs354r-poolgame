@@ -54,7 +54,7 @@ void ObjectSound::collision()
     Mix_PlayChannel( -1, bounce, 0 );
 }
 
-void ObjectSound::update(float deltaTime) const {
-   	Mix_PlayChannel( -1, bounce, 0 );
+void ObjectSound::update(const UpdateInfo& info) const {
+    //Mix_PlayChannel( -1, bounce, 0 );
 }
 

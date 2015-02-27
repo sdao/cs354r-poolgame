@@ -19,8 +19,10 @@ This source file is part of the
 #include "PhysicsBoxCollider.h"
 #include "ConstantVelocity.h"
 #include "Ball.h"
+#include "UpdateInfo.h"
 #include <iostream>
 #include <random>
+#include <cassert>
 #include "BGMusic.h"
  
 //-------------------------------------------------------------------------------------
@@ -252,6 +254,12 @@ bool MinimalOgre::go(void)
     sph->addComponent(bgMusic);
 	sceneObjects.push_back(sph);
 
+	// test component stuff
+	auto colliderPtr = sph->getComponent<PhysicsCollider>();
+	assert(colliderPtr);
+	auto boxColliderPtr = sph->getComponent<PhysicsBoxCollider>();
+	assert(!boxColliderPtr);
+
 	//create player
 	player = new Player(mSceneMgr, mCamera, "ogrehead.mesh", "Player");
 	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
@@ -309,7 +317,7 @@ bool MinimalOgre::go(void)
     items.push_back("");
     items.push_back("Filtering");
     items.push_back("Poly Mode");
- 
+
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
     mDetailsPanel->setParamValue(9, "Bilinear");
     mDetailsPanel->setParamValue(10, "Solid");
@@ -370,10 +378,11 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	player->update();
 
     // Update components.
-    // TODO: is this the right place?
-    //std::cout << "going to update components\n";
+    UpdateInfo info;
+    info.physics = &physics;
+    info.deltaTime = evt.timeSinceLastFrame;
     for (auto go : sceneObjects) {
-      go->update(evt.timeSinceLastFrame);
+      go->update(info);
     }
  
     return true;

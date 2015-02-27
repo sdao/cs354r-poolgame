@@ -10,7 +10,7 @@ class BGMusic : public Component {
 public:  
 	BGMusic();
 	virtual ~BGMusic();
-	virtual void update(float deltaTime) const override;
+	virtual void update(const UpdateInfo& info) const override;
 	bool loadMedia();
 	void closeMedia();
 

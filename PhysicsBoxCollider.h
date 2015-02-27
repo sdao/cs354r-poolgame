@@ -8,5 +8,8 @@
 
 class PhysicsBoxCollider : public PhysicsCollider {
 public: 
-  PhysicsBoxCollider(std::shared_ptr<GameObject> go, Physics& physics, const Ogre::Vector3& dim, float mass);
+  PhysicsBoxCollider(std::weak_ptr<GameObject> go,
+                     Physics& physics,
+                     const Ogre::Vector3& dim,
+                     float mass);
 };

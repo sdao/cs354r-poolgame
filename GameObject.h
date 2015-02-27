@@ -7,6 +7,7 @@
 
 #include "RootGameObject.h"
 #include "Component.h"
+#include "UpdateInfo.h"
 
 class GameObject : public RootGameObject {
 
@@ -33,9 +34,22 @@ class GameObject : public RootGameObject {
 		           const Ogre::Vector3& = Ogre::Vector3::ZERO,
 		           const Ogre::Vector3& = Ogre::Vector3::UNIT_SCALE);
 
-		void update(float deltaTime);
+		void update(const UpdateInfo& info);
 		void setMaterial(const std::string&);
 		void addComponent(std::shared_ptr<Component>);
+
+		template<typename T>
+		std::shared_ptr<T> getComponent() {
+			for (auto ptr : components) {
+				std::shared_ptr<T> casted =
+					std::dynamic_pointer_cast<T>(ptr);
+				if (casted) {
+					return casted;
+				}
+			}
+			return std::shared_ptr<T>();
+		}
+
 };
 
 #endif
