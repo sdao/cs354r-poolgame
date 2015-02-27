@@ -500,6 +500,13 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
     {
         mShutDown = true;
     }
+    else if (arg.key == OIS::KC_SPACE)
+    {
+        if (player) {
+          auto cueController = player->getComponent<CueStickController>();
+          cueController->hit();
+        }
+    }
  
     //mCameraMan->injectKeyDown(arg);
 

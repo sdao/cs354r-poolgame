@@ -16,9 +16,10 @@ Player::Player(Ogre::SceneManager* mSceneMgr, Ogre::Camera* mCamera, const std::
 
 void Player::update(){
 	Ogre::Vector3 moveDirection = Ogre::Vector3::ZERO;
-	std::cout<<"orientation: " << node->getOrientation().x << " "
+	/*std::cout<<"orientation: " << node->getOrientation().x << " "
 				   << node->getOrientation().y << " "
 				   << node->getOrientation().z << std::endl;
+	*/
 	//W
 	if(inputKeys[0]){
 		moveDirection += Ogre::Vector3::UNIT_Y;
