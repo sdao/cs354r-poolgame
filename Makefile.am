@@ -10,7 +10,7 @@ assignment2_SOURCES = MinimalOgre.cpp RootGameObject.cpp GameObject.cpp \
 		      Physics.cpp Player.cpp PhysicsBoxCollider.cpp Ball.cpp \
                       ConstantVelocity.cpp BGMusic.cpp ObjectSound.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
-assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
+assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(SDL_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system
 
 EXTRA_DIST = buildit makeit
