@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "PhysicsCollider.h"
+#include "ObjectSound.h"
 
 CueStickController::CueStickController(std::weak_ptr<GameObject> go)
   : Component(go), currentObj() {}
@@ -53,7 +54,11 @@ void CueStickController::hit() {
         gameObjPtr->localToWorldPosition(Ogre::Vector3::UNIT_Y);
       Ogre::Vector3 dirGoToTarget = targetWorldPosition - goWorldPosition;
       collider->applyWorldImpulse(dirGoToTarget * 1000.0f);
-      std::cout << dirGoToTarget.x << " " << dirGoToTarget.y << " " << dirGoToTarget.z << "\n";
+      //std::cout << dirGoToTarget.x << " " << dirGoToTarget.y << " " << dirGoToTarget.z << "\n";
+      auto sound = gameObjPtr->getComponent<ObjectSound>();
+      if (sound) {
+        sound->collision();
+      }
     }
   }
 }

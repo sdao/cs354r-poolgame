@@ -25,6 +25,7 @@ This source file is part of the
 #include <cassert>
 #include "BGMusic.h"
 #include "CueStickController.h"
+#include "ObjectSound.h"
  
 //-------------------------------------------------------------------------------------
 MinimalOgre::MinimalOgre(void)
@@ -275,6 +276,10 @@ bool MinimalOgre::go(void)
 	// putting the cue controller on the player
 	auto cueController = std::make_shared<CueStickController>(player);
 	player->addComponent(cueController);
+
+	// putting audio controller on player
+	auto soundController = std::make_shared<ObjectSound>();
+	player->addComponent(soundController);
 
     // Set ambient light
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
