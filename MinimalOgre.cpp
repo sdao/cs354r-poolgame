@@ -197,22 +197,62 @@ bool MinimalOgre::go(void)
 			case 1:
 				go->translate(0, 150, -100);
 				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(180)));
+                box = std::make_shared<PhysicsBoxCollider>(
+                    go,
+                    physics,
+                    Ogre::Vector3(300.0f, 1.0f, 300.0f),
+                    0.0f
+                );
+
+                go->addComponent(box);
 				break;
 			case 2:
 				go->translate(150, 0, -100);
 				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(90)));
+                box = std::make_shared<PhysicsBoxCollider>(
+                    go,
+                    physics,
+                    Ogre::Vector3(1.0f, 300.0f, 300.0f),
+                    0.0f
+                );
+
+                go->addComponent(box);
 				break;
 			case 3:
 				go->translate(-150, 0, -100);
 				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(270)));
+                box = std::make_shared<PhysicsBoxCollider>(
+                    go,
+                    physics,
+                    Ogre::Vector3(1.0f, 300.0f, 300.0f),
+                    0.0f
+                );
+
+                go->addComponent(box);
 				break;
 			case 4:
 				go->translate(0, 0, -250);
 				go->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(90)));
+                box = std::make_shared<PhysicsBoxCollider>(
+                    go,
+                    physics,
+                    Ogre::Vector3(300.0f, 300.0f, 1.0f),
+                    0.0f
+                );
+
+                go->addComponent(box);
 				break;
 			case 5:
 				go->translate(0, 0, 50);
 				go->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(270)));
+                box = std::make_shared<PhysicsBoxCollider>(
+                    go,
+                    physics,
+                    Ogre::Vector3(300.0f, 300.0f, 1.0f),
+                    0.0f
+                );
+
+                go->addComponent(box);
 				break;
 			default:
 				break;
