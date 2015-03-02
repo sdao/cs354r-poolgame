@@ -268,8 +268,20 @@ bool MinimalOgre::go(void)
 	std::uniform_real_distribution<float> dist(-50.0f, 50.0f);
 	for (int i = 0; i < 100; i++) {
 		const std::string sphereEntityName = "sph";
-		auto sph = std::make_shared<Ball>(mSceneMgr, sphereEntityName + Ogre::StringConverter::toString(i), 10.0f, Ogre::Vector3(0 + dist(rng), dist(rng), -100.0f + dist(rng)));
-		sph->setMaterial("Examples/BumpyMetal");
+		auto sph = std::make_shared<Ball>(
+			mSceneMgr,
+			sphereEntityName + Ogre::StringConverter::toString(i),
+			10.0f,
+			Ogre::Vector3(0 + dist(rng),
+				      dist(rng),
+				      -100.0f + dist(rng)),
+			i == 0 /* make 1st ball a cue ball */
+		);
+		if (i == 0) {
+			sph->setMaterial("Examples/Chrome");
+		} else {
+			sph->setMaterial("Examples/BumpyMetal");
+		}
 		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
 			sph,
 			physics,
@@ -279,7 +291,7 @@ bool MinimalOgre::go(void)
 		sph->addComponent(sphCollider);
 		sceneObjects.push_back(sph);
 	}
-
+/*
 	auto sph = std::make_shared<Ball>(mSceneMgr, "kinematic", 20.0f, Ogre::Vector3(0, -130.0f, -100.0f));
 	sph->setMaterial("Examples/GrassFloor");
 	auto constantVel = std::make_shared<ConstantVelocity>(
@@ -289,19 +301,12 @@ bool MinimalOgre::go(void)
 		sph,
 		physics,
 		20.0f,
-		0.0f /* static/kinematic object */
+		0.0f
 	);
-    auto bgMusic = std::make_shared<BGMusic>();
-	sph->addComponent(constantVel);
-	sph->addComponent(kinCollider);
-    sph->addComponent(bgMusic);
-	sceneObjects.push_back(sph);
-
-	// test component stuff
-	auto colliderPtr = sph->getComponent<PhysicsCollider>();
-	assert(colliderPtr);
-	auto boxColliderPtr = sph->getComponent<PhysicsBoxCollider>();
-	assert(!boxColliderPtr);
+*/
+	//sph->addComponent(constantVel);
+	//sph->addComponent(kinCollider);
+	//sceneObjects.push_back(sph);
 
 	//create player
 	player = std::make_shared<Player>(mSceneMgr,
@@ -312,6 +317,10 @@ bool MinimalOgre::go(void)
 	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
 	player->setScale(Ogre::Vector3(0.03, 0.3, 0.03));
 	//attack camera to player or vice versa
+	
+	// put bg music on player
+    	auto bgMusic = std::make_shared<BGMusic>();
+    	player->addComponent(bgMusic);
 	
 	// putting the cue controller on the player
 	auto cueController = std::make_shared<CueStickController>(player);

@@ -28,4 +28,8 @@ public:
   PhysicsCollider* rayCast(const Ogre::Vector3& start,
                            const Ogre::Vector3& direction,
                            float maxDist) const;
+  const std::vector<PhysicsCollider*>
+  rayCastAll(const Ogre::Vector3& start,
+             const Ogre::Vector3& direction,
+             float maxDist) const;
 };

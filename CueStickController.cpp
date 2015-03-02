@@ -14,10 +14,10 @@ void CueStickController::update(const UpdateInfo& update) {
   Ogre::Vector3 targetWorldPosition =
     gameObjPtr->localToWorldPosition(Ogre::Vector3::UNIT_Y);
   Ogre::Vector3 dirGoToTarget = targetWorldPosition - goWorldPosition;
-  PhysicsCollider* collider = update.physics->rayCast(goWorldPosition,
-                                                      dirGoToTarget,
-                                                      10000.0f);
-  if (collider) {
+  auto colliders = update.physics->rayCastAll(goWorldPosition,
+                                              dirGoToTarget,
+                                              10000.0f);
+  for (PhysicsCollider* collider : colliders) {
     std::weak_ptr<GameObject> colliderObj = collider->getGameObject();
     std::shared_ptr<GameObject> colliderObjPtr = colliderObj.lock();
     std::shared_ptr<GameObject> currentObjPtr = currentObj.lock();
@@ -26,7 +26,7 @@ void CueStickController::update(const UpdateInfo& update) {
       std::shared_ptr<GameObject> currentObjPtr = currentObj.lock();
       
       if (currentObjPtr) {
-        currentObjPtr->setMaterial("Examples/BumpyMetal");
+        currentObjPtr->setMaterial("Examples/Chrome");
       }
       currentObj = std::weak_ptr<GameObject>();
     }

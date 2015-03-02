@@ -70,3 +70,27 @@ PhysicsCollider* Physics::rayCast(const Ogre::Vector3& start,
   return nullptr;
 }
 
+const std::vector<PhysicsCollider*>
+Physics::rayCastAll(const Ogre::Vector3& start,
+                 const Ogre::Vector3& direction,
+                 float maxDist) const {
+  Ogre::Vector3 end = start + direction * maxDist;
+  btVector3 btStart(start.x, start.y, start.z);
+  btVector3 btEnd(end.x, end.y, end.z);
+  btCollisionWorld::AllHitsRayResultCallback rayCallback(btStart, btEnd);
+
+  dynamicsWorld->rayTest(btStart, btEnd, rayCallback);
+
+  std::vector<PhysicsCollider*>
+  colliders(rayCallback.m_collisionObjects.size());
+  
+  for (int i = 0; i < rayCallback.m_collisionObjects.size(); ++i) {
+    const btCollisionObject* collObj = rayCallback.m_collisionObjects[i];
+    if (collObj != nullptr) {
+      colliders[i] = static_cast<PhysicsCollider*>(collObj->getUserPointer());
+    }
+  }
+
+  return colliders;
+}
+

@@ -14,6 +14,7 @@ public:
   Ball(Ogre::SceneManager* mgr,
        const std::string& name,
        float radius,
-       const Ogre::Vector3& position);
+       const Ogre::Vector3& position,
+       bool isCueBall = false);
 };
 
