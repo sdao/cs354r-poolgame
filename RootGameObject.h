@@ -15,15 +15,16 @@ class RootGameObject{
 	public:
 		RootGameObject(Ogre::SceneManager*, const std::string);
 
+		const std::string& getName() const;
 		void translate(const Ogre::Vector3&, 
 					   const Ogre::Node::TransformSpace = Ogre::Node::TransformSpace::TS_PARENT);
 		void translate(float x, float y, float z,
 					   const Ogre::Node::TransformSpace = Ogre::Node::TransformSpace::TS_PARENT);
 
 		void setPosition(const Ogre::Vector3&);
-		const Ogre::Vector3 getPosition() const;
+		Ogre::Vector3 getPosition() const;
 		void setWorldPosition(const Ogre::Vector3&);
-		const Ogre::Vector3 getWorldPosition() const;
+		Ogre::Vector3 getWorldPosition() const;
 
 		void rotate(const Ogre::Vector3&, const Ogre::Radian&, const Ogre::Node::TransformSpace = Ogre::Node::TransformSpace::TS_PARENT);
 		void yaw(const Ogre::Degree&);

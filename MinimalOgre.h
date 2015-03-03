@@ -38,6 +38,7 @@ This source file is part of the
 #include "GameObject.h"
 #include "Player.h"
 //#include "Balls.h"
+#include "GameInfo.h"
 #include "Physics.h"
 #include <vector>
 #include <memory>
@@ -92,6 +93,7 @@ protected:
 	Physics physics;
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
 	std::shared_ptr<Player> player;
+	std::shared_ptr<GameInfo> gameinfo;
 	//std::vector<GameObject> SceneObjects;
 	//TODO Sounds?
 };

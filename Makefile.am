@@ -1,7 +1,8 @@
 noinst_HEADERS = MinimalOgre.h Component.h RootGameObject.h GameObject.h \
 		 Physics.h PhysicsCollider.h PhysicsSphereCollider.h Player.h \
 		 GameEnums.h PhysicsBoxCollider.h Ball.h ConstantVelocity.h \
-		 BGMusic.h ObjectSound.h UpdateInfo.h CueStickController.h
+		 BGMusic.h ObjectSound.h UpdateInfo.h CueStickController.h \
+		 GameInfo.h
 
 bin_PROGRAMS = assignment2
 assignment2_CPPFLAGS = -I$(top_srcdir) -std=c++11

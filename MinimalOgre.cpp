@@ -48,7 +48,8 @@ MinimalOgre::MinimalOgre(void)
 	state(GameState::Play),
 	physics(),
 	sceneObjects(),
-	player()
+	player(),
+	gameinfo()
 {
 }
 //-------------------------------------------------------------------------------------
@@ -155,19 +156,13 @@ bool MinimalOgre::go(void)
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 //-------------------------------------------------------------------------------------
     // Create the scene
-    //Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "ogrehead.mesh");
- 
-    //Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-    //headNode->attachObject(ogreHead);
-
-
-	//create walls
 
 	//make the walls
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-	Ogre::MeshManager::getSingletonPtr()->createPlane("wallMesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 300, 300, 5, 5, true, 1, 1.0 , 1.0, Ogre::Vector3::UNIT_X);
+	Ogre::MeshManager::getSingletonPtr()->createPlane("wallMesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 100, 100, 5, 5, true, 1, 1.0 , 1.0, Ogre::Vector3::UNIT_X);
 
-
+	gameinfo = std::make_shared<GameInfo>( SetupField(1000, 1000, 1000, mSceneMgr, physics, sceneObjects));
+	/*
 	for(int i = 0; i < 6; i++){
 		Ogre::Entity* wall = mSceneMgr->createEntity("wallEntity" + i , "wallMesh");
 		wall->setMaterialName("Examples/GrassFloor");
@@ -260,7 +255,8 @@ bool MinimalOgre::go(void)
 
 		sceneObjects.push_back(go);
 	}
-	//TODO should we save the walls in the vector gameObjects?
+	*/
+
 	//create Pockets
 
 	//create balls
@@ -289,6 +285,7 @@ bool MinimalOgre::go(void)
                 	1.0f
 		);
 		sph->addComponent(sphCollider);
+		gameinfo->ballPositions.push_back(sph->getWorldPosition());
 		sceneObjects.push_back(sph);
 	}
 /*
@@ -316,7 +313,6 @@ bool MinimalOgre::go(void)
 	sceneObjects.push_back(player);
 	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
 	player->setScale(Ogre::Vector3(0.03, 0.3, 0.03));
-	//attack camera to player or vice versa
 	
 	// put bg music on player
     	auto bgMusic = std::make_shared<BGMusic>();
@@ -449,6 +445,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
       go->update(info);
     }
  
+	setPositions(gameinfo, sceneObjects);
     return true;
 }
 //-------------------------------------------------------------------------------------

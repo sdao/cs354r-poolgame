@@ -4,6 +4,10 @@ RootGameObject::RootGameObject(Ogre::SceneManager* sceneMgr, const std::string n
 	node = sceneMgr->getRootSceneNode()->createChildSceneNode(name + "node");
 }
 
+const std::string& RootGameObject::getName() const {
+	return node->getName();
+}
+
 void RootGameObject::translate(const Ogre::Vector3& trans, const Ogre::Node::TransformSpace ts){
 	node->translate(trans, ts);
 }
@@ -16,7 +20,7 @@ void RootGameObject::setPosition(const Ogre::Vector3& position){
 	node->setPosition(position);
 }
 
-const Ogre::Vector3 RootGameObject::getPosition() const {
+Ogre::Vector3 RootGameObject::getPosition() const {
 	return node->getPosition();
 }
 
@@ -24,7 +28,7 @@ void RootGameObject::setWorldPosition(const Ogre::Vector3& position) {
 	node->_setDerivedPosition(position);
 }
 
-const Ogre::Vector3 RootGameObject::getWorldPosition() const {
+Ogre::Vector3 RootGameObject::getWorldPosition() const {
 	return node->_getDerivedPosition();
 }
 
