@@ -11,5 +11,6 @@ public:
   PhysicsSphereCollider(std::weak_ptr<GameObject> go,
                         Physics& physics,
                         float radius,
-                        float mass);
+                        float mass,
+                        bool trigger = false);
 };

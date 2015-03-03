@@ -12,7 +12,8 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
                                  std::weak_ptr<GameObject> go,
                                  Physics& physics,
                                  float mass,
-                                 float friction)
+                                 float friction,
+                                 bool trigger)
   : collisionShape(cs), isDynamic(mass > 0.0f), Component(go)
 {
   // Need to take temporary ownership of go.
@@ -45,12 +46,16 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
       | btCollisionObject::CF_KINEMATIC_OBJECT);
     rigidBody->setActivationState(DISABLE_DEACTIVATION);
   }
+  if (trigger) {
+    rigidBody->setCollisionFlags(rigidBody->getCollisionFlags()
+      | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+  }
   physics.getDynamicsWorld()->addRigidBody(rigidBody);
 }
 
 void PhysicsCollider::didCollide(const PhysicsCollider& other) const {
-  // TODO: have some default collision behavior.
-  //std::cout << "BAM!\n";
+  std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
+  gameObjectPtr->didCollide(other);
 }
 
 void PhysicsCollider::update(const UpdateInfo& info) {

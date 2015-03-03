@@ -5,6 +5,12 @@
 PhysicsSphereCollider::PhysicsSphereCollider(std::weak_ptr<GameObject> go,
                                              Physics& physics,
                                              float radius,
-                                             float mass)
-  : PhysicsCollider(new btSphereShape(btScalar(radius)), go, physics, mass) {}
+                                             float mass,
+                                             bool trigger)
+  : PhysicsCollider(new btSphereShape(btScalar(radius)),
+                    go,
+                    physics,
+                    mass,
+                    20.0f,
+                    trigger) {}
 

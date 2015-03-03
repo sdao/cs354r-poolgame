@@ -20,12 +20,15 @@ public:
    * @param mass     the mass of the object (kg); note that
    *                 mass <= 0.0f makes it kinematic, not dynamic
    * @param friction the friction coefficient of the object
+   * @param trigger  whether the collider should be a trigger instead of
+   *                 producing a collision response
    */
   PhysicsCollider(btCollisionShape* cs,
                   std::weak_ptr<GameObject> go,
                   Physics& physics,
                   float mass = 1.0f,
-                  float friction = 20.0f);
+                  float friction = 20.0f,
+                  bool trigger = false);
   virtual ~PhysicsCollider();
   void update(const UpdateInfo& info);
   virtual void didCollide(const PhysicsCollider& other) const;

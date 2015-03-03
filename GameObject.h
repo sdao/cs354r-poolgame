@@ -9,6 +9,9 @@
 #include "Component.h"
 #include "UpdateInfo.h"
 
+// Forward declarations.
+class PhysicsCollider;
+
 class GameObject : public RootGameObject {
 
 	protected:
@@ -37,6 +40,7 @@ class GameObject : public RootGameObject {
 		void update(const UpdateInfo& info);
 		void setMaterial(const std::string&);
 		void addComponent(std::shared_ptr<Component>);
+		virtual void didCollide(const PhysicsCollider& other);
 
 		template<typename T>
 		std::shared_ptr<T> getComponent() {

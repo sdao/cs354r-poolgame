@@ -11,5 +11,6 @@ public:
   PhysicsBoxCollider(std::weak_ptr<GameObject> go,
                      Physics& physics,
                      const Ogre::Vector3& dim,
-                     float mass);
+                     float mass,
+                     bool trigger = false);
 };

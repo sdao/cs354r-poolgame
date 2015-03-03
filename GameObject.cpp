@@ -62,3 +62,5 @@ void GameObject::addComponent(std::shared_ptr<Component> comp) {
 	components.push_back(comp);
 }
 
+void GameObject::didCollide(const PhysicsCollider& other) {}
+
