@@ -18,6 +18,8 @@ class Player : public GameObject {
 		void getKeyPress(const OIS::KeyEvent&);
 		void getKeyRelease(const OIS::KeyEvent&);
 		void getMouseEvent(const OIS::MouseEvent&);
+		void setState();
+		bool isInState(PlayerState) const;
 };
 
 #endif

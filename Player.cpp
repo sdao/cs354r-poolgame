@@ -83,3 +83,11 @@ void Player::getMouseEvent(const OIS::MouseEvent& arg){
 	//rot.z = 0.0f;
 	//node->setOrientation(rot);
 }
+
+void Player::setState(){
+
+}
+
+bool Player::isInState(PlayerState pstate) const {
+	return pState == pstate;
+}

@@ -89,13 +89,12 @@ protected:
     virtual void windowClosed(Ogre::RenderWindow* rw);
 
 	// Assignment2 Data Starts
+    OgreBites::SdkTrayManager* menuTray;
 	GameState state;
 	Physics physics;
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<GameInfo> gameinfo;
-	//std::vector<GameObject> SceneObjects;
-	//TODO Sounds?
 };
 
 #endif // #ifndef __MinimalOgre_h_

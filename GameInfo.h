@@ -12,14 +12,12 @@ struct GameInfo{
 
 	int scoreP1;
 	int scoreP2;
-	//float length;	
-	//float width;
-	//float height;
+	Ogre::Vector3 dimensions;
 	std::vector<Ogre::Vector3> ballPositions;
 };
 
 GameInfo SetupField(float length, float width, float height, Ogre::SceneManager* mSceneMgr, Physics& physics, std::vector<std::shared_ptr<GameObject> >& sceneObjects){
-	GameInfo gameinfo ={0, 0};
+	GameInfo gameinfo ={0, 0, Ogre::Vector3(length, height, width)};
 	gameinfo.ballPositions = std::vector<Ogre::Vector3>();
 	for(int i = 0; i < 6; i++){
         Ogre::Entity* wall = mSceneMgr->createEntity("wallEntity" + i , "wallMesh");
@@ -125,18 +123,13 @@ GameInfo SetupField(float length, float width, float height, Ogre::SceneManager*
 	return gameinfo;
 }
 
-void setPositions(std::shared_ptr<GameInfo> gameinfo, const std::vector<std::shared_ptr<GameObject> >& sceneObjects){
-	int ballIndex = 0;
+void setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::shared_ptr<GameObject> >& sceneObjects){
+	gameinfo.get()->ballPositions.clear();
 	for( auto go : sceneObjects ){
-		if(go.get()->getTag() == 1){
-			if(go.get()->getWorldPosition() != gameinfo.get()->ballPositions[ballIndex]){
-				//std::cout<< "object:  " << go.get()->getName() << " has moved!"<<std::endl;
-				gameinfo.get()->ballPositions[ballIndex] = go.get()->getWorldPosition();
-			}
-			ballIndex++;
+		if(go.get()->getTag() == 0x2){
+			gameinfo.get()->ballPositions.push_back(go.get()->getWorldPosition());
 		}
 	}
-	std::cout<<"ball index: " << ballIndex << std::endl;
 }
 
 //void getPositions

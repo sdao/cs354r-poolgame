@@ -46,7 +46,8 @@ MinimalOgre::MinimalOgre(void)
     mMouse(0),
     mKeyboard(0),
 	mOverlaySystem(0),
-	state(GameState::Play),
+	menuTray(0),
+	state(GameState::Main),
 	physics(),
 	sceneObjects(),
 	player(),
@@ -57,6 +58,7 @@ MinimalOgre::MinimalOgre(void)
 MinimalOgre::~MinimalOgre(void)
 {
     if (mTrayMgr) delete mTrayMgr;
+	if (menuTray) delete menuTray;
     if (mCameraMan) delete mCameraMan;
 	if (mOverlaySystem) delete mOverlaySystem;
  
@@ -364,7 +366,8 @@ bool MinimalOgre::go(void)
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
     mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
- 
+
+
     // create a params panel for displaying sample details
     Ogre::StringVector items;
     items.push_back("cam.pX");
@@ -395,7 +398,15 @@ bool MinimalOgre::go(void)
     scoreboard->setParamValue(2, "Infinite!");
     scoreboard->hide();
 
+
  
+	menuTray = new OgreBites::SdkTrayManager("Main Menu", mWindow, mInputContext, this); 
+	menuTray->createLabel (OgreBites::TL_CENTER, "Title", "3D POOL!", 400);
+	menuTray->createLabel (OgreBites::TL_CENTER, "size", "How Large would you like the field?", 400);
+	menuTray->createTextBox (OgreBites::TL_CENTER, "xinput", "X: ", 400, 20);
+
+	
+	menuTray->showAll();
     mRoot->addFrameListener(this);
 //-------------------------------------------------------------------------------------
     mRoot->startRendering();
@@ -432,25 +443,29 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
         }
     }
 
-    // Run physics.
-    physics.stepSimulation(evt.timeSinceLastFrame);
+	if(state == GameState::Play){
+    	// Run physics.
+    	physics.stepSimulation(evt.timeSinceLastFrame);
+
+
+    	// Update components.
+		UpdateInfo info;
+	    info.physics = &physics;
+	    info.deltaTime = evt.timeSinceLastFrame;
+    	for (auto go : sceneObjects) {
+	      go->update(info);
+    	}
+	
+		setPositions(gameinfo, sceneObjects);
+	}
 
 	//update player
 	player->update();
-
-    // Update components.
-    UpdateInfo info;
-    info.physics = &physics;
-    info.deltaTime = evt.timeSinceLastFrame;
-    for (auto go : sceneObjects) {
-      go->update(info);
-    }
- 
-	setPositions(gameinfo, sceneObjects);
-
-    std::string buffer = std::to_string(gameinfo->scoreP1);
+	
+	//set param values on GUI
+    std::string buffer = std::to_string(gameinfo.get()->scoreP1);
     scoreboard->setParamValue(0, buffer);
-    buffer = std::to_string(gameinfo->ballPositions.size());
+    buffer = std::to_string(gameinfo.get()->ballPositions.size());
     scoreboard->setParamValue(1, buffer);
     return true;
 }
@@ -555,28 +570,36 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
     }
     else if (arg.key == OIS::KC_ESCAPE)
     {
+		
         mShutDown = true;
     }
-    else if (arg.key == OIS::KC_SPACE)
-    {
-        if (player) {
-          auto cueController = player->getComponent<CueStickController>();
-          cueController->hit();
-        }
-    }
+
  
     //mCameraMan->injectKeyDown(arg);
 
 	switch(state){
 		case Main:
+			//show main menu gui
 			break;
 		case Play:
 			//pass keypress to player Object
 			player->getKeyPress(arg);
+
+		    if (arg.key == OIS::KC_SPACE)
+		    {
+	    	    if (player && player->isInState(PlayerState::Hit)) {
+		            auto cueController = player->getComponent<CueStickController>();
+		            cueController->hit();
+	  	    		//playerpState = PlayerState::Wait;
+        		}
+    		}
+
 			break;
 		case Pause:
+			//show pause menu
 			break;
 		case End:
+			//show "win/loss" menu
 			break;
 		default:
 			break;
