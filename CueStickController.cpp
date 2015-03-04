@@ -54,8 +54,8 @@ void CueStickController::hit() {
         gameObjPtr->localToWorldPosition(Ogre::Vector3::UNIT_Y);
       Ogre::Vector3 dirGoToTarget = (targetWorldPosition - goWorldPosition)
         .normalisedCopy();
-      collider->applyWorldImpulse(dirGoToTarget * 100000.0f);
-      //std::cout << dirGoToTarget.x << " " << dirGoToTarget.y << " " << dirGoToTarget.z << "\n";
+      collider->applyWorldImpulse(dirGoToTarget * 1600.0f);
+      //std::cout << dirGoToTarget.x << "  << dirGoToTarget.y << " " << dirGoToTarget.z << "\n";
       auto sound = gameObjPtr->getComponent<ObjectSound>();
       if (sound) {
         sound->collision();

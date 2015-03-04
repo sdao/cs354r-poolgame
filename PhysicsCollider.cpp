@@ -85,10 +85,12 @@ void PhysicsCollider::update(const UpdateInfo& info) {
 }
 
 void PhysicsCollider::applyWorldForce(const Ogre::Vector3& force) {
+  rigidBody->activate();
   rigidBody->applyCentralForce(btVector3(force.x, force.y, force.z));
 }
 
 void PhysicsCollider::applyWorldImpulse(const Ogre::Vector3& impulse) {
+  rigidBody->activate();
   rigidBody->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
 }
 
