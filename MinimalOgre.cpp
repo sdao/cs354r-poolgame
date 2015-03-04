@@ -26,6 +26,7 @@ This source file is part of the
 #include "BGMusic.h"
 #include "CueStickController.h"
 #include "ObjectSound.h"
+#include <string>
  
 //-------------------------------------------------------------------------------------
 MinimalOgre::MinimalOgre(void)
@@ -446,6 +447,11 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
  
 	setPositions(gameinfo, sceneObjects);
+
+    std::string buffer = std::to_string(gameinfo->scoreP1);
+    scoreboard->setParamValue(0, buffer);
+    buffer = std::to_string(gameinfo->ballPositions.size());
+    scoreboard->setParamValue(1, buffer);
     return true;
 }
 //-------------------------------------------------------------------------------------
