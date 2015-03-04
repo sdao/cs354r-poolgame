@@ -27,6 +27,7 @@ This source file is part of the
 #include "CueStickController.h"
 #include "ObjectSound.h"
 #include <string>
+#include "GoalController.h"
  
 //-------------------------------------------------------------------------------------
 MinimalOgre::MinimalOgre(void)
@@ -261,19 +262,49 @@ bool MinimalOgre::go(void)
 	*/
 
 	//create Pockets
+	for (int i = 0; i < 4; i++) {
+		Ogre::Vector3 location;
+		if (i == 0) {
+			location = Ogre::Vector3(-500.0f, -500.0f, -500.0f);
+		} else if (i == 1) {
+			location = Ogre::Vector3(-500.0f, -500.0f, 500.0f);
+		} else if (i == 2) {
+			location = Ogre::Vector3(500.0f, -500.0f, 500.0f);
+		} else {
+			location = Ogre::Vector3(500.0f, -500.0f, -500.0f);
+		}
+
+		auto goal = std::make_shared<Ball>(mSceneMgr,
+			std::string("g") + Ogre::StringConverter::toString(i),
+			20.0f,
+			location);
+		goal->setMaterial("Examples/BeachStones");
+		auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
+			goal,
+			physics,
+			15.0f,
+			0.0f,
+   	             true
+		);
+		auto goalController = std::make_shared<GoalController>();
+		goal->addComponent(triggerCollider);
+		goal->addComponent(goalController);
+		sceneObjects.push_back(goal);
+	}
 
 	//create balls
 	std::mt19937 rng;
-	std::uniform_real_distribution<float> dist(-50.0f, 50.0f);
+	std::uniform_real_distribution<float> xzDist(-100.0f, 100.0f); 
+	std::uniform_real_distribution<float> yDist(-300.0f, -400.0f);
 	for (int i = 0; i < 100; i++) {
 		const std::string sphereEntityName = "sph";
 		auto sph = std::make_shared<Ball>(
 			mSceneMgr,
 			sphereEntityName + Ogre::StringConverter::toString(i),
 			10.0f,
-			Ogre::Vector3(0 + dist(rng),
-				      dist(rng),
-				      -100.0f + dist(rng)),
+			Ogre::Vector3(0 + xzDist(rng),
+				      yDist(rng),
+				      -100.0f + xzDist(rng)),
 			i == 0 /* make 1st ball a cue ball */
 		);
 		if (i == 0) {
@@ -285,28 +316,12 @@ bool MinimalOgre::go(void)
 			sph,
 			physics,
 			10.0f, /* collider radius */
-                	1.0f
+                	i == 0 ? 140.0f : 80.0f /* cue ball heavier */
 		);
 		sph->addComponent(sphCollider);
 		gameinfo->ballPositions.push_back(sph->getWorldPosition());
 		sceneObjects.push_back(sph);
 	}
-/*
-	auto sph = std::make_shared<Ball>(mSceneMgr, "kinematic", 20.0f, Ogre::Vector3(0, -130.0f, -100.0f));
-	sph->setMaterial("Examples/GrassFloor");
-	auto constantVel = std::make_shared<ConstantVelocity>(
-		sph,
-		Ogre::Vector3(10.0f, 0.0f, 0.0f));
-	auto kinCollider = std::make_shared<PhysicsSphereCollider>(
-		sph,
-		physics,
-		20.0f,
-		0.0f
-	);
-*/
-	//sph->addComponent(constantVel);
-	//sph->addComponent(kinCollider);
-	//sceneObjects.push_back(sph);
 
 	//create player
 	player = std::make_shared<Player>(mSceneMgr,

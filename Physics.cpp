@@ -1,5 +1,6 @@
 #include "Physics.h"
 #include "PhysicsCollider.h"
+#include <iostream>
 
 Physics::Physics(float gravity)
   : broadphase(new btDbvtBroadphase()),
@@ -26,23 +27,24 @@ void Physics::stepSimulation(float timestep) {
   
   // Handle collisions.
   int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
-    for (int i = 0; i < numManifolds; i++)
-    {
-        btPersistentManifold* contactManifold =
-          dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-        const btCollisionObject* obA =
-          static_cast<const btCollisionObject*>(contactManifold->getBody0());
-        const btCollisionObject* obB =
-          static_cast<const btCollisionObject*>(contactManifold->getBody1());
+  //std::cout << "manifolds" << numManifolds <<  "\n";
+  for (int i = 0; i < numManifolds; i++)
+  {
+      btPersistentManifold* contactManifold =
+        dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+      const btCollisionObject* obA =
+        static_cast<const btCollisionObject*>(contactManifold->getBody0());
+      const btCollisionObject* obB =
+        static_cast<const btCollisionObject*>(contactManifold->getBody1());
 
-        PhysicsCollider* colliderA =
-          static_cast<PhysicsCollider*>(obA->getUserPointer());
-        PhysicsCollider* colliderB =
-          static_cast<PhysicsCollider*>(obB->getUserPointer());
+      PhysicsCollider* colliderA =
+        static_cast<PhysicsCollider*>(obA->getUserPointer());
+      PhysicsCollider* colliderB =
+        static_cast<PhysicsCollider*>(obB->getUserPointer());
 
-        colliderA->didCollide(*colliderB);
-        colliderB->didCollide(*colliderA);
-    }
+      colliderA->reportCollision(*colliderB);
+      colliderB->reportCollision(*colliderA);
+  }
 }
 
 btDynamicsWorld* Physics::getDynamicsWorld() {

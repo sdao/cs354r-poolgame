@@ -62,5 +62,13 @@ void GameObject::addComponent(std::shared_ptr<Component> comp) {
 	components.push_back(comp);
 }
 
-void GameObject::didCollide(const PhysicsCollider& other) {}
+void GameObject::didCollide(PhysicsCollider& other) {
+	for (auto comp : components) {
+	  comp->didCollide(other);
+	}
+}
+
+void GameObject::setVisible(bool visible) {
+	node->setVisible(visible);
+}
 

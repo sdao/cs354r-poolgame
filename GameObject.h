@@ -40,7 +40,8 @@ class GameObject : public RootGameObject {
 		void update(const UpdateInfo& info);
 		void setMaterial(const std::string&);
 		void addComponent(std::shared_ptr<Component>);
-		virtual void didCollide(const PhysicsCollider& other);
+		void didCollide(PhysicsCollider& other);
+		void setVisible(bool visible);
 
 		template<typename T>
 		std::shared_ptr<T> getComponent() {
