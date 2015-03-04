@@ -48,7 +48,7 @@ MinimalOgre::MinimalOgre(void)
     mKeyboard(0),
 	mOverlaySystem(0),
 	menuTray(0),
-	state(GameState::Main),
+	state(GameState::Play),
 	physics(),
 	sceneObjects(),
 	player(),
@@ -415,13 +415,13 @@ bool MinimalOgre::go(void)
 
 
  
-	menuTray = new OgreBites::SdkTrayManager("Main Menu", mWindow, mInputContext, this); 
-	menuTray->createLabel (OgreBites::TL_CENTER, "Title", "3D POOL!", 400);
-	menuTray->createLabel (OgreBites::TL_CENTER, "size", "How Large would you like the field?", 400);
-	menuTray->createTextBox (OgreBites::TL_CENTER, "xinput", "X: ", 400, 20);
+	// menuTray = new OgreBites::SdkTrayManager("Main Menu", mWindow, mInputContext, this); 
+	// menuTray->createLabel (OgreBites::TL_CENTER, "Title", "3D POOL!", 400);
+	// menuTray->createLabel (OgreBites::TL_CENTER, "size", "How Large would you like the field?", 400);
+	// menuTray->createTextBox (OgreBites::TL_CENTER, "xinput", "X: ", 400, 20);
 
 	
-	menuTray->showAll();
+	// menuTray->showAll();
     mRoot->addFrameListener(this);
 //-------------------------------------------------------------------------------------
     mRoot->startRendering();
