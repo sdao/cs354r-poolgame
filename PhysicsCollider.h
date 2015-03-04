@@ -9,6 +9,7 @@ protected:
   btCollisionShape* collisionShape;
   btDefaultMotionState* motionState;
   btRigidBody* rigidBody;
+  Physics* physics;
   bool isDynamic;
 
 public:
@@ -25,13 +26,13 @@ public:
    */
   PhysicsCollider(btCollisionShape* cs,
                   std::weak_ptr<GameObject> go,
-                  Physics& physics,
+                  Physics& phys,
                   float mass = 1.0f,
                   float friction = 20.0f,
                   bool trigger = false);
   virtual ~PhysicsCollider();
   void update(const UpdateInfo& info);
-  virtual void didCollide(const PhysicsCollider& other) const;
+  virtual void reportCollision(PhysicsCollider& other) const;
 
   /**
    * Applies a force with the given world-space vector to the collider.
@@ -43,5 +44,8 @@ public:
    * vector to the collider.
    */
   void applyWorldImpulse(const Ogre::Vector3& impulse);
+
+  void removeFromPhysics();
+  void addToPhysics(Physics& phys);
 
 };

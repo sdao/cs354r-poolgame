@@ -7,6 +7,6 @@ PhysicsBoxCollider::PhysicsBoxCollider(std::weak_ptr<GameObject> go,
                                        bool trigger)
   : PhysicsCollider(
       new btBoxShape(btVector3(dim.x * 0.5f, dim.y * 0.5f, dim.z * 0.5f)),
-      go, physics, mass, 20.0f, trigger
+      go, physics, mass, 40.0f, trigger
     ) {}
 

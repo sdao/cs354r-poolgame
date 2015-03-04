@@ -11,6 +11,6 @@ PhysicsSphereCollider::PhysicsSphereCollider(std::weak_ptr<GameObject> go,
                     go,
                     physics,
                     mass,
-                    20.0f,
+                    40.0f,
                     trigger) {}
 

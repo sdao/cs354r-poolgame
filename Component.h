@@ -6,6 +6,7 @@
 
 // Forward declarations.
 class GameObject;
+class PhysicsCollider;
 
 class Component {
 protected:
@@ -14,11 +15,12 @@ protected:
 public:
 	Component() : gameObject() {}
 	Component(std::weak_ptr<GameObject> go) : gameObject(go) {}
-	virtual void update(const UpdateInfo& info) = 0;
+	virtual void update(const UpdateInfo& info) {}
 	virtual ~Component() {}
 	std::weak_ptr<GameObject> getGameObject() const {
 		return gameObject;
 	}
+	virtual void didCollide(PhysicsCollider& collider) {}
 };
 
 #endif

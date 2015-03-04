@@ -10,7 +10,7 @@ PhysicsCollider::~PhysicsCollider() {
 
 PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
                                  std::weak_ptr<GameObject> go,
-                                 Physics& physics,
+                                 Physics& phys,
                                  float mass,
                                  float friction,
                                  bool trigger)
@@ -38,6 +38,10 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
                                                   collisionShape,
                                                   localInertia);
   rbInfo.m_friction = friction;
+  rbInfo.m_rollingFriction = friction;
+  rbInfo.m_linearDamping = 0.3f;
+  rbInfo.m_angularDamping = 0.3f;
+  rbInfo.m_restitution = 0.5f;
   rigidBody = new btRigidBody(rbInfo);
   rigidBody->setUserPointer(this);
   if (!isDynamic) {
@@ -50,12 +54,14 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
     rigidBody->setCollisionFlags(rigidBody->getCollisionFlags()
       | btCollisionObject::CF_NO_CONTACT_RESPONSE);
   }
-  physics.getDynamicsWorld()->addRigidBody(rigidBody);
+
+  addToPhysics(phys);
 }
 
-void PhysicsCollider::didCollide(const PhysicsCollider& other) const {
+void PhysicsCollider::reportCollision(PhysicsCollider& other) const {
   std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
   gameObjectPtr->didCollide(other);
+  //std::cout << "---ouch---\n";
 }
 
 void PhysicsCollider::update(const UpdateInfo& info) {
@@ -84,5 +90,18 @@ void PhysicsCollider::applyWorldForce(const Ogre::Vector3& force) {
 
 void PhysicsCollider::applyWorldImpulse(const Ogre::Vector3& impulse) {
   rigidBody->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
+}
+
+void PhysicsCollider::removeFromPhysics() {
+  if (physics) {
+    physics->getDynamicsWorld()->removeRigidBody(rigidBody);
+    physics = nullptr;
+  }
+}
+
+void PhysicsCollider::addToPhysics(Physics& phys) {
+  phys.getDynamicsWorld()->addRigidBody(rigidBody);
+  physics = &phys;
+  //rigidBody->setGravity(btVector3(0, 0, 0));
 }
 

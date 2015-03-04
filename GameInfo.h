@@ -136,7 +136,7 @@ void setPositions(std::shared_ptr<GameInfo> gameinfo, const std::vector<std::sha
 			ballIndex++;
 		}
 	}
-	std::cout<<"ball index: " << ballIndex << std::endl;
+	//std::cout<<"ball index: " << ballIndex << std::endl;
 }
 
 //void getPositions
