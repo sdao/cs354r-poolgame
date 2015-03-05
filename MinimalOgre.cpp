@@ -409,14 +409,11 @@ bool MinimalOgre::go(void)
     Ogre::StringVector scores;
     scores.push_back("Score:");
     scores.push_back("Balls Remaining:");
-    scores.push_back("Time Left:");
     scores.push_back("Hit Strength:");
 
     scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 400, scores);
-    scoreboard->setParamValue(0, "10000 You're Awesome!");
-    scoreboard->setParamValue(1, "0 Good Job!");
-    scoreboard->setParamValue(2, "Infinite!");
-    scoreboard->setParamValue(3, "Low");
+    scoreboard->setParamValue(0, "0");
+    scoreboard->setParamValue(2, "Low");
 
 
  
@@ -608,7 +605,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 		    if (arg.key == OIS::KC_SPACE)
 		    {
 	    	    if (player && player->isInState(PlayerState::Hit)) {
-                    std::string strength = scoreboard->getParamValue(3);
+                    std::string strength = scoreboard->getParamValue(2);
 		            auto cueController = player->getComponent<CueStickController>();
 		            cueController->hit(strength);
 	  	    		//playerpState = PlayerState::Wait;
@@ -618,17 +615,17 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
             if (arg.key == OIS::KC_RIGHT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {
-                    if (scoreboard->getParamValue(3) == "Low")
+                    if (scoreboard->getParamValue(2) == "Low")
                     {
-                        scoreboard->setParamValue(3, "Medium");
+                        scoreboard->setParamValue(2, "Medium");
                     }
-                    else if (scoreboard->getParamValue(3) == "Medium")
+                    else if (scoreboard->getParamValue(2) == "Medium")
                     {
-                        scoreboard->setParamValue(3, "High");
+                        scoreboard->setParamValue(2, "High");
                     }
-                    else if (scoreboard->getParamValue(3) == "High")
+                    else if (scoreboard->getParamValue(2) == "High")
                     {
-                        scoreboard->setParamValue(3, "Low");
+                        scoreboard->setParamValue(2, "Low");
                     }
                     //playerpState = PlayerState::Wait;
                 }
@@ -637,17 +634,17 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
             if (arg.key == OIS::KC_LEFT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {
-                    if (scoreboard->getParamValue(3) == "Low")
+                    if (scoreboard->getParamValue(2) == "Low")
                     {
-                        scoreboard->setParamValue(3, "High");
+                        scoreboard->setParamValue(2, "High");
                     }
-                    else if (scoreboard->getParamValue(3) == "Medium")
+                    else if (scoreboard->getParamValue(2) == "Medium")
                     {
-                        scoreboard->setParamValue(3, "Low");
+                        scoreboard->setParamValue(2, "Low");
                     }
-                    else if (scoreboard->getParamValue(3) == "High")
+                    else if (scoreboard->getParamValue(2) == "High")
                     {
-                        scoreboard->setParamValue(3, "Medium");
+                        scoreboard->setParamValue(2, "Medium");
                     }
                     //playerpState = PlayerState::Wait;
                 }
