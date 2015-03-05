@@ -42,9 +42,16 @@ void CueStickController::update(const UpdateInfo& update) {
   //std::cout << "NADA :(\n";
 }
 
-void CueStickController::hit() {
+void CueStickController::hit(std::string strength) {
   std::shared_ptr<GameObject> gameObjPtr = gameObject.lock();
   std::shared_ptr<GameObject> currentObjPtr = currentObj.lock();
+  float power;
+  if (strength == "Low")
+    power = 1600.0;
+  else if (strength == "Medium")
+    power = 3200.0;
+  else if (strength == "High")
+    power = 4800.0;
   if (currentObjPtr) {
     auto collider = currentObjPtr->getComponent<PhysicsCollider>();
     if (collider) {
@@ -54,7 +61,7 @@ void CueStickController::hit() {
         gameObjPtr->localToWorldPosition(Ogre::Vector3::UNIT_Y);
       Ogre::Vector3 dirGoToTarget = (targetWorldPosition - goWorldPosition)
         .normalisedCopy();
-      collider->applyWorldImpulse(dirGoToTarget * 1600.0f);
+      collider->applyWorldImpulse(dirGoToTarget * power);
       //std::cout << dirGoToTarget.x << "  << dirGoToTarget.y << " " << dirGoToTarget.z << "\n";
       auto sound = gameObjPtr->getComponent<ObjectSound>();
       if (sound) {

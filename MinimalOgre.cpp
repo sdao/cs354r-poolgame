@@ -384,6 +384,7 @@ bool MinimalOgre::go(void)
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
     mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     mTrayMgr->hideCursor();
+    mTrayMgr->hideFrameStats();
 
 
     // create a params panel for displaying sample details
@@ -409,12 +410,13 @@ bool MinimalOgre::go(void)
     scores.push_back("Score:");
     scores.push_back("Balls Remaining:");
     scores.push_back("Time Left:");
+    scores.push_back("Hit Strength:");
 
     scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 400, scores);
     scoreboard->setParamValue(0, "10000 You're Awesome!");
     scoreboard->setParamValue(1, "0 Good Job!");
     scoreboard->setParamValue(2, "Infinite!");
-    scoreboard->hide();
+    scoreboard->setParamValue(3, "Low");
 
 
  
@@ -606,11 +608,50 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 		    if (arg.key == OIS::KC_SPACE)
 		    {
 	    	    if (player && player->isInState(PlayerState::Hit)) {
+                    std::string strength = scoreboard->getParamValue(3);
 		            auto cueController = player->getComponent<CueStickController>();
-		            cueController->hit();
+		            cueController->hit(strength);
 	  	    		//playerpState = PlayerState::Wait;
         		}
     		}
+
+            if (arg.key == OIS::KC_RIGHT)
+            {
+                if (player && player->isInState(PlayerState::Hit)) {
+                    if (scoreboard->getParamValue(3) == "Low")
+                    {
+                        scoreboard->setParamValue(3, "Medium");
+                    }
+                    else if (scoreboard->getParamValue(3) == "Medium")
+                    {
+                        scoreboard->setParamValue(3, "High");
+                    }
+                    else if (scoreboard->getParamValue(3) == "High")
+                    {
+                        scoreboard->setParamValue(3, "Low");
+                    }
+                    //playerpState = PlayerState::Wait;
+                }
+            }
+
+            if (arg.key == OIS::KC_LEFT)
+            {
+                if (player && player->isInState(PlayerState::Hit)) {
+                    if (scoreboard->getParamValue(3) == "Low")
+                    {
+                        scoreboard->setParamValue(3, "High");
+                    }
+                    else if (scoreboard->getParamValue(3) == "Medium")
+                    {
+                        scoreboard->setParamValue(3, "Low");
+                    }
+                    else if (scoreboard->getParamValue(3) == "High")
+                    {
+                        scoreboard->setParamValue(3, "Medium");
+                    }
+                    //playerpState = PlayerState::Wait;
+                }
+            }
 
 			break;
 		case Pause:
