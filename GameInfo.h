@@ -124,12 +124,14 @@ GameInfo SetupField(float length, float width, float height, Ogre::SceneManager*
 }
 
 void setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::shared_ptr<GameObject> >& sceneObjects){
+	int startscore = gameinfo.get()->ballPositions.size();
 	gameinfo.get()->ballPositions.clear();
 	for( auto go : sceneObjects ){
 		if(go.get()->getTag() == 0x2){
 			gameinfo.get()->ballPositions.push_back(go.get()->getWorldPosition());
 		}
 	}
+	gameinfo.get()->scoreP1 += startscore - gameinfo.get()->ballPositions.size();
 }
 
 //void getPositions

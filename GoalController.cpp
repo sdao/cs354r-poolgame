@@ -3,8 +3,6 @@
 #include <iostream>
 
 void GoalController::didCollide(PhysicsCollider& collider) {
-  std::cout << "DIE FOUL BEAST!\n";
-  
   // Hide the other object's geometry.
   auto otherGo = collider.getGameObject();
   auto otherGoPtr = otherGo.lock();
@@ -12,6 +10,9 @@ void GoalController::didCollide(PhysicsCollider& collider) {
     otherGoPtr->setTag(0x0);
     otherGoPtr->setVisible(false);
     collider.removeFromPhysics();
+    std::cout << "!!!!!!!!!!!\n";
+    std::cout << "wow, you got one in\n";
+    std::cout << "!!!!!!!!!!!\n";
   } else if (otherGoPtr->getTag() == 0x1 /* cue ball */) {
     std::cout << "***********\n";
     std::cout << "you suck   \n";

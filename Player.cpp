@@ -8,8 +8,8 @@ Player::Player(Ogre::SceneManager* mSceneMgr, Ogre::Camera* mCamera, const std::
 	mCamera->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(90)));
 	node->createChildSceneNode("ChildCamera")->attachObject(mCamera);
 	node->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(-90)));
-	inputKeys = new bool[4];
-	for(int i = 0 ; i < 4 ; i++){
+	inputKeys = new bool[6];
+	for(int i = 0 ; i < 6 ; i++){
 		inputKeys[i] =  false;
 	}
 }
@@ -36,6 +36,12 @@ void Player::update(){
 	if(inputKeys[3]){
 		moveDirection += Ogre::Vector3::UNIT_X;
 	}
+	if(inputKeys[4]){//up
+		moveDirection += Ogre::Vector3::UNIT_Z;
+	}
+	if(inputKeys[5]){//up
+		moveDirection += Ogre::Vector3::NEGATIVE_UNIT_Z;
+	}
 
 	translate(moveDirection, Ogre::Node::TransformSpace::TS_LOCAL);
 }
@@ -53,6 +59,12 @@ void Player::getKeyPress(const OIS::KeyEvent& arg){
 	else if(arg.key == OIS::KC_D){
 		inputKeys[3] = true;
 	}
+	else if(arg.key == OIS::KC_E){
+		inputKeys[4] = true;
+	}
+	else if(arg.key == OIS::KC_Q){
+		inputKeys[5] = true;
+	}
 }
 
 void Player::getKeyRelease(const OIS::KeyEvent& arg){
@@ -68,6 +80,12 @@ void Player::getKeyRelease(const OIS::KeyEvent& arg){
 	else if(arg.key == OIS::KC_D){
 		inputKeys[3] = false;
 	}
+	else if(arg.key == OIS::KC_E){
+		inputKeys[4] = false;
+	}
+	else if(arg.key == OIS::KC_Q){
+		inputKeys[5] = false;
+	}
 }
 
 void Player::getMouseEvent(const OIS::MouseEvent& arg){
@@ -82,10 +100,6 @@ void Player::getMouseEvent(const OIS::MouseEvent& arg){
 	
 	//rot.z = 0.0f;
 	//node->setOrientation(rot);
-}
-
-void Player::setState(){
-
 }
 
 bool Player::isInState(PlayerState pstate) const {

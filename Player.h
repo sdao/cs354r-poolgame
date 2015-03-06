@@ -10,9 +10,9 @@
 class Player : public GameObject {
 	protected:
 		PlayerState pState;
-		bool* inputKeys;
 
 	public:
+		bool* inputKeys;
 		Player(Ogre::SceneManager*, Ogre::Camera*, const std::string&, const std::string&);
 		void update();
 		void getKeyPress(const OIS::KeyEvent&);
