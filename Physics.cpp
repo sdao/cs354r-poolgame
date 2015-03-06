@@ -114,6 +114,12 @@ void Physics::disableGravity() {
 void Physics::enableGravity() {
   gravEnabled = true;
   dynamicsWorld->setGravity(btVector3(0, -myGrav, 0));
+
+  auto allObjs = dynamicsWorld->getCollisionObjectArray();
+
+  for (int i = 0; i < allObjs.size(); ++i) {
+    allObjs[i]->activate();
+  }
 }
 
 bool Physics::isGravityEnabled() const {

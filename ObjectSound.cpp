@@ -102,11 +102,8 @@ void ObjectSound::didCollide(PhysicsCollider& collider) {
       collision(1);
     }
   } 
-  else if (otherObjPtr->getTag() != 0x4 ||
-           (collider.getPhysicsWorld()
-            && !collider.getPhysicsWorld()->isGravityEnabled())) {
+  else {
     // Other object not a ball, so we must play a sound.
-    // ONLY IF THE OTHER OBJECT IS NOT THE GROUND OR GRAVITY IS DISABLED.
     collision(1);
   }
 }
