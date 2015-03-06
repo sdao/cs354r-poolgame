@@ -1,6 +1,10 @@
 #include "ObjectSound.h"
 #include <iostream>
-ObjectSound::ObjectSound() {
+#include "PhysicsCollider.h"
+
+ObjectSound::ObjectSound(std::weak_ptr<GameObject> go)
+  : Component(go)
+{
 	//Initialize SDL
     if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 )
     {
@@ -56,5 +60,19 @@ void ObjectSound::collision()
 
 void ObjectSound::update(const UpdateInfo& info) {
     //Mix_PlayChannel( -1, bounce, 0 );
+}
+
+void ObjectSound::didCollide(PhysicsCollider& collider) {
+  auto thisObjPtr = getGameObject().lock();
+  auto otherObjPtr = collider.getGameObject().lock();
+  if (otherObjPtr->getTag() == 0x1 || otherObjPtr->getTag() == 0x2) {
+    // Other object is a ball. Only one of us should play the sound.
+    if (thisObjPtr->getRandId() > otherObjPtr->getRandId()) {
+      collision();
+    }
+  } else {
+    // Other object not a ball, so we must play a sound.
+    collision();
+  }
 }
 

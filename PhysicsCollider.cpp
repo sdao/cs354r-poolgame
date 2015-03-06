@@ -14,7 +14,9 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
                                  float mass,
                                  float friction,
                                  bool trigger)
-  : collisionShape(cs), isDynamic(mass > 0.0f), Component(go)
+  : collisionShape(cs), isDynamic(mass > 0.0f), isTrigger(trigger),
+    Component(go),
+    collisionTimer(0.0f), inCollision(false)
 {
   // Need to take temporary ownership of go.
   std::shared_ptr<GameObject> gameObjPtr = go.lock();
@@ -58,10 +60,16 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
   addToPhysics(phys);
 }
 
-void PhysicsCollider::reportCollision(PhysicsCollider& other) const {
-  std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
-  gameObjectPtr->didCollide(other);
-  //std::cout << "---ouch---\n";
+void
+PhysicsCollider::reportCollision(PhysicsCollider& other, float time) {
+  if (!inCollision || isTrigger) {
+    // Collision started.
+    std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
+    gameObjectPtr->didCollide(other);
+    inCollision = true;
+  }
+  
+  collisionTimer = COLLISION_REPORT_DELAY;
 }
 
 void PhysicsCollider::update(const UpdateInfo& info) {
@@ -81,6 +89,12 @@ void PhysicsCollider::update(const UpdateInfo& info) {
     Ogre::Vector3 cur = gameObjectPtr->getWorldPosition();
     oldTransform.setOrigin(btVector3(cur.x, cur.y, cur.z));
     motionState->setWorldTransform(oldTransform);
+  }
+
+  if (collisionTimer > 0.0f) {
+    collisionTimer -= info.deltaTime;
+  } else {
+    inCollision = false;
   }
 }
 
@@ -104,6 +118,10 @@ void PhysicsCollider::removeFromPhysics() {
 void PhysicsCollider::addToPhysics(Physics& phys) {
   phys.getDynamicsWorld()->addRigidBody(rigidBody);
   physics = &phys;
-  //rigidBody->setGravity(btVector3(0, 0, 0));
+}
+
+float PhysicsCollider::getVelocity() const {
+  btVector3 v = rigidBody->getLinearVelocity();
+  return v.length();
 }
 

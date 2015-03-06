@@ -12,6 +12,7 @@ class Physics {
   btCollisionDispatcher* dispatcher;
   btSequentialImpulseConstraintSolver* solver;
   btDiscreteDynamicsWorld* dynamicsWorld;
+  float accumTime;
 
 public:
   /**

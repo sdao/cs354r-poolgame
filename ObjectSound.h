@@ -7,9 +7,10 @@
 
 class ObjectSound : public Component {
 public:  
-	ObjectSound();
+	ObjectSound(std::weak_ptr<GameObject> go);
 	virtual ~ObjectSound();
 	virtual void update(const UpdateInfo& info) override;
+	virtual void didCollide(PhysicsCollider& collider) override;
 	bool loadMedia();
 	void collision();
 	void closeMedia();
