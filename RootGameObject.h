@@ -6,11 +6,14 @@
 #include <OgreVector3.h>
 #include <OgreMath.h>
 
-class RootGameObject{
+class RootGameObject {
+	static int globalCounter;
+	static int createRandId();
 
 	protected:
 		Ogre::SceneNode* node;
 		int tag;
+		int randId;
 
 	public:
 		RootGameObject(Ogre::SceneManager*, const std::string);
@@ -41,6 +44,7 @@ class RootGameObject{
 
 		void setTag(int newTag);
 		int getTag() const;
+		int getRandId() const;
 };
 
 #endif

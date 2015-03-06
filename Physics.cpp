@@ -1,6 +1,7 @@
 #include "Physics.h"
 #include "PhysicsCollider.h"
 #include <iostream>
+#include <chrono>
 
 Physics::Physics(float gravity)
   : broadphase(new btDbvtBroadphase()),
@@ -9,7 +10,8 @@ Physics::Physics(float gravity)
     solver(new btSequentialImpulseConstraintSolver()),
     dynamicsWorld(new btDiscreteDynamicsWorld(
       dispatcher, broadphase, solver, collisionConfiguration
-    ))
+    )),
+    accumTime(0.0f)
 { 
   dynamicsWorld->setGravity(btVector3(0, -gravity, 0));
 }
@@ -23,11 +25,12 @@ Physics::~Physics() {
 }
 
 void Physics::stepSimulation(float timestep) {
+using namespace std::chrono;
   dynamicsWorld->stepSimulation(timestep, 10);
-  
+  accumTime += timestep;
+
   // Handle collisions.
   int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
-  //std::cout << "manifolds" << numManifolds <<  "\n";
   for (int i = 0; i < numManifolds; i++)
   {
       btPersistentManifold* contactManifold =
@@ -37,13 +40,18 @@ void Physics::stepSimulation(float timestep) {
       const btCollisionObject* obB =
         static_cast<const btCollisionObject*>(contactManifold->getBody1());
 
-      PhysicsCollider* colliderA =
-        static_cast<PhysicsCollider*>(obA->getUserPointer());
-      PhysicsCollider* colliderB =
-        static_cast<PhysicsCollider*>(obB->getUserPointer());
-
-      colliderA->reportCollision(*colliderB);
-      colliderB->reportCollision(*colliderA);
+      if (obA->isActive() || obB->isActive()) {
+        PhysicsCollider* colliderA =
+          static_cast<PhysicsCollider*>(obA->getUserPointer());
+        PhysicsCollider* colliderB =
+          static_cast<PhysicsCollider*>(obB->getUserPointer());
+        
+        if (colliderA->getVelocity() > 1.0f
+            || colliderB->getVelocity() > 1.0f) {
+          colliderA->reportCollision(*colliderB, accumTime);
+          colliderB->reportCollision(*colliderA, accumTime);
+        }
+      }
   }
 }
 

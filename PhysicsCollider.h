@@ -11,6 +11,10 @@ protected:
   btRigidBody* rigidBody;
   Physics* physics;
   bool isDynamic;
+  bool isTrigger;
+  float collisionTimer;
+  bool inCollision;
+  static constexpr float COLLISION_REPORT_DELAY = 0.2f;
 
 public:
   /**
@@ -32,7 +36,7 @@ public:
                   bool trigger = false);
   virtual ~PhysicsCollider();
   void update(const UpdateInfo& info);
-  virtual void reportCollision(PhysicsCollider& other) const;
+  virtual void reportCollision(PhysicsCollider& other, float time);
 
   /**
    * Applies a force with the given world-space vector to the collider.
@@ -47,5 +51,6 @@ public:
 
   void removeFromPhysics();
   void addToPhysics(Physics& phys);
+  float getVelocity() const;
 
 };

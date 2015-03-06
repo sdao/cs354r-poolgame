@@ -1,6 +1,9 @@
 #include "RootGameObject.h"
+#include <random>
 
-RootGameObject::RootGameObject(Ogre::SceneManager* sceneMgr, const std::string name) : tag(0) {
+int RootGameObject::globalCounter = 0;
+
+RootGameObject::RootGameObject(Ogre::SceneManager* sceneMgr, const std::string name) : tag(0), randId(createRandId()) {
 	node = sceneMgr->getRootSceneNode()->createChildSceneNode(name + "node");
 }
 
@@ -74,5 +77,14 @@ void RootGameObject::setTag(int newTag) {
 
 int RootGameObject::getTag() const {
 	return tag;
+}
+
+int RootGameObject::createRandId() {
+	++globalCounter;
+	return globalCounter;
+}
+
+int RootGameObject::getRandId() const {
+	return randId;
 }
 

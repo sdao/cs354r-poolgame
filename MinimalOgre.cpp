@@ -322,6 +322,8 @@ bool MinimalOgre::go(void)
                 	i == 0 ? 1.5f : 1.0f /* cue ball heavier */
 		);
 		sph->addComponent(sphCollider);
+		auto ballSound = std::make_shared<ObjectSound>(sph);
+		sph->addComponent(ballSound);
 		gameinfo->ballPositions.push_back(sph->getWorldPosition());
 		sceneObjects.push_back(sph);
 	}
@@ -344,7 +346,7 @@ bool MinimalOgre::go(void)
 	player->addComponent(cueController);
 
 	// putting audio controller on player
-	auto soundController = std::make_shared<ObjectSound>();
+	auto soundController = std::make_shared<ObjectSound>(player);
 	player->addComponent(soundController);
 
     // Set ambient light
