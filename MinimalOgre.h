@@ -63,9 +63,8 @@ protected:
 	OgreBites::InputContext mInputContext;
     OgreBites::SdkTrayManager* mTrayMgr;
     OgreBites::SdkCameraMan* mCameraMan;      // basic camera controller
-    OgreBites::ParamsPanel* mDetailsPanel;    // sample details panel
     OgreBites::ParamsPanel* scoreboard;    // displays scores
-    OgreBites::Label* pauseLabel;    // Label saying Pause
+    OgreBites::Label* pauseLabel;          // Label saying Pause
     bool mCursorWasVisible;                   // was cursor visible before dialog appeared
     bool mShutDown;
  

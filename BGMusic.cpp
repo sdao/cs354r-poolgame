@@ -28,7 +28,6 @@ BGMusic::~BGMusic() {
 	closeMedia();
 }
 
-
 bool BGMusic::loadMedia()
 {
 
@@ -42,6 +41,22 @@ bool BGMusic::loadMedia()
     }
 
     return success;
+}
+
+void BGMusic::playOrPause()
+{
+    //If the music is paused
+    if( Mix_PausedMusic() == 1 )
+    {
+        //Resume the music
+        Mix_ResumeMusic();
+    }
+    //If the music is playing
+    else
+    {
+        //Pause the music
+        Mix_PauseMusic();
+    }
 }
 
 void BGMusic::closeMedia()

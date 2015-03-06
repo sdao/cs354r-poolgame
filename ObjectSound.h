@@ -12,7 +12,7 @@ public:
 	virtual void update(const UpdateInfo& info) override;
 	virtual void didCollide(PhysicsCollider& collider) override;
 	bool loadMedia();
-	void collision();
+	void collision(int val);
 	void closeMedia();
 
 protected:	
@@ -24,4 +24,6 @@ private:
 
 	//The sound effects that will be used
 	Mix_Chunk *bounce = NULL;
+	Mix_Chunk *scratch = NULL;
+	Mix_Chunk *score = NULL;
 };

@@ -65,7 +65,7 @@ void CueStickController::hit(std::string strength) {
       //std::cout << dirGoToTarget.x << "  << dirGoToTarget.y << " " << dirGoToTarget.z << "\n";
       auto sound = gameObjPtr->getComponent<ObjectSound>();
       if (sound) {
-        sound->collision();
+        sound->collision(1);
       }
     }
   }

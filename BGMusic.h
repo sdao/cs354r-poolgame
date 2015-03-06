@@ -13,6 +13,7 @@ public:
 	virtual void update(const UpdateInfo& info) override;
 	bool loadMedia();
 	void closeMedia();
+	void playOrPause();
 
 protected:	
 	int x = 0;

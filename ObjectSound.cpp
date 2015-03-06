@@ -40,6 +40,22 @@ bool ObjectSound::loadMedia()
         success = false;
     }
 
+    //Load sound effects
+    scratch = Mix_LoadWAV( "scratch.wav" );
+    if( bounce == NULL )
+    {
+        printf( "Failed to load bounce sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+        success = false;
+    }
+
+    //Load sound effects
+    score = Mix_LoadWAV( "score.wav" );
+    if( bounce == NULL )
+    {
+        printf( "Failed to load bounce sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+        success = false;
+    }
+
     return success;
 }
 
@@ -48,14 +64,29 @@ void ObjectSound::closeMedia()
     //Free the sound effects
     Mix_FreeChunk( bounce );
     bounce = NULL;
+    Mix_FreeChunk( score );
+    score = NULL;
+    Mix_FreeChunk( scratch );
+    scratch = NULL;
 
     Mix_Quit();
     SDL_Quit();
 }
 
-void ObjectSound::collision()
+void ObjectSound::collision(int val)
 {
-    Mix_PlayChannel( -1, bounce, 0 );
+    switch (val)
+    {
+        case 1: 
+        Mix_PlayChannel( -1, bounce, 0 );
+        break;
+        case 2: 
+        Mix_PlayChannel( -1, score, 0 );
+        break;
+        case 3: 
+        Mix_PlayChannel( -1, scratch, 0 );
+        break;
+    }
 }
 
 void ObjectSound::update(const UpdateInfo& info) {
@@ -68,11 +99,12 @@ void ObjectSound::didCollide(PhysicsCollider& collider) {
   if (otherObjPtr->getTag() == 0x1 || otherObjPtr->getTag() == 0x2) {
     // Other object is a ball. Only one of us should play the sound.
     if (thisObjPtr->getRandId() > otherObjPtr->getRandId()) {
-      collision();
+      collision(1);
     }
-  } else {
+  } 
+  else {
     // Other object not a ball, so we must play a sound.
-    collision();
+    collision(1);
   }
 }
 
