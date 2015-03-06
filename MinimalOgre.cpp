@@ -326,10 +326,11 @@ bool MinimalOgre::go(void)
 		sph->addComponent(sphCollider);
 		auto ballSound = std::make_shared<ObjectSound>(sph);
 		sph->addComponent(ballSound);
-		gameinfo->ballPositions.push_back(sph->getWorldPosition());
+		if(sph->getTag() == 0x2)
+			gameinfo->ballPositions.push_back(sph->getWorldPosition());
 		sceneObjects.push_back(sph);
 	}
-
+	
 	//create player
 	player = std::make_shared<Player>(mSceneMgr,
 					  mCamera,
@@ -649,6 +650,9 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
             {
                 state = Pause;
                 pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Pause", "GAME PAUSED: Unpause by pressing 'P'");
+		for(int i = 0; i < 6; i++){
+			player.get()->inputKeys[i] = false;
+		}
             }
 
 			break;
