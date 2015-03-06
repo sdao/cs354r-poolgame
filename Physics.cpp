@@ -107,19 +107,22 @@ Physics::rayCastAll(const Ogre::Vector3& start,
 }
 
 void Physics::disableGravity() {
+  std::cout << "disable\n";
   gravEnabled = false;
   dynamicsWorld->setGravity(btVector3(0, 0, 0));
 }
 
 void Physics::enableGravity() {
+  std::cout << "enable\n";
   gravEnabled = true;
-  dynamicsWorld->setGravity(btVector3(0, -myGrav, 0));
 
   auto allObjs = dynamicsWorld->getCollisionObjectArray();
-
   for (int i = 0; i < allObjs.size(); ++i) {
     allObjs[i]->activate();
   }
+
+  dynamicsWorld->setGravity(btVector3(0, -myGrav, 0));
+  stepSimulation(0.001);
 }
 
 bool Physics::isGravityEnabled() const {

@@ -1,0 +1,22 @@
+Team 12 - Lode Runners
+Steven Dao, Nishant Gupta, Josan Munoz
+
+Final Project Report
+
+	The project went little smoother than expected in some aspects and more 
+difficult in other areas. The physics, which was the main focus of the game, 
+turned out to go alot easier than expected. As we kept implamenting features 
+and mechanics, the physics was the great wall we had to get over each time but 
+never took longer than 1 sit-down session. Another aspect that went really well 
+was audio. None of us had experience in loading in and playing audio to a game 
+engine, but after the first or second iteration of audio, the background music 
+and some sound effects were in. The user interface from SDKTrays became one of 
+the more frustrating issues to deal with. This resulted in us scoping back to 
+a simpler implamentation of hit force. Getting in user input with OIS and 
+using the StateMachine implamentation for game and player states was a smaller 
+success we came across.
+	Some bugs still exist in the game, one of which is where while using
+high hit strength, the player can hit the ball out of the playing field through
+the walls. Another issue we had is constant sound effect noise when a ball is 
+close to a wall enough to touch the wall. The sound would play over and over 
+again albeit not explicitly bouncing against the wall.
