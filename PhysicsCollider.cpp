@@ -63,7 +63,7 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
 void
 PhysicsCollider::reportCollision(PhysicsCollider& other, float time) {
   int otherId = other.getGameObject().lock()->getRandId();
-  if (!inCollision || otherId != collisionId) {
+  if (!inCollision || (trigger && otherId != collisionId)) {
     // Collision started.
     std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
     gameObjectPtr->didCollide(other);
