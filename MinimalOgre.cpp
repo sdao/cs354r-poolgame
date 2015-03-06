@@ -281,14 +281,15 @@ bool MinimalOgre::go(void)
 		auto goal = std::make_shared<Ball>(mSceneMgr,
 			std::string("g") + Ogre::StringConverter::toString(i),
 			100.0f,
-			location);
+			location,
+			BallType::BALL_GOAL);
 		goal->setMaterial("Examples/BeachStones");
 		auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
 			goal,
 			physics,
 			90.0f,
 			0.0f,
-   	             true
+   	             	true
 		);
 		auto goalController = std::make_shared<GoalController>();
 		goal->addComponent(triggerCollider);
@@ -309,8 +310,8 @@ bool MinimalOgre::go(void)
 			Ogre::Vector3(0 + xzDist(rng),
 				      yDist(rng),
 				      -100.0f + xzDist(rng)),
-			i == 0 /* make 1st ball a cue ball */
-		);
+                        /* make 1st ball a cue ball */
+			i == 0 ? BallType::BALL_CUE : BallType::BALL_POOL		);
 		if (i == 0) {
 			sph->setMaterial("Examples/Chrome");
 		} else {

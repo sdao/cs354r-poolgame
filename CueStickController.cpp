@@ -31,7 +31,7 @@ void CueStickController::update(const UpdateInfo& update) {
       currentObj = std::weak_ptr<GameObject>();
     }
 
-    if (colliderObjPtr->getTag() & 0x1 == 1) {
+    if (colliderObjPtr->getTag() == 0x1) {
       //std::cout << "saw a ball!\n";
       currentObj = colliderObj;
       colliderObjPtr->setMaterial("Examples/GrassFloor");

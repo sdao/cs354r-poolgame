@@ -2,6 +2,12 @@
 
 #include "GameObject.h"
 
+enum class BallType {
+  BALL_POOL = 0,
+  BALL_CUE = 1,
+  BALL_GOAL = 2
+};
+
 class Ball : public GameObject {
   float radius;
 
@@ -15,6 +21,6 @@ public:
        const std::string& name,
        float radius,
        const Ogre::Vector3& position,
-       bool isCueBall = false);
+       BallType type = BallType::BALL_POOL);
 };
 
