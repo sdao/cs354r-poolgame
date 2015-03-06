@@ -166,101 +166,7 @@ bool MinimalOgre::go(void)
 	Ogre::MeshManager::getSingletonPtr()->createPlane("wallMesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 100, 100, 5, 5, true, 1, 1.0 , 1.0, Ogre::Vector3::UNIT_X);
 
 	gameinfo = std::make_shared<GameInfo>( SetupField(1000, 1000, 1000, mSceneMgr, physics, sceneObjects));
-	/*
-	for(int i = 0; i < 6; i++){
-		Ogre::Entity* wall = mSceneMgr->createEntity("wallEntity" + i , "wallMesh");
-		wall->setMaterialName("Examples/GrassFloor");
-		wall->setCastShadows(false);
-
-		const std::string wallEntityName = "wallEntity";
-		auto go = std::make_shared<GameObject>(mSceneMgr, wall,
-			wallEntityName + Ogre::StringConverter::toString(i));
-		//Ogre::SceneNode* wallnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("wallEntity" + i);
-		//wallnode->attachObject(wall);
-		
-		// TODO: BAD! VERY BAD!
-		std::shared_ptr<PhysicsBoxCollider> box;
-
-		switch(i){
-			case 0:
-				go->translate(0, -150, -100);
-				box = std::make_shared<PhysicsBoxCollider>(
-					go,
-					physics,
-					Ogre::Vector3(300.0f, 1.0f, 300.0f),
-					0.0f
-				);
-
-				go->addComponent(box);
-				break;
-			case 1:
-				go->translate(0, 150, -100);
-				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(180)));
-                box = std::make_shared<PhysicsBoxCollider>(
-                    go,
-                    physics,
-                    Ogre::Vector3(300.0f, 1.0f, 300.0f),
-                    0.0f
-                );
-
-                go->addComponent(box);
-				break;
-			case 2:
-				go->translate(150, 0, -100);
-				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(90)));
-                box = std::make_shared<PhysicsBoxCollider>(
-                    go,
-                    physics,
-                    Ogre::Vector3(1.0f, 300.0f, 300.0f),
-                    0.0f
-                );
-
-                go->addComponent(box);
-				break;
-			case 3:
-				go->translate(-150, 0, -100);
-				go->rotate(Ogre::Vector3::UNIT_Z, Ogre::Radian(Ogre::Degree(270)));
-                box = std::make_shared<PhysicsBoxCollider>(
-                    go,
-                    physics,
-                    Ogre::Vector3(1.0f, 300.0f, 300.0f),
-                    0.0f
-                );
-
-                go->addComponent(box);
-				break;
-			case 4:
-				go->translate(0, 0, -250);
-				go->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(90)));
-                box = std::make_shared<PhysicsBoxCollider>(
-                    go,
-                    physics,
-                    Ogre::Vector3(300.0f, 300.0f, 1.0f),
-                    0.0f
-                );
-
-                go->addComponent(box);
-				break;
-			case 5:
-				go->translate(0, 0, 50);
-				go->rotate(Ogre::Vector3::UNIT_X, Ogre::Radian(Ogre::Degree(270)));
-                box = std::make_shared<PhysicsBoxCollider>(
-                    go,
-                    physics,
-                    Ogre::Vector3(300.0f, 300.0f, 1.0f),
-                    0.0f
-                );
-
-                go->addComponent(box);
-				break;
-			default:
-				break;
-		}
-
-		sceneObjects.push_back(go);
-	}
-	*/
-
+	
 	//create Pockets
 	for (int i = 0; i < 8; i++) {
 		Ogre::Vector3 location;
@@ -320,7 +226,7 @@ bool MinimalOgre::go(void)
 			sph,
 			physics,
 			i == 0 ? 50.0f : 40.0f, /* collider radius */
-                	i == 0 ? 1.5f : 1.0f /* cue ball heavier */
+                	i == 0 ? 15.0f : 10.0f /* cue ball heavier */
 		);
 		sph->addComponent(sphCollider);
 		auto ballSound = std::make_shared<ObjectSound>(sph);
@@ -388,13 +294,17 @@ bool MinimalOgre::go(void)
     mTrayMgr->hideCursor();
 
     Ogre::StringVector scores;
-    scores.push_back("Score:");
-    scores.push_back("Balls Remaining:");
-    scores.push_back("Hit Strength:");
+    scores.push_back("Score");
+    scores.push_back("Balls Remaining");
+    scores.push_back("Hit Strength");
+    scores.push_back("Gravity");
+    scores.push_back("Music");
 
-    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 400, scores);
+    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 250, scores);
     scoreboard->setParamValue(0, "0");
     scoreboard->setParamValue(2, "Low");
+    scoreboard->setParamValue(3, "Off");
+    scoreboard->setParamValue(4, "On");
 
 
  
@@ -479,6 +389,10 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
     {
         auto music = player->getComponent<BGMusic>();
         music->playOrPause();
+        if (scoreboard->getParamValue(4) == "On")
+            scoreboard->setParamValue(4, "Off");
+        else
+            scoreboard->setParamValue(4, "On");
     }
     else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
     {
@@ -536,7 +450,21 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	  	    		// playerpState = PlayerState::Wait;
         		}
     		}
-
+		if (arg.key == OIS::KC_G) // toggle gravity
+		{
+			if (player && player->isInState(PlayerState::Hit)) {
+				bool isGravitating = physics.isGravityEnabled();
+				if (isGravitating) {
+       					physics.disableGravity();
+				} else {
+					physics.enableGravity();
+        		}
+                if (scoreboard->getParamValue(3) == "On")
+                    scoreboard->setParamValue(3, "Off");
+                else
+                    scoreboard->setParamValue(3, "On");
+			}
+    		}
             if (arg.key == OIS::KC_RIGHT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {

@@ -69,4 +69,7 @@ public:
   /** Gets the current scalar speed of the collider. */
   float getVelocity() const;
 
+  /** Gets the collider's physics world if it exists. */
+  Physics* getPhysicsWorld() const;
+
 };

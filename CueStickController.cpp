@@ -47,11 +47,11 @@ void CueStickController::hit(std::string strength) {
   std::shared_ptr<GameObject> currentObjPtr = currentObj.lock();
   float power;
   if (strength == "Low")
-    power = 1600.0;
+    power = 16000.0;
   else if (strength == "Medium")
-    power = 3200.0;
+    power = 32000.0;
   else if (strength == "High")
-    power = 4800.0;
+    power = 48000.0;
   if (currentObjPtr) {
     auto collider = currentObjPtr->getComponent<PhysicsCollider>();
     if (collider) {
