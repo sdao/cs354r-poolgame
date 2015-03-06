@@ -302,26 +302,7 @@ bool MinimalOgre::go(void)
     scores.push_back("Music");
 
     Ogre::StringVector cList;
-//     Controls
-// ================
-// w - move forward
-// a - move left
-// s - move backward
-// d - move right
 
-// q - move down
-// e - move up
-
-// left-arrow - right-scroll hit strength
-// right-arrow - left-scroll hit strength
-// spacebar - hit ball
-
-// c - toggle controls menu
-// o - toggle Score Board
-// m - toggle music
-// g - toggle gravity
-// p - pause/unpause game
-// r - cycles polygon rendering
     cList.push_back("Controls");
     cList.push_back("w");
     cList.push_back("a");
@@ -339,23 +320,34 @@ bool MinimalOgre::go(void)
     cList.push_back("p");
     cList.push_back("r");
 
-    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 250, scores);
+    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_TOPLEFT, "Scoreboard", 250, scores);
     scoreboard->setParamValue(1, "0");
     scoreboard->setParamValue(2, "Low");
     scoreboard->setParamValue(3, "Off");
     scoreboard->setParamValue(4, "On");
+    mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
+    scoreboard->show();
 
-    controls = mTrayMgr->createParamsPanel(OgreBites::TL_CENTER, "Controls", 250, cList);
+    controls = mTrayMgr->createParamsPanel(OgreBites::TL_CENTER, "Controls", 350, cList);
+    controls->setParamValue(1, "move forward");
+    controls->setParamValue(2, "move left");
+    controls->setParamValue(3, "move backward");
+    controls->setParamValue(4, "move right");
+    controls->setParamValue(5, "move down");
+    controls->setParamValue(6, "move up");
+    controls->setParamValue(7, "left-scroll hit strength");
+    controls->setParamValue(8, "right-scroll hit strength");
+    controls->setParamValue(9, "hit ball");
+    controls->setParamValue(10, "toggle controls menu");
+    controls->setParamValue(11, "toggle scoreboard");
+    controls->setParamValue(12, "toggle music");
+    controls->setParamValue(13, "toggle gravity");
+    controls->setParamValue(14, "pause/unpause game");
+    controls->setParamValue(15, "cycles polygon rendering");
+    mTrayMgr->moveWidgetToTray(controls, OgreBites::TL_CENTER, 0);
+    mTrayMgr->removeWidgetFromTray(controls);
+    controls->hide();
 
-
- 
-	// menuTray = new OgreBites::SdkTrayManager("Main Menu", mWindow, mInputContext, this); 
-	// menuTray->createLabel (OgreBites::TL_CENTER, "Title", "3D POOL!", 400);
-	// menuTray->createLabel (OgreBites::TL_CENTER, "size", "How Large would you like the field?", 400);
-	// menuTray->createTextBox (OgreBites::TL_CENTER, "xinput", "X: ", 400, 20);
-
-	
-	// menuTray->showAll();
     mRoot->addFrameListener(this);
 //-------------------------------------------------------------------------------------
     mRoot->startRendering();
@@ -424,6 +416,19 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
         {
             mTrayMgr->removeWidgetFromTray(scoreboard);
             scoreboard->hide();
+        }
+    }
+    else if (arg.key == OIS::KC_C)   // toggle visibility of scoreboard
+    {
+        if (controls->getTrayLocation() == OgreBites::TL_NONE)
+        {
+            mTrayMgr->moveWidgetToTray(controls, OgreBites::TL_CENTER, 0);
+            controls->show();
+        }
+        else
+        {
+            mTrayMgr->removeWidgetFromTray(controls);
+            controls->hide();
         }
     }
     else if (arg.key == OIS::KC_M)   // Toggle Background Music
