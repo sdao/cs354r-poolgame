@@ -41,6 +41,7 @@ MinimalOgre::MinimalOgre(void)
     mCameraMan(0),
     mDetailsPanel(0),
     scoreboard(0),
+    pauseLabel(0),
     mCursorWasVisible(false),
     mShutDown(false),
     mInputManager(0),
@@ -601,7 +602,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
                     std::string strength = scoreboard->getParamValue(2);
 		            auto cueController = player->getComponent<CueStickController>();
 		            cueController->hit(strength);
-	  	    		//playerpState = PlayerState::Wait;
+	  	    		// playerpState = PlayerState::Wait;
         		}
     		}
 
@@ -620,7 +621,6 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
                     {
                         scoreboard->setParamValue(2, "Low");
                     }
-                    //playerpState = PlayerState::Wait;
                 }
             }
 
@@ -639,12 +639,22 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
                     {
                         scoreboard->setParamValue(2, "Medium");
                     }
-                    //playerpState = PlayerState::Wait;
                 }
+            }
+
+            if (arg.key == OIS::KC_P)
+            {
+                state = Pause;
+                pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Pause", "GAME PAUSED: Unpause by pressing 'P'");
             }
 
 			break;
 		case Pause:
+            if (arg.key == OIS::KC_P)
+            {
+                state = Play;
+                mTrayMgr->destroyWidget(pauseLabel);
+            }
 			//show pause menu
 			break;
 		case End:
@@ -685,7 +695,8 @@ bool MinimalOgre::mouseMoved( const OIS::MouseEvent &arg )
     //if (mTrayMgr->injectMouseMove(arg)) return true;
     //mCameraMan->injectMouseMove(arg);
 	//if(player.isInState(PlayerState::Play))
-	player->getMouseEvent(arg);
+    if (state == Play)
+	   player->getMouseEvent(arg);
     return true;
 }
  
