@@ -40,6 +40,7 @@ MinimalOgre::MinimalOgre(void)
     mTrayMgr(0),
     mCameraMan(0),
     scoreboard(0),
+    controls(0),
     pauseLabel(0),
     mCursorWasVisible(false),
     mShutDown(false),
@@ -300,11 +301,51 @@ bool MinimalOgre::go(void)
     scores.push_back("Gravity");
     scores.push_back("Music");
 
+    Ogre::StringVector cList;
+//     Controls
+// ================
+// w - move forward
+// a - move left
+// s - move backward
+// d - move right
+
+// q - move down
+// e - move up
+
+// left-arrow - right-scroll hit strength
+// right-arrow - left-scroll hit strength
+// spacebar - hit ball
+
+// c - toggle controls menu
+// o - toggle Score Board
+// m - toggle music
+// g - toggle gravity
+// p - pause/unpause game
+// r - cycles polygon rendering
+    cList.push_back("Controls");
+    cList.push_back("w");
+    cList.push_back("a");
+    cList.push_back("s");
+    cList.push_back("d");
+    cList.push_back("q");
+    cList.push_back("e");
+    cList.push_back("left-arrow");
+    cList.push_back("right-arrow");
+    cList.push_back("spacebar");
+    cList.push_back("c");
+    cList.push_back("o");
+    cList.push_back("m");
+    cList.push_back("g");
+    cList.push_back("p");
+    cList.push_back("r");
+
     scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 250, scores);
-    scoreboard->setParamValue(0, "0");
+    scoreboard->setParamValue(1, "0");
     scoreboard->setParamValue(2, "Low");
     scoreboard->setParamValue(3, "Off");
     scoreboard->setParamValue(4, "On");
+
+    controls = mTrayMgr->createParamsPanel(OgreBites::TL_CENTER, "Controls", 250, cList);
 
 
  
