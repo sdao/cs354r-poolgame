@@ -11,9 +11,11 @@ Physics::Physics(float gravity)
     dynamicsWorld(new btDiscreteDynamicsWorld(
       dispatcher, broadphase, solver, collisionConfiguration
     )),
-    accumTime(0.0f)
+    accumTime(0.0f),
+    myGrav(gravity),
+    gravEnabled(false)
 { 
-  dynamicsWorld->setGravity(btVector3(0, -gravity, 0));
+  dynamicsWorld->setGravity(btVector3(0, 0, 0));
 }
 
 Physics::~Physics() {
@@ -102,5 +104,19 @@ Physics::rayCastAll(const Ogre::Vector3& start,
   }
 
   return colliders;
+}
+
+void Physics::disableGravity() {
+  gravEnabled = false;
+  dynamicsWorld->setGravity(btVector3(0, 0, 0));
+}
+
+void Physics::enableGravity() {
+  gravEnabled = true;
+  dynamicsWorld->setGravity(btVector3(0, -myGrav, 0));
+}
+
+bool Physics::isGravityEnabled() const {
+  return gravEnabled;
 }
 

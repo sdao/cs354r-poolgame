@@ -128,3 +128,7 @@ float PhysicsCollider::getVelocity() const {
   return v.length();
 }
 
+Physics* PhysicsCollider::getPhysicsWorld() const {
+  return physics;
+}
+

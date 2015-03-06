@@ -442,7 +442,17 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	  	    		// playerpState = PlayerState::Wait;
         		}
     		}
-
+		if (arg.key == OIS::KC_G) // toggle gravity
+		{
+			if (player && player->isInState(PlayerState::Hit)) {
+				bool isGravitating = physics.isGravityEnabled();
+				if (isGravitating) {
+       					physics.disableGravity();
+				} else {
+					physics.enableGravity();
+        			}
+			}
+    		}
             if (arg.key == OIS::KC_RIGHT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {
