@@ -1,0 +1,11 @@
+README build and run instructions
+
+To Build:
+
+./buildit
+
+ - all textures are from shared files and music is included with source.
+
+To Run:
+
+./assignment2

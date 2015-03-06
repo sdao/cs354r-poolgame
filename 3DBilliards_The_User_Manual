@@ -1,0 +1,31 @@
+User Manual
+===============
+	3D Billiards adds a new spin to the classic table-top game with the use of
+the already existing 3rd Dimension. The point of this game is to use the your cue
+stick to hit the cue ball and knock the other balls into the pockets located at the
+corners of the cube room. When a neutral ball hits a pocket, you gain a point, but
+if you're cue ball hits a pocket, you lose a point! Let the soothing background music
+play while you aim for your goal to get the highest score, or turn the music off
+altogether! Lastly, we're giving the player the option to turn the gravity on/off with 
+a push of a button!
+
+Controls
+================
+w - move forward
+a - move left
+s - move backward
+d - move right
+
+q - move down
+e - move up
+
+left-arrow - right-scroll hit strength
+right-arrow - left-scroll hit strength
+spacebar - hit ball
+
+c - toggle controls menu
+o - toggle Score Board
+m - toggle music
+g - toggle gravity
+p - pause/unpause game
+r - cycles polygon rendering
