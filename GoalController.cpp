@@ -3,8 +3,6 @@
 #include <iostream>
 
 void GoalController::didCollide(PhysicsCollider& collider) {
-  std::cout << "DIE FOUL BEAST!\n";
-  
   // Hide the other object's geometry.
   auto otherGo = collider.getGameObject();
   auto otherGoPtr = otherGo.lock();

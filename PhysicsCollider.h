@@ -14,6 +14,7 @@ protected:
   bool isTrigger;
   float collisionTimer;
   bool inCollision;
+  int collisionId;
   static constexpr float COLLISION_REPORT_DELAY = 0.2f;
 
 public:

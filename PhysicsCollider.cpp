@@ -16,7 +16,7 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
                                  bool trigger)
   : collisionShape(cs), isDynamic(mass > 0.0f), isTrigger(trigger),
     Component(go),
-    collisionTimer(0.0f), inCollision(false)
+    collisionTimer(0.0f), inCollision(false), collisionId(-1)
 {
   // Need to take temporary ownership of go.
   std::shared_ptr<GameObject> gameObjPtr = go.lock();
@@ -62,11 +62,13 @@ PhysicsCollider::PhysicsCollider(btCollisionShape* cs,
 
 void
 PhysicsCollider::reportCollision(PhysicsCollider& other, float time) {
-  if (!inCollision || isTrigger) {
+  int otherId = other.getGameObject().lock()->getRandId();
+  if (!inCollision || otherId != collisionId) {
     // Collision started.
     std::shared_ptr<GameObject> gameObjectPtr = gameObject.lock();
     gameObjectPtr->didCollide(other);
     inCollision = true;
+    collisionId = otherId;
   }
   
   collisionTimer = COLLISION_REPORT_DELAY;
@@ -95,6 +97,7 @@ void PhysicsCollider::update(const UpdateInfo& info) {
     collisionTimer -= info.deltaTime;
   } else {
     inCollision = false;
+    collisionId = -1;
   }
 }
 
