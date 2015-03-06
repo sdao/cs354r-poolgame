@@ -458,7 +458,11 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
        					physics.disableGravity();
 				} else {
 					physics.enableGravity();
-        			}
+        		}
+                if (scoreboard->getParamValue(3) == "On")
+                    scoreboard->setParamValue(3, "Off");
+                else
+                    scoreboard->setParamValue(3, "On");
 			}
     		}
             if (arg.key == OIS::KC_RIGHT)
