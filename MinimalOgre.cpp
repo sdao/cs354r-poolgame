@@ -294,13 +294,17 @@ bool MinimalOgre::go(void)
     mTrayMgr->hideCursor();
 
     Ogre::StringVector scores;
-    scores.push_back("Score:");
-    scores.push_back("Balls Remaining:");
-    scores.push_back("Hit Strength:");
+    scores.push_back("Score");
+    scores.push_back("Balls Remaining");
+    scores.push_back("Hit Strength");
+    scores.push_back("Gravity");
+    scores.push_back("Music");
 
-    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 400, scores);
+    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "Scoreboard", 250, scores);
     scoreboard->setParamValue(0, "0");
     scoreboard->setParamValue(2, "Low");
+    scoreboard->setParamValue(3, "Off");
+    scoreboard->setParamValue(4, "On");
 
 
  
@@ -385,6 +389,10 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
     {
         auto music = player->getComponent<BGMusic>();
         music->playOrPause();
+        if (scoreboard->getParamValue(4) == "On")
+            scoreboard->setParamValue(4, "Off");
+        else
+            scoreboard->setParamValue(4, "On");
     }
     else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
     {
@@ -450,7 +458,11 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
        					physics.disableGravity();
 				} else {
 					physics.enableGravity();
-        			}
+        		}
+                if (scoreboard->getParamValue(3) == "On")
+                    scoreboard->setParamValue(3, "Off");
+                else
+                    scoreboard->setParamValue(3, "On");
 			}
     		}
             if (arg.key == OIS::KC_RIGHT)
