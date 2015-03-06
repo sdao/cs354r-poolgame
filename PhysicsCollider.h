@@ -19,7 +19,8 @@ protected:
 
 public:
   /**
-   * Creates a new physics collider.
+   * Creates a new physics collider, automatically adding it to the specified
+   * physics world.
    *
    * @param go       the object driven by the collider
    * @param physics  the physics world
@@ -37,6 +38,15 @@ public:
                   bool trigger = false);
   virtual ~PhysicsCollider();
   void update(const UpdateInfo& info);
+
+  /**
+   * Used by the physics system to report that a collision has begun between
+   * the current collider and some other collider. This event will probably
+   * only happen once during the collision.
+   *
+   * @param other a reference to the other collider
+   * @param time  the current system time at point of collision
+   */
   virtual void reportCollision(PhysicsCollider& other, float time);
 
   /**
@@ -50,8 +60,13 @@ public:
    */
   void applyWorldImpulse(const Ogre::Vector3& impulse);
 
+  /** Removes the collider from its current physics world. */
   void removeFromPhysics();
+
+  /** Adds the collider to the specified physics world. */
   void addToPhysics(Physics& phys);
+
+  /** Gets the current scalar speed of the collider. */
   float getVelocity() const;
 
 };
