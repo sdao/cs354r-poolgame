@@ -1,25 +1,5 @@
-#ifndef _gameinfo_h_
-#define _gameinfo_h_
+#include "GameInfo.h"
 
-#include <OgreSceneManager.h>
-#include <OgreVector3.h>
-#include <vector>
-#include "GameObject.h"
-#include "Physics.h"
-#include "PhysicsBoxCollider.h"
-#include "Ball.h"
-
-struct GameInfo{
-
-	int scoreP1;
-	int scoreP2;
-	Ogre::Vector3 dimensions;
-	std::vector<Ogre::Vector3> ballPositions;
-};
-
-GameInfo SetupField(float, float, float, Ogre::SceneManager*, Physics&, std::vector<std::shared_ptr<GameObject> >&);
-void setPositions(std::shared_ptr<GameInfo>&, const std::vector<std::shared_ptr<GameObject> >&);
-/*
 GameInfo SetupField(float length, float width, float height, Ogre::SceneManager* mSceneMgr, Physics& physics, std::vector<std::shared_ptr<GameObject> >& sceneObjects){
 	GameInfo gameinfo ={0, 0, Ogre::Vector3(length, height, width)};
 	gameinfo.ballPositions = std::vector<Ogre::Vector3>();
@@ -137,7 +117,3 @@ void setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::sh
 	}
 	gameinfo.get()->scoreP1 += startscore - gameinfo.get()->ballPositions.size();
 }
-
-//void getPositions
-*/
-#endif

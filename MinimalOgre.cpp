@@ -196,7 +196,7 @@ bool MinimalOgre::go(void)
 			0.0f,
    	             	true
 		);
-		auto goalController = std::make_shared<GoalController>();
+		auto goalController = std::make_shared<GoalController>(gameinfo);
 		goal->addComponent(triggerCollider);
 		goal->addComponent(goalController);
 		sceneObjects.push_back(goal);

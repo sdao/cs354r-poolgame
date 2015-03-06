@@ -3,6 +3,12 @@
 #include "ObjectSound.h"
 #include <iostream>
 
+GoalController::GoalController(std::shared_ptr<GameInfo> ginfo)
+	: Component()
+{
+	gameinfo = ginfo;
+}
+
 void GoalController::didCollide(PhysicsCollider& collider) {
   auto otherGo = collider.getGameObject();
   auto otherGoPtr = otherGo.lock();
@@ -27,9 +33,10 @@ void GoalController::didCollide(PhysicsCollider& collider) {
       otherGoSound->collision(3);
     }
 
-    std::cout << "***********\n";
-    std::cout << "you suck   \n";
-    std::cout << "***********\n";
+    std::cout << "*************************\n";
+    std::cout << "you suck. MINUS 1 FOR YOU   \n";
+    std::cout << "*************************\n";
+    gameinfo->scoreP1 -= 1;
   }
 }
 
