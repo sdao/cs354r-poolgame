@@ -24,7 +24,7 @@ GameInfo SetupField(float length, float width, float height, Ogre::SceneManager*
                     Ogre::Vector3(length, 1.0f, width),
                     0.0f
                 );
-		go->setTag(10);
+
                 go->addComponent(box);
                 break;
             case 1://top
