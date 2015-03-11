@@ -189,7 +189,7 @@ bool MinimalOgre::go(void)
 			100.0f,
 			location,
 			BallType::BALL_GOAL);
-		goal->setMaterial("Examples/BeachStones");
+		goal->setMaterial("Balls/Blue");
 		auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
 			goal,
 			physics,
@@ -207,7 +207,7 @@ bool MinimalOgre::go(void)
 	std::mt19937 rng(time(0));
 	std::uniform_real_distribution<float> xzDist(-300.0f, 300.0f); 
 	std::uniform_real_distribution<float> yDist(-300.0f, 300.0f);
-	for (int i = 0; i < 30; i++) {
+	for (int i = 0; i < 16; i++) {
 		const std::string sphereEntityName = "sph";
 		auto sph = std::make_shared<Ball>(
 			mSceneMgr,
@@ -219,9 +219,9 @@ bool MinimalOgre::go(void)
                         /* make 1st ball a cue ball */
 			i == 0 ? BallType::BALL_CUE : BallType::BALL_POOL		);
 		if (i == 0) {
-			sph->setMaterial("Examples/Chrome");
+			sph->setMaterial("Balls/White");
 		} else {
-			sph->setMaterial("Examples/BumpyMetal");
+			sph->setMaterial("Examples/Hilite/Yellow");
 		}
 		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
 			sph,

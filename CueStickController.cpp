@@ -26,7 +26,7 @@ void CueStickController::update(const UpdateInfo& update) {
       std::shared_ptr<GameObject> currentObjPtr = currentObj.lock();
       
       if (currentObjPtr) {
-        currentObjPtr->setMaterial("Examples/Chrome");
+        currentObjPtr->setMaterial("Balls/White");
       }
       currentObj = std::weak_ptr<GameObject>();
     }
@@ -34,7 +34,7 @@ void CueStickController::update(const UpdateInfo& update) {
     if (colliderObjPtr->getTag() == 0x1) {
       //std::cout << "saw a ball!\n";
       currentObj = colliderObj;
-      colliderObjPtr->setMaterial("Examples/GrassFloor");
+      colliderObjPtr->setMaterial("Balls/Red");
       return;
     }
   }
