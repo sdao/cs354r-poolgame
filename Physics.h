@@ -5,7 +5,7 @@
 
 // Forward declarations.
 class PhysicsCollider;
-  constexpr float DEFAULT_GRAVITY = 9800.0;
+  constexpr float DEFAULT_GRAVITY = 6000.0;
 
 class Physics {
   btBroadphaseInterface* broadphase;
