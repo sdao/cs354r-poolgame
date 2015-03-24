@@ -84,7 +84,10 @@ protected:
     virtual bool mouseMoved( const OIS::MouseEvent &arg );
     virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
     virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
- 
+
+	//Assignment3 methods
+	void setupField(bool, float, float, float); 
+
     // Ogre::WindowEventListener
     virtual void windowResized(Ogre::RenderWindow* rw);
     virtual void windowClosed(Ogre::RenderWindow* rw);
@@ -96,6 +99,7 @@ protected:
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<GameInfo> gameinfo;
+	bool multiplayer;
 };
 
 #endif // #ifndef __MinimalOgre_h_
