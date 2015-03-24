@@ -1,0 +1,4 @@
+#!/bin/sh
+
+clang++ client.cc mail.pb.cc --std=c++11 -lpthread -lboost_system -l:libprotobuf.so.8 -Iprotobuf-2.5.0/src -o client
+
