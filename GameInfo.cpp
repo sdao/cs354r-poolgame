@@ -1,4 +1,5 @@
 #include "GameInfo.h"
+#include "PhysicsSphereCollider.h"
 
 /*
 GameInfo SetupField(float length, float width, float height, Ogre::SceneManager* mSceneMgr, Physics& physics, std::vector<std::shared_ptr<GameObject> >& sceneObjects){
@@ -179,13 +180,27 @@ GameInfo SetupField(float length, float width, float height, Ogre::SceneManager*
 */
 void setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::shared_ptr<GameObject> >& sceneObjects){
 	int startscore = gameinfo.get()->ballPositions.size();
+	bool moving = false;
 	gameinfo.get()->ballPositions.clear();
 	for( auto go : sceneObjects ){
 		if(go.get()->getTag() == 0x2){
 			gameinfo.get()->ballPositions.push_back(go.get()->getWorldPosition());
 			
 			//get ball Physics comonent, get velocity etc
+			std::shared_ptr<PhysicsSphereCollider> collider = go.get()->getComponent<PhysicsSphereCollider>();
+			if(collider != NULL && !moving){
+				if(collider->getVelocity() > 3.0f){
+					moving = true;
+				}
+			}
 		}
 	}
+
+	/*if(moving)
+		std::cout << "We're still moving" <<std::endl;
+	else
+		std::cout << "we stopped!"<<std::endl;
+	*/
+
 	gameinfo.get()->scoreP1 += startscore - gameinfo.get()->ballPositions.size();
 }
