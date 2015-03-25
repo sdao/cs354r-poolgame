@@ -16,7 +16,7 @@ assignment2_SOURCES = MinimalOgre.cpp RootGameObject.cpp GameObject.cpp \
                       GameMessage.pb.cc Server.cpp Client.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(SDL_LIBS)
-assignment2_LDFLAGS = -lOgreOverlay -lboost_system -l:libprotobuf.so.8
+assignment2_LDFLAGS = -lOgreOverlay -lboost_system -l:libprotobuf.so.8 -lpthread
 
 EXTRA_DIST = buildit makeit
 AUTOMAKE_OPTIONS = foreign

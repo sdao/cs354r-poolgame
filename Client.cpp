@@ -1,6 +1,5 @@
 #include "Client.h"
 
-
 Client::Client()
   : io_service(),
     sock(io_service),
@@ -10,7 +9,7 @@ void Client::connect(std::string hostname,
   int port,
   std::function<void()> completionCallback)
 {
-  std::thread([&]() {
+ // background = std::thread([&]() {
     std::cout << "Looking for server...\n";
     tcp::resolver resolver(io_service);
     tcp::resolver::query query(hostname, std::to_string(port));
@@ -19,7 +18,7 @@ void Client::connect(std::string hostname,
     std::cout << "Server connected!\n";
     connectStatus = true;
     completionCallback();
-  });
+//  });
 }
 
 bool Client::connected() const {

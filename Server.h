@@ -14,6 +14,7 @@ class Server {
   boost::asio::io_service io_service;
   tcp::socket sock;
   std::mutex lock;
+  std::thread background;
   bool connectStatus;
 
   GameMessage storage;

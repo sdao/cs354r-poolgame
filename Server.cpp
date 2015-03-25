@@ -34,7 +34,7 @@ Server::postBallPositions(const std::vector<Ogre::Vector3>& ballPositions) {
     vMsg->set_z(v.z);
   }
 
-  std::thread([&]() {
+  //background = std::thread([&]() {
     lock.lock();
     int size = ballMessage->ByteSize();
     std::vector<std::uint8_t> data(sizeof(int) + size);
@@ -42,7 +42,7 @@ Server::postBallPositions(const std::vector<Ogre::Vector3>& ballPositions) {
     ballMessage->SerializeToArray(&data[sizeof(int)], size);
     boost::asio::write(sock, boost::asio::buffer(data));
     lock.unlock();
-  }); 
+ // }); 
 }
 
 bool Server::connected() const {

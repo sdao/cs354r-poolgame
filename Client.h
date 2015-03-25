@@ -10,6 +10,7 @@ using boost::asio::ip::tcp;
 class Client {
   boost::asio::io_service io_service;
   tcp::socket sock;
+  std::thread background;
   bool connectStatus;
 
   GameMessage storage;
