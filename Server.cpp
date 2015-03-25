@@ -5,18 +5,18 @@ Server::Server() : io_service(),
                    connectStatus(false) {}
 
 void Server::accept(int port, std::function<void()> completionCallback) {
-  std::thread([&]() {
+ // std::thread([&]() {
     std::cout << "Waiting for client...\n";
 
-    lock.lock();
+   // lock.lock();
     tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
     acceptor.accept(sock);
-    lock.unlock();
+ //   lock.unlock();
 
-    std::cout << "Client connected!\n";
+    //std::cout << "Client connected!\n";
     connectStatus = true;
     completionCallback();
-  });
+ // });
 }
 
 void
@@ -35,13 +35,13 @@ Server::postBallPositions(const std::vector<Ogre::Vector3>& ballPositions) {
   }
 
   //background = std::thread([&]() {
-    lock.lock();
+    //lock.lock();
     int size = ballMessage->ByteSize();
     std::vector<std::uint8_t> data(sizeof(int) + size);
     *reinterpret_cast<int*>(&data[0]) = size;
     ballMessage->SerializeToArray(&data[sizeof(int)], size);
     boost::asio::write(sock, boost::asio::buffer(data));
-    lock.unlock();
+    //lock.unlock();
  // }); 
 }
 
