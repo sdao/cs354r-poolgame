@@ -824,13 +824,17 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         //Wait for Connection
         client = false;
-        serverManager.accept(67309);
+        serverManager.accept(67309, []() {
+          std::cout << "server accept callback\n";
+        });
     }
     else if (button == connect)
     {
         // Pick Port and Host
         client = true;
-        serverManager.connect("firefly", 67309);
+        clientManager.connect("firefly", 67309, []() {
+          std::cout << "client connect callback\n";
+        });
     }
     else if (button == back)
     {
