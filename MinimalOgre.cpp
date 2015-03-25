@@ -49,7 +49,13 @@ MinimalOgre::MinimalOgre(void)
     mKeyboard(0),
 	mOverlaySystem(0),
 	menuTray(0),
-	state(GameState::Play),
+    sp(0),
+    mp(0),
+    ex(0),
+    back(0),
+    host(0),
+    connect(0),
+	state(GameState::Main),
 	physics(),
 	sceneObjects(),
 	player(),
@@ -125,6 +131,8 @@ bool MinimalOgre::go(void)
     {
         return false;
     }
+
+
 //-------------------------------------------------------------------------------------
     // choose scenemanager
     // Get the SceneManager, in this case a generic one
@@ -145,6 +153,7 @@ bool MinimalOgre::go(void)
     mCamera->setNearClipDistance(5);
  
     mCameraMan = new OgreBites::SdkCameraMan(mCamera);   // create a default camera controller
+
 //-------------------------------------------------------------------------------------
     // create viewports
     // Create one viewport, entire window
@@ -164,113 +173,7 @@ bool MinimalOgre::go(void)
     // load resources
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 //-------------------------------------------------------------------------------------
-    // Create the scene
 
-	//make the walls
-	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-	Ogre::MeshManager::getSingletonPtr()->createPlane("wallMesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 100, 100, 5, 5, true, 1, 1.0 , 1.0, Ogre::Vector3::UNIT_X);
-
-	setupField(false, 1000, 1000, 1000);
-
-	//gameinfo = std::make_shared<GameInfo>( SetupField(1000, 1000, 1000, mSceneMgr, physics, sceneObjects));
-	/*
-	//create Pockets
-	for (int i = 0; i < 8; i++) {
-		Ogre::Vector3 location;
-		if (i % 4 == 0) {
-			location = Ogre::Vector3(-500.0f, -500.0f, -500.0f);
-		} else if (i % 4 == 1) {
-			location = Ogre::Vector3(-500.0f, -500.0f, 500.0f);
-		} else if (i % 4 == 2) {
-			location = Ogre::Vector3(500.0f, -500.0f, 500.0f);
-		} else {
-			location = Ogre::Vector3(500.0f, -500.0f, -500.0f);
-		}
-		if (i >= 4) {
-			location.y = -location.y;
-		}
-
-		auto goal = std::make_shared<Ball>(mSceneMgr,
-			std::string("g") + Ogre::StringConverter::toString(i),
-			100.0f,
-			location,
-			BallType::BALL_GOAL);
-		goal->setMaterial("Balls/Blue");
-		auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
-			goal,
-			physics,
-			90.0f,
-			0.0f,
-   	             	true
-		);
-		auto goalController = std::make_shared<GoalController>(gameinfo);
-		goal->addComponent(triggerCollider);
-		goal->addComponent(goalController);
-		sceneObjects.push_back(goal);
-	}
-
-	//create balls
-	std::mt19937 rng(time(0));
-	std::uniform_real_distribution<float> xzDist(-300.0f, 300.0f); 
-	std::uniform_real_distribution<float> yDist(-300.0f, 300.0f);
-	for (int i = 0; i < 16; i++) {
-		const std::string sphereEntityName = "sph";
-		auto sph = std::make_shared<Ball>(
-			mSceneMgr,
-			sphereEntityName + Ogre::StringConverter::toString(i),
-			i == 0 ? 50.0f : 40.0f,
-			Ogre::Vector3(0 + xzDist(rng),
-				      yDist(rng),
-				      -100.0f + xzDist(rng)),
-                         make 1st ball a cue ball 
-			i == 0 ? BallType::BALL_CUE : BallType::BALL_POOL		);
-		if (i == 0) {
-			sph->setMaterial("Balls/White");
-		} else {
-			sph->setMaterial("Examples/Hilite/Yellow");
-		}
-		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
-			sph,
-			physics,
-			i == 0 ? 50.0f : 40.0f,  collider radius 
-                	i == 0 ? 15.0f : 10.0f  cue ball heavier 
-		);
-		sph->addComponent(sphCollider);
-		auto ballSound = std::make_shared<ObjectSound>(sph);
-		sph->addComponent(ballSound);
-		if(sph->getTag() == 0x2)
-			gameinfo->ballPositions.push_back(sph->getWorldPosition());
-		sceneObjects.push_back(sph);
-	}
-	*/
-	//create player
-	player = std::make_shared<Player>(mSceneMgr,
-					  mCamera,
-					  "column.mesh",
-					  "Player");
-	sceneObjects.push_back(player);
-	//player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
-	player->setScale(Ogre::Vector3(0.03, 0.3, 0.03));
-	
-	// put bg music on player
-    	auto bgMusic = std::make_shared<BGMusic>();
-    	player->addComponent(bgMusic);
-	
-	// putting the cue controller on the player
-	auto cueController = std::make_shared<CueStickController>(player);
-	player->addComponent(cueController);
-
-	// putting audio controller on player
-	auto soundController = std::make_shared<ObjectSound>(player);
-	player->addComponent(soundController);
-
-    // Set ambient light
-    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
- 
-    // Create a light
-    Ogre::Light* l = mSceneMgr->createLight("MainLight");
-    l->setPosition(20,80,50);
-//-------------------------------------------------------------------------------------
     //create FrameListener
     Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
     OIS::ParamList pl;
@@ -297,67 +200,18 @@ bool MinimalOgre::go(void)
  
     mInputContext.mKeyboard = mKeyboard;
     mInputContext.mMouse = mMouse;
-    mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
-    mTrayMgr->hideCursor();
-
-    Ogre::StringVector scores;
-    scores.push_back("Score");
-    scores.push_back("Balls Remaining");
-    scores.push_back("Hit Strength");
-    scores.push_back("Gravity");
-    scores.push_back("Music");
-
-    Ogre::StringVector cList;
-
-    cList.push_back("Controls");
-    cList.push_back("w");
-    cList.push_back("a");
-    cList.push_back("s");
-    cList.push_back("d");
-    cList.push_back("q");
-    cList.push_back("e");
-    cList.push_back("left-arrow");
-    cList.push_back("right-arrow");
-    cList.push_back("spacebar");
-    cList.push_back("c");
-    cList.push_back("o");
-    cList.push_back("m");
-    cList.push_back("g");
-    cList.push_back("p");
-    cList.push_back("r");
-
-    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_TOPLEFT, "Scoreboard", 250, scores);
-    scoreboard->setParamValue(1, "0");
-    scoreboard->setParamValue(2, "Low");
-    scoreboard->setParamValue(3, "Off");
-    scoreboard->setParamValue(4, "On");
-    mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
-    scoreboard->show();
-
-    controls = mTrayMgr->createParamsPanel(OgreBites::TL_CENTER, "Controls", 350, cList);
-    controls->setParamValue(1, "move forward");
-    controls->setParamValue(2, "move left");
-    controls->setParamValue(3, "move backward");
-    controls->setParamValue(4, "move right");
-    controls->setParamValue(5, "move down");
-    controls->setParamValue(6, "move up");
-    controls->setParamValue(7, "left-scroll hit strength");
-    controls->setParamValue(8, "right-scroll hit strength");
-    controls->setParamValue(9, "hit ball");
-    controls->setParamValue(10, "toggle controls menu");
-    controls->setParamValue(11, "toggle scoreboard");
-    controls->setParamValue(12, "toggle music");
-    controls->setParamValue(13, "toggle gravity");
-    controls->setParamValue(14, "pause/unpause game");
-    controls->setParamValue(15, "cycles polygon rendering");
-    mTrayMgr->moveWidgetToTray(controls, OgreBites::TL_CENTER, 0);
-    mTrayMgr->removeWidgetFromTray(controls);
-    controls->hide();
 
     mRoot->addFrameListener(this);
+
+    // Setup GUI
+    mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
+    sp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Single Player", "Solo");
+    mp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Multi Player", "Multiplayer");
+    ex = mTrayMgr->createButton(OgreBites::TL_CENTER, "Exit", "Quit");
+
 //-------------------------------------------------------------------------------------
     mRoot->startRendering();
- 
+
     return true;
 }
  
@@ -395,20 +249,27 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	      go->update(info);
     	}
 	
+
 		//TODO come back for multiplayer
 		if( !client && !setPositions(gameinfo, sceneObjects) && player->isInState(PlayerState::Wait)){
 			player->setState(PlayerState::Hit);
 		}
+
+        //update player
+        player->update();
+        
+        //set param values on GUI
+        std::string buffer = std::to_string(gameinfo.get()->scoreP1);
+        scoreboard->setParamValue(0, buffer);
+        buffer = std::to_string(gameinfo.get()->ballPositions.size());
+        scoreboard->setParamValue(1, buffer);
 	}
 
-	//update player
-	player->update();
-	
-	//set param values on GUI
-    std::string buffer = std::to_string(gameinfo.get()->scoreP1);
-    scoreboard->setParamValue(0, buffer);
-    buffer = std::to_string(gameinfo.get()->ballPositions.size());
-    scoreboard->setParamValue(1, buffer);
+    else if (state == GameState::Main)
+    {
+        // Control Main Menu Stuff
+    }
+
     return true;
 }
 //-------------------------------------------------------------------------------------
@@ -416,74 +277,17 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 {
     if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
  
-    else if (arg.key == OIS::KC_O)   // toggle visibility of scoreboard
-    {
-        if (scoreboard->getTrayLocation() == OgreBites::TL_NONE)
-        {
-            mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
-            scoreboard->show();
-        }
-        else
-        {
-            mTrayMgr->removeWidgetFromTray(scoreboard);
-            scoreboard->hide();
-        }
-    }
-    else if (arg.key == OIS::KC_C)   // toggle visibility of scoreboard
-    {
-        if (controls->getTrayLocation() == OgreBites::TL_NONE)
-        {
-            mTrayMgr->moveWidgetToTray(controls, OgreBites::TL_CENTER, 0);
-            controls->show();
-        }
-        else
-        {
-            mTrayMgr->removeWidgetFromTray(controls);
-            controls->hide();
-        }
-    }
-    else if (arg.key == OIS::KC_M)   // Toggle Background Music
-    {
-        auto music = player->getComponent<BGMusic>();
-        music->playOrPause();
-        if (scoreboard->getParamValue(4) == "On")
-            scoreboard->setParamValue(4, "Off");
-        else
-            scoreboard->setParamValue(4, "On");
-    }
-    else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
-    {
-        Ogre::String newVal;
-        Ogre::PolygonMode pm;
- 
-        switch (mCamera->getPolygonMode())
-        {
-        case Ogre::PM_SOLID:
-            newVal = "Wireframe";
-            pm = Ogre::PM_WIREFRAME;
-            break;
-        case Ogre::PM_WIREFRAME:
-            newVal = "Points";
-            pm = Ogre::PM_POINTS;
-            break;
-        default:
-            newVal = "Solid";
-            pm = Ogre::PM_SOLID;
-        }
- 
-        mCamera->setPolygonMode(pm);
-    }
-    else if(arg.key == OIS::KC_F5)   // refresh all textures
-    {
-        Ogre::TextureManager::getSingleton().reloadAll();
-    }
-    else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
-    {
-        mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
-    }
+    // if (arg.key == OIS::KC_M)   // Toggle Background Music
+    // {
+    //     auto music = player->getComponent<BGMusic>();
+    //     music->playOrPause();
+    //     if (scoreboard->getParamValue(4) == "On")
+    //         scoreboard->setParamValue(4, "Off");
+    //     else
+    //         scoreboard->setParamValue(4, "On");
+    // }
     else if (arg.key == OIS::KC_ESCAPE)
     {
-		
         mShutDown = true;
     }
 
@@ -492,8 +296,6 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 
 	switch(state){
 		case Main:
-			//show main menu gui
-			
 			break;
 		case Play:
 			//pass keypress to player Object
@@ -513,24 +315,50 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 					}
         		}
     		}
-		/*
-		if (arg.key == OIS::KC_G) // toggle gravity
-		{
-			if (player && player->isInState(PlayerState::Hit)) {
-				bool isGravitating = physics.isGravityEnabled();
-				if (isGravitating) {
-       					physics.disableGravity();
-				} else {
-					physics.enableGravity();
-        		}
-	                if (scoreboard->getParamValue(3) == "On")
-        	            scoreboard->setParamValue(3, "Off");
-	                else
-        	            scoreboard->setParamValue(3, "On");
-			}
-    		}
-		*/
-            if (arg.key == OIS::KC_RIGHT)
+            else if (arg.key == OIS::KC_O)   // toggle visibility of scoreboard
+            {
+                if (scoreboard->getTrayLocation() == OgreBites::TL_NONE)
+                {
+                    mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
+                    scoreboard->show();
+                }
+                else
+                {
+                    mTrayMgr->removeWidgetFromTray(scoreboard);
+                    scoreboard->hide();
+                }
+            }
+            else if (arg.key == OIS::KC_C)   // toggle visibility of controls
+            {
+                if (controls->getTrayLocation() == OgreBites::TL_NONE)
+                {
+                    mTrayMgr->moveWidgetToTray(controls, OgreBites::TL_CENTER, 0);
+                    controls->show();
+                }
+                else
+                {
+                    mTrayMgr->removeWidgetFromTray(controls);
+                    controls->hide();
+                }
+            }
+    		/*
+    		if (arg.key == OIS::KC_G) // toggle gravity
+    		{
+    			if (player && player->isInState(PlayerState::Hit)) {
+    				bool isGravitating = physics.isGravityEnabled();
+    				if (isGravitating) {
+           					physics.disableGravity();
+    				} else {
+    					physics.enableGravity();
+            		}
+    	                if (scoreboard->getParamValue(3) == "On")
+            	            scoreboard->setParamValue(3, "Off");
+    	                else
+            	            scoreboard->setParamValue(3, "On");
+    			}
+        	}
+    		*/
+            else if (arg.key == OIS::KC_RIGHT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {
                     if (scoreboard->getParamValue(2) == "Low")
@@ -548,7 +376,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
                 }
             }
 
-            if (arg.key == OIS::KC_LEFT)
+            else if (arg.key == OIS::KC_LEFT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {
                     if (scoreboard->getParamValue(2) == "Low")
@@ -566,7 +394,30 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
                 }
             }
 
-            if (arg.key == OIS::KC_P)
+            else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
+            {
+                Ogre::String newVal;
+                Ogre::PolygonMode pm;
+         
+                switch (mCamera->getPolygonMode())
+                {
+                case Ogre::PM_SOLID:
+                    newVal = "Wireframe";
+                    pm = Ogre::PM_WIREFRAME;
+                    break;
+                case Ogre::PM_WIREFRAME:
+                    newVal = "Points";
+                    pm = Ogre::PM_POINTS;
+                    break;
+                default:
+                    newVal = "Solid";
+                    pm = Ogre::PM_SOLID;
+                }
+         
+                mCamera->setPolygonMode(pm);
+            }
+
+            else if (arg.key == OIS::KC_P)
             {
                 state = Pause;
 
@@ -605,7 +456,6 @@ bool MinimalOgre::keyReleased( const OIS::KeyEvent &arg )
 			//pass keyrelease to player Object
 			player->getKeyRelease(arg);
 			break;
-			break;
 		case Pause:
 			break;
 		case End:
@@ -624,6 +474,8 @@ bool MinimalOgre::mouseMoved( const OIS::MouseEvent &arg )
 	//if(player.isInState(PlayerState::Play))
     if (state == Play)
 	   player->getMouseEvent(arg);
+    if (state == Main)
+        mTrayMgr->injectMouseMove(arg);
     return true;
 }
  
@@ -649,6 +501,10 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 
 		gameinfo = std::make_shared<GameInfo>(GameInfo(tempgameinfo));
 	}
+
+    //make the walls
+    Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
+    Ogre::MeshManager::getSingletonPtr()->createPlane("wallMesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 100, 100, 5, 5, true, 1, 1.0 , 1.0, Ogre::Vector3::UNIT_X);
 
 	for(int i = 0; i < 6; i++){
         Ogre::Entity* wall = mSceneMgr->createEntity("wallEntity" + i , "wallMesh");
@@ -828,6 +684,87 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 		sceneObjects.push_back(goal);
 	}
 
+    //create player
+    player = std::make_shared<Player>(mSceneMgr,
+                      mCamera,
+                      "column.mesh",
+                      "Player");
+    sceneObjects.push_back(player);
+    //player->rotate(Ogre::Vector3::UNIT_Y, Ogre::Radian(Ogre::Degree(180)));
+    player->setScale(Ogre::Vector3(0.03, 0.3, 0.03));
+    
+    // put bg music on player
+        auto bgMusic = std::make_shared<BGMusic>();
+        player->addComponent(bgMusic);
+    
+    // putting the cue controller on the player
+    auto cueController = std::make_shared<CueStickController>(player);
+    player->addComponent(cueController);
+
+    // putting audio controller on player
+    auto soundController = std::make_shared<ObjectSound>(player);
+    player->addComponent(soundController);
+
+    // Set ambient light
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+ 
+    // Create a light
+    Ogre::Light* l = mSceneMgr->createLight("MainLight");
+    l->setPosition(20,80,50);
+
+    Ogre::StringVector scores;
+    scores.push_back("Score");
+    scores.push_back("Balls Remaining");
+    scores.push_back("Hit Strength");
+    scores.push_back("Gravity");
+    scores.push_back("Music");
+
+    Ogre::StringVector cList;
+
+    cList.push_back("Controls");
+    cList.push_back("w");
+    cList.push_back("a");
+    cList.push_back("s");
+    cList.push_back("d");
+    cList.push_back("q");
+    cList.push_back("e");
+    cList.push_back("left-arrow");
+    cList.push_back("right-arrow");
+    cList.push_back("spacebar");
+    cList.push_back("c");
+    cList.push_back("o");
+    cList.push_back("m");
+    cList.push_back("g");
+    cList.push_back("p");
+    cList.push_back("r");
+
+    scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_TOPLEFT, "Scoreboard", 250, scores);
+    scoreboard->setParamValue(1, "0");
+    scoreboard->setParamValue(2, "Low");
+    scoreboard->setParamValue(3, "Off");
+    scoreboard->setParamValue(4, "On");
+    mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
+    scoreboard->show();
+
+    controls = mTrayMgr->createParamsPanel(OgreBites::TL_CENTER, "Controls", 350, cList);
+    controls->setParamValue(1, "move forward");
+    controls->setParamValue(2, "move left");
+    controls->setParamValue(3, "move backward");
+    controls->setParamValue(4, "move right");
+    controls->setParamValue(5, "move down");
+    controls->setParamValue(6, "move up");
+    controls->setParamValue(7, "left-scroll hit strength");
+    controls->setParamValue(8, "right-scroll hit strength");
+    controls->setParamValue(9, "hit ball");
+    controls->setParamValue(10, "toggle controls menu");
+    controls->setParamValue(11, "toggle scoreboard");
+    controls->setParamValue(12, "toggle music");
+    controls->setParamValue(13, "toggle gravity");
+    controls->setParamValue(14, "pause/unpause game");
+    controls->setParamValue(15, "cycles polygon rendering");
+    mTrayMgr->moveWidgetToTray(controls, OgreBites::TL_CENTER, 0);
+    mTrayMgr->removeWidgetFromTray(controls);
+    controls->hide();
 } 
 
 //Adjust mouse clipping area
@@ -858,6 +795,49 @@ void MinimalOgre::windowClosed(Ogre::RenderWindow* rw)
         }
     }
 }
+
+void MinimalOgre::buttonHit (OgreBites::Button *button)
+{
+    if (button == sp)
+    {
+        state = Play;
+        // Create the scene
+        mTrayMgr->clearTray(OgreBites::TL_CENTER);
+        mTrayMgr->destroyAllWidgets();
+        setupField(false, 1000, 1000, 1000);
+        mTrayMgr->hideCursor();
+    }
+    else if (button == mp)
+    {
+        mTrayMgr->clearTray(OgreBites::TL_CENTER);
+        mTrayMgr->destroyAllWidgets();
+        host = mTrayMgr->createButton(OgreBites::TL_CENTER, "Host", "Host");
+        connect = mTrayMgr->createButton(OgreBites::TL_CENTER, "Connect", "Connect");
+        back = mTrayMgr->createButton(OgreBites::TL_CENTER, "Back", "Back");
+        // Setup Multiplayer
+    }
+    else if (button == ex)
+    {
+        mShutDown = true;
+    }
+    else if (button == host)
+    {
+        //Wait for Connection
+    }
+    else if (button == connect)
+    {
+        // Pick Port and Host
+    }
+    else if (button == back)
+    {
+        mTrayMgr->clearTray(OgreBites::TL_CENTER);
+        mTrayMgr->destroyAllWidgets();
+        sp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Single Player", "Solo");
+        mp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Multi Player", "Multiplayer");
+        ex = mTrayMgr->createButton(OgreBites::TL_CENTER, "Exit", "Quit");
+    }
+}
+
  
  
  

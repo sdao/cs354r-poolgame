@@ -96,6 +96,12 @@ protected:
 
 	// Assignment2 Data Starts
     OgreBites::SdkTrayManager* menuTray;
+    OgreBites::Button* sp;
+    OgreBites::Button* mp;
+    OgreBites::Button* ex;
+    OgreBites::Button* back;
+    OgreBites::Button* host;
+    OgreBites::Button* connect;
 	GameState state;
 	Physics physics;
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
@@ -105,6 +111,17 @@ protected:
 	bool client;
 	Server serverManager;
 	Client clientManager;
+
+
+    // SDKTrayListener Functions
+
+    virtual void buttonHit (OgreBites::Button *button) override;
+    // virtual void itemSelected (SelectMenu *menu)
+    // virtual void labelHit (Label *label)
+    // virtual void sliderMoved (Slider *slider)
+    // virtual void checkBoxToggled (CheckBox *box)
+    // virtual void okDialogClosed (const Ogre::DisplayString &message)
+    // virtual void yesNoDialogClosed (const Ogre::DisplayString &question, bool yesHit)
 };
 
 #endif // #ifndef __MinimalOgre_h_
