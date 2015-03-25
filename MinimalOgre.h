@@ -100,6 +100,7 @@ protected:
 	std::shared_ptr<Player> player;
 	std::shared_ptr<GameInfo> gameinfo;
 	bool multiplayer;
+	bool client;
 };
 
 #endif // #ifndef __MinimalOgre_h_

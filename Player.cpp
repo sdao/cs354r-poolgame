@@ -103,6 +103,12 @@ void Player::getMouseEvent(const OIS::MouseEvent& arg){
 }
 
 void Player::setState(PlayerState pstate){
+	if(pstate == PlayerState::Wait){
+		setMaterial("Balls/Red");
+	}
+	if(pstate == PlayerState::Hit){
+		setMaterial("Balls/White");
+	}
 	pState = pstate;
 }
 

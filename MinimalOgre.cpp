@@ -54,7 +54,8 @@ MinimalOgre::MinimalOgre(void)
 	sceneObjects(),
 	player(),
 	gameinfo(),
-	multiplayer(false)
+	multiplayer(false),
+	client(false)
 {
 }
 //-------------------------------------------------------------------------------------
@@ -378,6 +379,8 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
 
 	if(state == GameState::Play){
+
+		
     	// Run physics.
     	physics.stepSimulation(evt.timeSinceLastFrame);
 
@@ -391,7 +394,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
     	}
 	
 		//TODO come back for multiplayer
-		if( !setPositions(gameinfo, sceneObjects) && player->isInState(PlayerState::Wait)){
+		if( !client && !setPositions(gameinfo, sceneObjects) && player->isInState(PlayerState::Wait)){
 			player->setState(PlayerState::Hit);
 		}
 	}
@@ -638,11 +641,12 @@ bool MinimalOgre::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID 
 
 void MinimalOgre::setupField(bool singleplayer, float length, float width, float height){
 
-	GameInfo tempgameinfo = {0, 0, 0, Ogre::Vector3(length, height, width)};
-	tempgameinfo.ballPositions = std::vector<Ogre::Vector3>();
+	if(!singleplayer){
+		GameInfo tempgameinfo = {0, 0, 0, Ogre::Vector3(length, height, width)};
+		tempgameinfo.ballPositions = std::vector<Ogre::Vector3>();
 
-	gameinfo = std::make_shared<GameInfo>(GameInfo(tempgameinfo));
-	//gameinfo.get()->
+		gameinfo = std::make_shared<GameInfo>(GameInfo(tempgameinfo));
+	}
 
 	for(int i = 0; i < 6; i++){
         Ogre::Entity* wall = mSceneMgr->createEntity("wallEntity" + i , "wallMesh");
@@ -765,17 +769,23 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 		} else {
 			sph->setMaterial("Examples/Hilite/Yellow");
 		}
-		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
-			sph,
-			physics,
-			i == 0 ? 50.0f : 40.0f, /* collider radius */
-                	i == 0 ? 15.0f : 10.0f /* cue ball heavier */
-		);
-		sph->addComponent(sphCollider);
-		auto ballSound = std::make_shared<ObjectSound>(sph);
-		sph->addComponent(ballSound);
-		if(sph->getTag() == 0x2)
-			gameinfo.get()->ballPositions.push_back(sph->getWorldPosition());
+
+		if(!singleplayer){
+			auto sphCollider = std::make_shared<PhysicsSphereCollider>(
+				sph,
+				physics,
+				i == 0 ? 50.0f : 40.0f, /* collider radius */
+           	     	i == 0 ? 15.0f : 10.0f /* cue ball heavier */
+			);
+			sph->addComponent(sphCollider);
+			auto ballSound = std::make_shared<ObjectSound>(sph);
+			sph->addComponent(ballSound);
+			if(sph->getTag() == 0x2)
+				gameinfo.get()->ballPositions.push_back(sph->getWorldPosition());
+		}
+		else{
+			//TODO network components instead of physics on balls
+		}
 		sceneObjects.push_back(sph);
 	}
 
@@ -801,21 +811,20 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 			location,
 			BallType::BALL_GOAL);
 		goal->setMaterial("Balls/Blue");
-		auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
-			goal,
-			physics,
-			90.0f,
-			0.0f,
+		if(!singleplayer){
+			auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
+				goal,
+				physics,
+				90.0f,
+				0.0f,
    	             	true
-		);
-		auto goalController = std::make_shared<GoalController>(gameinfo);
-		goal->addComponent(triggerCollider);
-		goal->addComponent(goalController);
+			);
+			auto goalController = std::make_shared<GoalController>(gameinfo);
+			goal->addComponent(triggerCollider);
+			goal->addComponent(goalController);
+		}
 		sceneObjects.push_back(goal);
 	}
-
-	
-
 
 } 
 
