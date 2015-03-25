@@ -161,50 +161,60 @@ class GameMessage : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .BallPositions ball_positions = 1;
+  // required .GameMessage.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::GameMessage_Type type() const;
+  inline void set_type(::GameMessage_Type value);
+
+  // optional .BallPositions ball_positions = 2;
   inline bool has_ball_positions() const;
   inline void clear_ball_positions();
-  static const int kBallPositionsFieldNumber = 1;
+  static const int kBallPositionsFieldNumber = 2;
   inline const ::BallPositions& ball_positions() const;
   inline ::BallPositions* mutable_ball_positions();
   inline ::BallPositions* release_ball_positions();
   inline void set_allocated_ball_positions(::BallPositions* ball_positions);
 
-  // optional .Score score = 2;
+  // optional .Score score = 3;
   inline bool has_score() const;
   inline void clear_score();
-  static const int kScoreFieldNumber = 2;
+  static const int kScoreFieldNumber = 3;
   inline const ::Score& score() const;
   inline ::Score* mutable_score();
   inline ::Score* release_score();
   inline void set_allocated_score(::Score* score);
 
-  // optional .HitInfo cientHit = 3;
-  inline bool has_cienthit() const;
-  inline void clear_cienthit();
-  static const int kCientHitFieldNumber = 3;
-  inline const ::HitInfo& cienthit() const;
-  inline ::HitInfo* mutable_cienthit();
-  inline ::HitInfo* release_cienthit();
-  inline void set_allocated_cienthit(::HitInfo* cienthit);
+  // optional .HitInfo client_hit = 4;
+  inline bool has_client_hit() const;
+  inline void clear_client_hit();
+  static const int kClientHitFieldNumber = 4;
+  inline const ::HitInfo& client_hit() const;
+  inline ::HitInfo* mutable_client_hit();
+  inline ::HitInfo* release_client_hit();
+  inline void set_allocated_client_hit(::HitInfo* client_hit);
 
   // @@protoc_insertion_point(class_scope:GameMessage)
  private:
+  inline void set_has_type();
+  inline void clear_has_type();
   inline void set_has_ball_positions();
   inline void clear_has_ball_positions();
   inline void set_has_score();
   inline void clear_has_score();
-  inline void set_has_cienthit();
-  inline void clear_has_cienthit();
+  inline void set_has_client_hit();
+  inline void clear_has_client_hit();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::BallPositions* ball_positions_;
   ::Score* score_;
-  ::HitInfo* cienthit_;
+  ::HitInfo* client_hit_;
+  int type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_GameMessage_2eproto();
   friend void protobuf_AssignDesc_GameMessage_2eproto();
@@ -371,24 +381,24 @@ class BallPositions : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .Vector3f balls = 1;
-  inline int balls_size() const;
-  inline void clear_balls();
-  static const int kBallsFieldNumber = 1;
-  inline const ::Vector3f& balls(int index) const;
-  inline ::Vector3f* mutable_balls(int index);
-  inline ::Vector3f* add_balls();
+  // repeated .Vector3f ball = 1;
+  inline int ball_size() const;
+  inline void clear_ball();
+  static const int kBallFieldNumber = 1;
+  inline const ::Vector3f& ball(int index) const;
+  inline ::Vector3f* mutable_ball(int index);
+  inline ::Vector3f* add_ball();
   inline const ::google::protobuf::RepeatedPtrField< ::Vector3f >&
-      balls() const;
+      ball() const;
   inline ::google::protobuf::RepeatedPtrField< ::Vector3f >*
-      mutable_balls();
+      mutable_ball();
 
   // @@protoc_insertion_point(class_scope:BallPositions)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::Vector3f > balls_;
+  ::google::protobuf::RepeatedPtrField< ::Vector3f > ball_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -618,15 +628,38 @@ class HitInfo : public ::google::protobuf::Message {
 
 // GameMessage
 
-// optional .BallPositions ball_positions = 1;
-inline bool GameMessage::has_ball_positions() const {
+// required .GameMessage.Type type = 1;
+inline bool GameMessage::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void GameMessage::set_has_ball_positions() {
+inline void GameMessage::set_has_type() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void GameMessage::clear_has_ball_positions() {
+inline void GameMessage::clear_has_type() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void GameMessage::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::GameMessage_Type GameMessage::type() const {
+  return static_cast< ::GameMessage_Type >(type_);
+}
+inline void GameMessage::set_type(::GameMessage_Type value) {
+  assert(::GameMessage_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional .BallPositions ball_positions = 2;
+inline bool GameMessage::has_ball_positions() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void GameMessage::set_has_ball_positions() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void GameMessage::clear_has_ball_positions() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void GameMessage::clear_ball_positions() {
   if (ball_positions_ != NULL) ball_positions_->::BallPositions::Clear();
@@ -656,15 +689,15 @@ inline void GameMessage::set_allocated_ball_positions(::BallPositions* ball_posi
   }
 }
 
-// optional .Score score = 2;
+// optional .Score score = 3;
 inline bool GameMessage::has_score() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void GameMessage::set_has_score() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void GameMessage::clear_has_score() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void GameMessage::clear_score() {
   if (score_ != NULL) score_->::Score::Clear();
@@ -694,41 +727,41 @@ inline void GameMessage::set_allocated_score(::Score* score) {
   }
 }
 
-// optional .HitInfo cientHit = 3;
-inline bool GameMessage::has_cienthit() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+// optional .HitInfo client_hit = 4;
+inline bool GameMessage::has_client_hit() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void GameMessage::set_has_cienthit() {
-  _has_bits_[0] |= 0x00000004u;
+inline void GameMessage::set_has_client_hit() {
+  _has_bits_[0] |= 0x00000008u;
 }
-inline void GameMessage::clear_has_cienthit() {
-  _has_bits_[0] &= ~0x00000004u;
+inline void GameMessage::clear_has_client_hit() {
+  _has_bits_[0] &= ~0x00000008u;
 }
-inline void GameMessage::clear_cienthit() {
-  if (cienthit_ != NULL) cienthit_->::HitInfo::Clear();
-  clear_has_cienthit();
+inline void GameMessage::clear_client_hit() {
+  if (client_hit_ != NULL) client_hit_->::HitInfo::Clear();
+  clear_has_client_hit();
 }
-inline const ::HitInfo& GameMessage::cienthit() const {
-  return cienthit_ != NULL ? *cienthit_ : *default_instance_->cienthit_;
+inline const ::HitInfo& GameMessage::client_hit() const {
+  return client_hit_ != NULL ? *client_hit_ : *default_instance_->client_hit_;
 }
-inline ::HitInfo* GameMessage::mutable_cienthit() {
-  set_has_cienthit();
-  if (cienthit_ == NULL) cienthit_ = new ::HitInfo;
-  return cienthit_;
+inline ::HitInfo* GameMessage::mutable_client_hit() {
+  set_has_client_hit();
+  if (client_hit_ == NULL) client_hit_ = new ::HitInfo;
+  return client_hit_;
 }
-inline ::HitInfo* GameMessage::release_cienthit() {
-  clear_has_cienthit();
-  ::HitInfo* temp = cienthit_;
-  cienthit_ = NULL;
+inline ::HitInfo* GameMessage::release_client_hit() {
+  clear_has_client_hit();
+  ::HitInfo* temp = client_hit_;
+  client_hit_ = NULL;
   return temp;
 }
-inline void GameMessage::set_allocated_cienthit(::HitInfo* cienthit) {
-  delete cienthit_;
-  cienthit_ = cienthit;
-  if (cienthit) {
-    set_has_cienthit();
+inline void GameMessage::set_allocated_client_hit(::HitInfo* client_hit) {
+  delete client_hit_;
+  client_hit_ = client_hit;
+  if (client_hit) {
+    set_has_client_hit();
   } else {
-    clear_has_cienthit();
+    clear_has_client_hit();
   }
 }
 
@@ -806,29 +839,29 @@ inline void Vector3f::set_z(float value) {
 
 // BallPositions
 
-// repeated .Vector3f balls = 1;
-inline int BallPositions::balls_size() const {
-  return balls_.size();
+// repeated .Vector3f ball = 1;
+inline int BallPositions::ball_size() const {
+  return ball_.size();
 }
-inline void BallPositions::clear_balls() {
-  balls_.Clear();
+inline void BallPositions::clear_ball() {
+  ball_.Clear();
 }
-inline const ::Vector3f& BallPositions::balls(int index) const {
-  return balls_.Get(index);
+inline const ::Vector3f& BallPositions::ball(int index) const {
+  return ball_.Get(index);
 }
-inline ::Vector3f* BallPositions::mutable_balls(int index) {
-  return balls_.Mutable(index);
+inline ::Vector3f* BallPositions::mutable_ball(int index) {
+  return ball_.Mutable(index);
 }
-inline ::Vector3f* BallPositions::add_balls() {
-  return balls_.Add();
+inline ::Vector3f* BallPositions::add_ball() {
+  return ball_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::Vector3f >&
-BallPositions::balls() const {
-  return balls_;
+BallPositions::ball() const {
+  return ball_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::Vector3f >*
-BallPositions::mutable_balls() {
-  return &balls_;
+BallPositions::mutable_ball() {
+  return &ball_;
 }
 
 // -------------------------------------------------------------------

@@ -6,9 +6,11 @@ message GameMessage {
     CLIENT_HIT = 4;
   }
 
-  optional BallPositions ball_positions = 1;
-  optional Score score = 2;
-  optional HitInfo cientHit = 3;
+  required Type type = 1;
+
+  optional BallPositions ball_positions = 2;
+  optional Score score = 3;
+  optional HitInfo client_hit = 4;
 }
 
 message Vector3f {
@@ -18,7 +20,7 @@ message Vector3f {
 }
 
 message BallPositions {
-  repeated Vector3f balls = 1;
+  repeated Vector3f ball = 1;
 }
 
 message Score {

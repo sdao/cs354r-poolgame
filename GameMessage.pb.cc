@@ -46,10 +46,11 @@ void protobuf_AssignDesc_GameMessage_2eproto() {
       "GameMessage.proto");
   GOOGLE_CHECK(file != NULL);
   GameMessage_descriptor_ = file->message_type(0);
-  static const int GameMessage_offsets_[3] = {
+  static const int GameMessage_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameMessage, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameMessage, ball_positions_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameMessage, score_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameMessage, cienthit_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(GameMessage, client_hit_),
   };
   GameMessage_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -82,7 +83,7 @@ void protobuf_AssignDesc_GameMessage_2eproto() {
       sizeof(Vector3f));
   BallPositions_descriptor_ = file->message_type(2);
   static const int BallPositions_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BallPositions, balls_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BallPositions, ball_),
   };
   BallPositions_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -174,18 +175,19 @@ void protobuf_AddDesc_GameMessage_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\021GameMessage.proto\"\273\001\n\013GameMessage\022&\n\016b"
-    "all_positions\030\001 \001(\0132\016.BallPositions\022\025\n\005s"
-    "core\030\002 \001(\0132\006.Score\022\032\n\010cientHit\030\003 \001(\0132\010.H"
-    "itInfo\"Q\n\004Type\022\022\n\016BALL_POSITIONS\020\001\022\t\n\005SC"
-    "ORE\020\002\022\032\n\026SERVER_RELEASE_CONTROL\020\003\022\016\n\nCLI"
-    "ENT_HIT\020\004\"+\n\010Vector3f\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 "
-    "\002(\002\022\t\n\001z\030\003 \002(\002\")\n\rBallPositions\022\030\n\005balls"
-    "\030\001 \003(\0132\t.Vector3f\"1\n\005Score\022\022\n\nhost_score"
-    "\030\001 \002(\002\022\024\n\014client_score\030\002 \002(\002\"w\n\007HitInfo\022"
-    "#\n\010strength\030\001 \002(\0162\021.HitInfo.Strength\022\034\n\t"
-    "direction\030\002 \002(\0132\t.Vector3f\")\n\010Strength\022\007"
-    "\n\003LOW\020\001\022\n\n\006MEDIUM\020\002\022\010\n\004HIGH\020\003", 469);
+    "\n\021GameMessage.proto\"\336\001\n\013GameMessage\022\037\n\004t"
+    "ype\030\001 \002(\0162\021.GameMessage.Type\022&\n\016ball_pos"
+    "itions\030\002 \001(\0132\016.BallPositions\022\025\n\005score\030\003 "
+    "\001(\0132\006.Score\022\034\n\nclient_hit\030\004 \001(\0132\010.HitInf"
+    "o\"Q\n\004Type\022\022\n\016BALL_POSITIONS\020\001\022\t\n\005SCORE\020\002"
+    "\022\032\n\026SERVER_RELEASE_CONTROL\020\003\022\016\n\nCLIENT_H"
+    "IT\020\004\"+\n\010Vector3f\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t"
+    "\n\001z\030\003 \002(\002\"(\n\rBallPositions\022\027\n\004ball\030\001 \003(\013"
+    "2\t.Vector3f\"1\n\005Score\022\022\n\nhost_score\030\001 \002(\002"
+    "\022\024\n\014client_score\030\002 \002(\002\"w\n\007HitInfo\022#\n\010str"
+    "ength\030\001 \002(\0162\021.HitInfo.Strength\022\034\n\tdirect"
+    "ion\030\002 \002(\0132\t.Vector3f\")\n\010Strength\022\007\n\003LOW\020"
+    "\001\022\n\n\006MEDIUM\020\002\022\010\n\004HIGH\020\003", 503);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "GameMessage.proto", &protobuf_RegisterTypes);
   GameMessage::default_instance_ = new GameMessage();
@@ -236,9 +238,10 @@ const GameMessage_Type GameMessage::Type_MAX;
 const int GameMessage::Type_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
+const int GameMessage::kTypeFieldNumber;
 const int GameMessage::kBallPositionsFieldNumber;
 const int GameMessage::kScoreFieldNumber;
-const int GameMessage::kCientHitFieldNumber;
+const int GameMessage::kClientHitFieldNumber;
 #endif  // !_MSC_VER
 
 GameMessage::GameMessage()
@@ -249,7 +252,7 @@ GameMessage::GameMessage()
 void GameMessage::InitAsDefaultInstance() {
   ball_positions_ = const_cast< ::BallPositions*>(&::BallPositions::default_instance());
   score_ = const_cast< ::Score*>(&::Score::default_instance());
-  cienthit_ = const_cast< ::HitInfo*>(&::HitInfo::default_instance());
+  client_hit_ = const_cast< ::HitInfo*>(&::HitInfo::default_instance());
 }
 
 GameMessage::GameMessage(const GameMessage& from)
@@ -260,9 +263,10 @@ GameMessage::GameMessage(const GameMessage& from)
 
 void GameMessage::SharedCtor() {
   _cached_size_ = 0;
+  type_ = 1;
   ball_positions_ = NULL;
   score_ = NULL;
-  cienthit_ = NULL;
+  client_hit_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -274,7 +278,7 @@ void GameMessage::SharedDtor() {
   if (this != default_instance_) {
     delete ball_positions_;
     delete score_;
-    delete cienthit_;
+    delete client_hit_;
   }
 }
 
@@ -301,14 +305,15 @@ GameMessage* GameMessage::New() const {
 
 void GameMessage::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    type_ = 1;
     if (has_ball_positions()) {
       if (ball_positions_ != NULL) ball_positions_->::BallPositions::Clear();
     }
     if (has_score()) {
       if (score_ != NULL) score_->::Score::Clear();
     }
-    if (has_cienthit()) {
-      if (cienthit_ != NULL) cienthit_->::HitInfo::Clear();
+    if (has_client_hit()) {
+      if (client_hit_ != NULL) client_hit_->::HitInfo::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -321,21 +326,42 @@ bool GameMessage::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .BallPositions ball_positions = 1;
+      // required .GameMessage.Type type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::GameMessage_Type_IsValid(value)) {
+            set_type(static_cast< ::GameMessage_Type >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_ball_positions;
+        break;
+      }
+
+      // optional .BallPositions ball_positions = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_ball_positions:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_ball_positions()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_score;
+        if (input->ExpectTag(26)) goto parse_score;
         break;
       }
 
-      // optional .Score score = 2;
-      case 2: {
+      // optional .Score score = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_score:
@@ -344,17 +370,17 @@ bool GameMessage::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_cientHit;
+        if (input->ExpectTag(34)) goto parse_client_hit;
         break;
       }
 
-      // optional .HitInfo cientHit = 3;
-      case 3: {
+      // optional .HitInfo client_hit = 4;
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_cientHit:
+         parse_client_hit:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_cienthit()));
+               input, mutable_client_hit()));
         } else {
           goto handle_uninterpreted;
         }
@@ -380,22 +406,28 @@ bool GameMessage::MergePartialFromCodedStream(
 
 void GameMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .BallPositions ball_positions = 1;
+  // required .GameMessage.Type type = 1;
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->type(), output);
+  }
+
+  // optional .BallPositions ball_positions = 2;
   if (has_ball_positions()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->ball_positions(), output);
+      2, this->ball_positions(), output);
   }
 
-  // optional .Score score = 2;
+  // optional .Score score = 3;
   if (has_score()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->score(), output);
+      3, this->score(), output);
   }
 
-  // optional .HitInfo cientHit = 3;
-  if (has_cienthit()) {
+  // optional .HitInfo client_hit = 4;
+  if (has_client_hit()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->cienthit(), output);
+      4, this->client_hit(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -406,25 +438,31 @@ void GameMessage::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* GameMessage::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .BallPositions ball_positions = 1;
+  // required .GameMessage.Type type = 1;
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->type(), target);
+  }
+
+  // optional .BallPositions ball_positions = 2;
   if (has_ball_positions()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->ball_positions(), target);
+        2, this->ball_positions(), target);
   }
 
-  // optional .Score score = 2;
+  // optional .Score score = 3;
   if (has_score()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->score(), target);
+        3, this->score(), target);
   }
 
-  // optional .HitInfo cientHit = 3;
-  if (has_cienthit()) {
+  // optional .HitInfo client_hit = 4;
+  if (has_client_hit()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        3, this->cienthit(), target);
+        4, this->client_hit(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -438,25 +476,31 @@ int GameMessage::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .BallPositions ball_positions = 1;
+    // required .GameMessage.Type type = 1;
+    if (has_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional .BallPositions ball_positions = 2;
     if (has_ball_positions()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->ball_positions());
     }
 
-    // optional .Score score = 2;
+    // optional .Score score = 3;
     if (has_score()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->score());
     }
 
-    // optional .HitInfo cientHit = 3;
-    if (has_cienthit()) {
+    // optional .HitInfo client_hit = 4;
+    if (has_client_hit()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->cienthit());
+          this->client_hit());
     }
 
   }
@@ -486,14 +530,17 @@ void GameMessage::MergeFrom(const ::google::protobuf::Message& from) {
 void GameMessage::MergeFrom(const GameMessage& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_type()) {
+      set_type(from.type());
+    }
     if (from.has_ball_positions()) {
       mutable_ball_positions()->::BallPositions::MergeFrom(from.ball_positions());
     }
     if (from.has_score()) {
       mutable_score()->::Score::MergeFrom(from.score());
     }
-    if (from.has_cienthit()) {
-      mutable_cienthit()->::HitInfo::MergeFrom(from.cienthit());
+    if (from.has_client_hit()) {
+      mutable_client_hit()->::HitInfo::MergeFrom(from.client_hit());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -512,6 +559,7 @@ void GameMessage::CopyFrom(const GameMessage& from) {
 }
 
 bool GameMessage::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   if (has_ball_positions()) {
     if (!this->ball_positions().IsInitialized()) return false;
@@ -519,17 +567,18 @@ bool GameMessage::IsInitialized() const {
   if (has_score()) {
     if (!this->score().IsInitialized()) return false;
   }
-  if (has_cienthit()) {
-    if (!this->cienthit().IsInitialized()) return false;
+  if (has_client_hit()) {
+    if (!this->client_hit().IsInitialized()) return false;
   }
   return true;
 }
 
 void GameMessage::Swap(GameMessage* other) {
   if (other != this) {
+    std::swap(type_, other->type_);
     std::swap(ball_positions_, other->ball_positions_);
     std::swap(score_, other->score_);
-    std::swap(cienthit_, other->cienthit_);
+    std::swap(client_hit_, other->client_hit_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -831,7 +880,7 @@ void Vector3f::Swap(Vector3f* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int BallPositions::kBallsFieldNumber;
+const int BallPositions::kBallFieldNumber;
 #endif  // !_MSC_VER
 
 BallPositions::BallPositions()
@@ -884,7 +933,7 @@ BallPositions* BallPositions::New() const {
 }
 
 void BallPositions::Clear() {
-  balls_.Clear();
+  ball_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -895,17 +944,17 @@ bool BallPositions::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .Vector3f balls = 1;
+      // repeated .Vector3f ball = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_balls:
+         parse_ball:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_balls()));
+                input, add_ball()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_balls;
+        if (input->ExpectTag(10)) goto parse_ball;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -928,10 +977,10 @@ bool BallPositions::MergePartialFromCodedStream(
 
 void BallPositions::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .Vector3f balls = 1;
-  for (int i = 0; i < this->balls_size(); i++) {
+  // repeated .Vector3f ball = 1;
+  for (int i = 0; i < this->ball_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->balls(i), output);
+      1, this->ball(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -942,11 +991,11 @@ void BallPositions::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* BallPositions::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .Vector3f balls = 1;
-  for (int i = 0; i < this->balls_size(); i++) {
+  // repeated .Vector3f ball = 1;
+  for (int i = 0; i < this->ball_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->balls(i), target);
+        1, this->ball(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -959,12 +1008,12 @@ void BallPositions::SerializeWithCachedSizes(
 int BallPositions::ByteSize() const {
   int total_size = 0;
 
-  // repeated .Vector3f balls = 1;
-  total_size += 1 * this->balls_size();
-  for (int i = 0; i < this->balls_size(); i++) {
+  // repeated .Vector3f ball = 1;
+  total_size += 1 * this->ball_size();
+  for (int i = 0; i < this->ball_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->balls(i));
+        this->ball(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -992,7 +1041,7 @@ void BallPositions::MergeFrom(const ::google::protobuf::Message& from) {
 
 void BallPositions::MergeFrom(const BallPositions& from) {
   GOOGLE_CHECK_NE(&from, this);
-  balls_.MergeFrom(from.balls_);
+  ball_.MergeFrom(from.ball_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -1010,15 +1059,15 @@ void BallPositions::CopyFrom(const BallPositions& from) {
 
 bool BallPositions::IsInitialized() const {
 
-  for (int i = 0; i < balls_size(); i++) {
-    if (!this->balls(i).IsInitialized()) return false;
+  for (int i = 0; i < ball_size(); i++) {
+    if (!this->ball(i).IsInitialized()) return false;
   }
   return true;
 }
 
 void BallPositions::Swap(BallPositions* other) {
   if (other != this) {
-    balls_.Swap(&other->balls_);
+    ball_.Swap(&other->ball_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

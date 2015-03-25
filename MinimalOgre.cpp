@@ -823,10 +823,14 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     else if (button == host)
     {
         //Wait for Connection
+        client = false;
+        serverManager.accept(67309);
     }
     else if (button == connect)
     {
         // Pick Port and Host
+        client = true;
+        serverManager.connect("firefly", 67309);
     }
     else if (button == back)
     {
