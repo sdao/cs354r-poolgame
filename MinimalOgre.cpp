@@ -420,8 +420,11 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
             else if (arg.key == OIS::KC_P)
             {
                 state = Pause;
-
-                pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Pause", "GAME PAUSED: Unpause by pressing 'P'", 600);
+                mTrayMgr->showCursor();
+                pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Pause", "GAME PAUSED", 400);
+                resume = mTrayMgr->createButton(OgreBites::TL_CENTER, "Resume", "Resume");
+                ff = mTrayMgr->createButton(OgreBites::TL_CENTER, "Forfeit", "Forfeit");
+                ex = mTrayMgr->createButton(OgreBites::TL_CENTER, "Exit", "Quit");
         		for(int i = 0; i < 6; i++){
         			player.get()->inputKeys[i] = false;
         		}
@@ -431,6 +434,10 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
             if (arg.key == OIS::KC_P)
             {
                 state = Play;
+                mTrayMgr->hideCursor();
+                mTrayMgr->destroyWidget(resume);
+                mTrayMgr->destroyWidget(ff);
+                mTrayMgr->destroyWidget(ex);
                 mTrayMgr->destroyWidget(pauseLabel);
             }
 			//show pause menu
@@ -474,7 +481,7 @@ bool MinimalOgre::mouseMoved( const OIS::MouseEvent &arg )
 	//if(player.isInState(PlayerState::Play))
     if (state == Play)
 	   player->getMouseEvent(arg);
-    if (state == Main)
+    else
         mTrayMgr->injectMouseMove(arg);
     return true;
 }
@@ -819,6 +826,15 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     else if (button == ex)
     {
         mShutDown = true;
+    }
+    else if (button == resume)
+    {
+        state = Play;
+        mTrayMgr->hideCursor();
+        mTrayMgr->destroyWidget(resume);
+        mTrayMgr->destroyWidget(ff);
+        mTrayMgr->destroyWidget(ex);
+        mTrayMgr->destroyWidget(pauseLabel);
     }
     else if (button == host)
     {

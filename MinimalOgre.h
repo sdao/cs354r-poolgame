@@ -99,6 +99,8 @@ protected:
     OgreBites::Button* sp;
     OgreBites::Button* mp;
     OgreBites::Button* ex;
+    OgreBites::Button* resume;
+    OgreBites::Button* ff;
     OgreBites::Button* back;
     OgreBites::Button* host;
     OgreBites::Button* connect;
