@@ -1,0 +1,34 @@
+message GameMessage {
+  enum Type {
+    BALL_POSITIONS = 1;
+    SCORE = 2;
+    SERVER_RELEASE_CONTROL = 3;
+    CLIENT_HIT = 4;
+  }
+
+  optional BallPositions ball_positions = 1;
+  optional Score score = 2;
+  optional HitInfo cientHit = 3;
+}
+
+message Vector3f {
+  required float x = 1;
+  required float y = 2;
+  required float z = 3;
+}
+
+message BallPositions {
+  repeated Vector3f balls = 1;
+}
+
+message Score {
+  required float host_score = 1;
+  required float client_score = 2;
+}
+
+message HitInfo {
+  enum Strength { LOW = 1; MEDIUM = 2; HIGH = 3; }
+  required Strength strength = 1;
+  required Vector3f direction = 2;
+}
+

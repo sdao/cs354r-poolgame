@@ -55,7 +55,9 @@ MinimalOgre::MinimalOgre(void)
 	player(),
 	gameinfo(),
 	multiplayer(false),
-	client(false)
+	client(false),
+        serverManager(),
+        clientManager()
 {
 }
 //-------------------------------------------------------------------------------------

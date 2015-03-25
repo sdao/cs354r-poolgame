@@ -40,6 +40,8 @@ This source file is part of the
 //#include "Balls.h"
 #include "GameInfo.h"
 #include "Physics.h"
+#include "Server.h"
+#include "Client.h"
 #include <vector>
 #include <memory>
 
@@ -101,6 +103,8 @@ protected:
 	std::shared_ptr<GameInfo> gameinfo;
 	bool multiplayer;
 	bool client;
+	Server serverManager;
+	Client clientManager;
 };
 
 #endif // #ifndef __MinimalOgre_h_
