@@ -178,29 +178,42 @@ GameInfo SetupField(float length, float width, float height, Ogre::SceneManager*
 	return gameinfo;
 }
 */
-void setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::shared_ptr<GameObject> >& sceneObjects){
+bool setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::shared_ptr<GameObject> >& sceneObjects){
 	int startscore = gameinfo.get()->ballPositions.size();
 	bool moving = false;
 	gameinfo.get()->ballPositions.clear();
 	for( auto go : sceneObjects ){
-		if(go.get()->getTag() == 0x2){
+		if(go.get()->getTag() == 2){
 			gameinfo.get()->ballPositions.push_back(go.get()->getWorldPosition());
 			
 			//get ball Physics comonent, get velocity etc
 			std::shared_ptr<PhysicsSphereCollider> collider = go.get()->getComponent<PhysicsSphereCollider>();
 			if(collider != NULL && !moving){
-				if(collider->getVelocity() > 3.0f){
+				if(collider->getVelocity() > 7.0f){
+					moving = true;
+				}
+			}
+			continue;
+		}
+		//include cueball in movement check
+		if(go.get()->getTag() == 1){
+			std::shared_ptr<PhysicsSphereCollider> collider = go.get()->getComponent<PhysicsSphereCollider>();
+			if(collider != NULL && !moving){
+				if(collider->getVelocity() > 7.0f){
 					moving = true;
 				}
 			}
 		}
 	}
 
-	/*if(moving)
-		std::cout << "We're still moving" <<std::endl;
+	//if(moving)
+	//	std::cout << "We're still moving" <<std::endl;
+	//else
+	//	std::cout << "we stopped!"<<std::endl;
+	
+	if(gameinfo.get()->playerturn == 0)
+		gameinfo.get()->scoreP1 += startscore - gameinfo.get()->ballPositions.size();
 	else
-		std::cout << "we stopped!"<<std::endl;
-	*/
-
-	gameinfo.get()->scoreP1 += startscore - gameinfo.get()->ballPositions.size();
+		gameinfo.get()->scoreP2 += startscore - gameinfo.get()->ballPositions.size();
+	return moving;
 }

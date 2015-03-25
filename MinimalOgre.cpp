@@ -390,7 +390,10 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	      go->update(info);
     	}
 	
-		setPositions(gameinfo, sceneObjects);
+		//TODO come back for multiplayer
+		if( !setPositions(gameinfo, sceneObjects) && player->isInState(PlayerState::Wait)){
+			player->setState(PlayerState::Hit);
+		}
 	}
 
 	//update player
@@ -485,6 +488,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	switch(state){
 		case Main:
 			//show main menu gui
+			
 			break;
 		case Play:
 			//pass keypress to player Object
@@ -492,11 +496,16 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 
 		    if (arg.key == OIS::KC_SPACE)
 		    {
-	    	    if (player && player->isInState(PlayerState::Hit)) {
+	    	    if (player && player->isInState(PlayerState::Hit) &&
+					gameinfo.get()->playerturn == 0) {
+					
                     std::string strength = scoreboard->getParamValue(2);
 		            auto cueController = player->getComponent<CueStickController>();
 		            cueController->hit(strength);
-	  	    		// playerpState = PlayerState::Wait;
+	  	    		player->setState(PlayerState::Wait);
+					if(multiplayer){
+						gameinfo.get()->playerturn = (gameinfo.get()->playerturn+1)%2;
+					}
         		}
     		}
 		/*
@@ -629,7 +638,7 @@ bool MinimalOgre::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID 
 
 void MinimalOgre::setupField(bool singleplayer, float length, float width, float height){
 
-	GameInfo tempgameinfo = {0, 0, 1, Ogre::Vector3(length, height, width)};
+	GameInfo tempgameinfo = {0, 0, 0, Ogre::Vector3(length, height, width)};
 	tempgameinfo.ballPositions = std::vector<Ogre::Vector3>();
 
 	gameinfo = std::make_shared<GameInfo>(GameInfo(tempgameinfo));

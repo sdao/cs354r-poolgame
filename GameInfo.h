@@ -22,5 +22,5 @@ struct GameInfo{
 };
 
 //GameInfo SetupField(float, float, float, Ogre::SceneManager*, Physics&, std::vector<std::shared_ptr<GameObject> >&);
-void setPositions(std::shared_ptr<GameInfo>&, const std::vector<std::shared_ptr<GameObject> >&);
+bool setPositions(std::shared_ptr<GameInfo>&, const std::vector<std::shared_ptr<GameObject> >&);
 #endif
