@@ -68,6 +68,7 @@ protected:
     OgreBites::ParamsPanel* scoreboard;    // displays scores
     OgreBites::ParamsPanel* controls;    // displays controls
     OgreBites::Label* pauseLabel;          // Label saying Pause
+    OgreBites::Label* waitLabel;          // Label saying waiting for connection
     bool mCursorWasVisible;                   // was cursor visible before dialog appeared
     bool mShutDown;
  
@@ -88,7 +89,8 @@ protected:
     virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
 
 	//Assignment3 methods
-	void setupField(bool, float, float, float); 
+	void setupField(bool, float, float, float);
+    void destroyField(); 
 
     // Ogre::WindowEventListener
     virtual void windowResized(Ogre::RenderWindow* rw);
@@ -99,6 +101,7 @@ protected:
     OgreBites::Button* sp;
     OgreBites::Button* mp;
     OgreBites::Button* ex;
+    OgreBites::Button* mm;
     OgreBites::Button* resume;
     OgreBites::Button* ff;
     OgreBites::Button* back;

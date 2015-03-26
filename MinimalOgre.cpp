@@ -44,6 +44,7 @@ MinimalOgre::MinimalOgre(void)
     scoreboard(0),
     controls(0),
     pauseLabel(0),
+    waitLabel(0),
     mCursorWasVisible(false),
     mShutDown(false),
     mInputManager(0),
@@ -54,6 +55,7 @@ MinimalOgre::MinimalOgre(void)
     sp(0),
     mp(0),
     ex(0),
+    mm(0),
     back(0),
     host(0),
     connect(0),
@@ -426,7 +428,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
                 pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Pause", "GAME PAUSED", 400);
                 resume = mTrayMgr->createButton(OgreBites::TL_CENTER, "Resume", "Resume");
                 ff = mTrayMgr->createButton(OgreBites::TL_CENTER, "Forfeit", "Forfeit");
-                ex = mTrayMgr->createButton(OgreBites::TL_CENTER, "Exit", "Quit");
+                mm = mTrayMgr->createButton(OgreBites::TL_CENTER, "Main Menu", "Return to Main Menu");
         		for(int i = 0; i < 6; i++){
         			player.get()->inputKeys[i] = false;
         		}
@@ -439,7 +441,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
                 mTrayMgr->hideCursor();
                 mTrayMgr->destroyWidget(resume);
                 mTrayMgr->destroyWidget(ff);
-                mTrayMgr->destroyWidget(ex);
+                mTrayMgr->destroyWidget(mm);
                 mTrayMgr->destroyWidget(pauseLabel);
             }
 			//show pause menu
@@ -776,6 +778,13 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
     controls->hide();
 } 
 
+void MinimalOgre::destroyField(){
+    mSceneMgr->destroyAllEntities();
+    // wallEntity0Node->removeAndDestroyAllChildren();
+    // mSceneMgr->destroySceneNode(wallEntity0Node);
+    mTrayMgr->destroyAllWidgets();
+}
+
 //Adjust mouse clipping area
 void MinimalOgre::windowResized(Ogre::RenderWindow* rw)
 {
@@ -829,22 +838,32 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         mShutDown = true;
     }
+    else if (button == mm)
+    {
+        destroyField();
+        sp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Single Player", "Solo");
+        mp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Multi Player", "Multiplayer");
+        ex = mTrayMgr->createButton(OgreBites::TL_CENTER, "Exit", "Quit");
+        state = Main;
+    }
     else if (button == resume)
     {
         state = Play;
         mTrayMgr->hideCursor();
         mTrayMgr->destroyWidget(resume);
         mTrayMgr->destroyWidget(ff);
-        mTrayMgr->destroyWidget(ex);
+        mTrayMgr->destroyWidget(mm);
         mTrayMgr->destroyWidget(pauseLabel);
     }
     else if (button == host)
     {
         //Wait for Connection
         client = false;
-        serverManager.accept(67309, []() {
+        serverManager.accept(67309, [&]() {
           std::cout << "server accept callback\n";
+          mTrayMgr->destroyWidget(waitLabel);
         });
+        waitLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Wait", "Waiting For Connection", 400);
     }
     else if (button == connect)
     {
@@ -860,7 +879,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     }
     else if (button == back)
     {
-        mTrayMgr->clearTray(OgreBites::TL_CENTER);
+        // mTrayMgr->clearTray(OgreBites::TL_CENTER);
         mTrayMgr->destroyAllWidgets();
         sp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Single Player", "Solo");
         mp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Multi Player", "Multiplayer");
