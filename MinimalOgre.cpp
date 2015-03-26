@@ -877,7 +877,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         // Pick Port and Host
         client = true;
-        clientManager.connect("atlas-moth", 67309, [](bool connected) {
+        clientManager.connect("atlas-moth", 67309, [=](bool connected) {
           if (connected) {
             std::cout << "connected!\n";
             isConnectedHost = true;
