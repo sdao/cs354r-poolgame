@@ -27,6 +27,8 @@ This source file is part of the
 #include "CueStickController.h"
 #include "ObjectSound.h"
 #include <string>
+#include <thread>
+#include <chrono>
 #include "GoalController.h"
  
 //-------------------------------------------------------------------------------------
@@ -848,8 +850,12 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         // Pick Port and Host
         client = true;
-        clientManager.connect("firefly", 67309, []() {
-          std::cout << "client connect callback\n";
+        clientManager.connect("atlas-moth", 67309, [](bool accepted) {
+          if (accepted) {
+            std::cout << "connected!\n";
+          } else {
+            std::cout << ":( :( :( no server :( :( :(\n";
+          }
         });
     }
     else if (button == back)

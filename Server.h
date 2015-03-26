@@ -13,8 +13,7 @@ using boost::asio::ip::tcp;
 class Server {
   boost::asio::io_service io_service;
   tcp::socket sock;
-  std::mutex lock;
-  std::thread background;
+  std::mutex mutex;
   bool connectStatus;
 
   GameMessage storage;
