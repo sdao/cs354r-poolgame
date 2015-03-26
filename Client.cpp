@@ -23,6 +23,7 @@ void Client::connect(std::string hostname,
 
       if (error) {
         std::cout << "Could not connect :(\n";
+        std::cout << error.message() << "\n";
         connectStatus = false;
         completionCallback(false);
       } else {

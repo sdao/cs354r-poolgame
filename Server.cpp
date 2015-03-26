@@ -5,11 +5,12 @@ Server::Server() : io_service(),
                    connectStatus(false) {}
 
 void Server::accept(int port, std::function<void()> completionCallback) {
-  std::thread t([&]() {
+  std::thread t([=]() {
     std::cout << "Waiting for client...\n";
 
     {
       std::lock_guard<std::mutex> lock(mutex);
+      std::cout << "Accepting client on port " << port << "\n";
       tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
       acceptor.accept(sock);
     }
