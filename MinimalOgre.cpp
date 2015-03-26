@@ -66,8 +66,9 @@ MinimalOgre::MinimalOgre(void)
 	gameinfo(),
 	multiplayer(false),
 	client(false),
-        serverManager(),
-        clientManager()
+    serverManager(),
+    clientManager(),
+    isConnectedHost(0)
 {
 }
 //-------------------------------------------------------------------------------------
@@ -271,7 +272,14 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     else if (state == GameState::Main)
     {
-        // Control Main Menu Stuff
+        if (isConnectedHost.load())
+        {
+            state = Play;
+            // Create the scene
+            mTrayMgr->clearTray(OgreBites::TL_CENTER);
+            mTrayMgr->destroyAllWidgets();
+            setupField(false, 1000, 1000, 1000);
+        }
     }
 
     return true;
@@ -859,9 +867,9 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         //Wait for Connection
         client = false;
-        serverManager.accept(67309, [&]() {
+        serverManager.accept(67309, [=]() {
           std::cout << "server accept callback\n";
-          mTrayMgr->destroyWidget(waitLabel);
+          isConnectedHost = true;
         });
         waitLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Wait", "Waiting For Connection", 400);
     }
@@ -872,6 +880,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
         clientManager.connect("atlas-moth", 67309, [](bool connected) {
           if (connected) {
             std::cout << "connected!\n";
+            isConnectedHost = true;
           } else {
             std::cout << ":( :( :( no server :( :( :(\n";
           }

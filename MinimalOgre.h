@@ -44,6 +44,7 @@ This source file is part of the
 #include "Client.h"
 #include <vector>
 #include <memory>
+#include <atomic>
 
 class MinimalOgre : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener
 {
@@ -116,6 +117,7 @@ protected:
 	bool client;
 	Server serverManager;
 	Client clientManager;
+    std::atomic_bool isConnectedHost;
 
 
     // SDKTrayListener Functions
