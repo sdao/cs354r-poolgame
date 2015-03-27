@@ -11,7 +11,7 @@ void Server::accept(int port, std::function<void()> completionCallback) {
     std::cout << "Waiting for client...\n";
 
     {
-      std::lock_guard<std::mutex> lock(mutex);
+      std::lock_guard<std::mutex> lock(this->mutex);
       std::cout << "Accepting client on port " << port << "\n";
       tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
       acceptor.accept(sock);
@@ -42,28 +42,30 @@ Server::postBallPositions(
     vMsg->set_y(v.y);
     vMsg->set_z(v.z);
   }
-
   ballMessage->set_make_noise(makeNoise);
   ballMessage->set_host_score(hostScore);
   ballMessage->set_client_score(clientScore);
 
-  std::thread t([&]() {
-    std::lock_guard<std::mutex> lock(mutex);
-    int size = ballMessage->ByteSize();
+  std::thread t([=]() {
+    std::lock_guard<std::mutex> lock(this->mutex);
+    int size = this->storage.ByteSize();
     std::vector<std::uint8_t> data(sizeof(int) + size);
     *reinterpret_cast<int*>(&data[0]) = size;
-    ballMessage->SerializeToArray(&data[sizeof(int)], size);
-    boost::asio::write(sock, boost::asio::buffer(data));
-  }); 
+    this->storage.SerializeToArray(&data[sizeof(int)], size);
+    boost::asio::write(this->sock, boost::asio::buffer(data));
+  });
+  t.detach(); 
 }
 
 void Server::debugHeartbeat() {
   std::thread t([this]() {
+    int counter = 0;
     while (true) {
       std::vector<Ogre::Vector3> empty;
-      postBallPositions(empty, false, 42, 42);
+      postBallPositions(empty, false, counter, counter);
       std::cout << "----Heartbeat---\n";
       std::this_thread::sleep_for(std::chrono::seconds(1));
+      counter++;
     }
   });
   t.detach();

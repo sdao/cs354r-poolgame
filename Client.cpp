@@ -14,12 +14,12 @@ void Client::connect(std::string hostname,
     std::cout << "Looking for server `" << hostname << "`...\n";
 
     try {
-      tcp::resolver resolver(io_service);
+      tcp::resolver resolver(this->io_service);
       tcp::resolver::query query(hostname, std::to_string(port));
       tcp::resolver::iterator iter = resolver.resolve(query);
 
       boost::system::error_code error;
-      boost::asio::connect(sock, iter, error);
+      boost::asio::connect(this->sock, iter, error);
 
       if (error) {
         std::cout << "Could not connect :(\n";
@@ -47,7 +47,7 @@ void Client::continuouslyReceiveBallPositions(ReceiveHandler receiveCallback)
       boost::system::error_code error;
 
       int messageSize;
-      boost::asio::read(sock,
+      boost::asio::read(this->sock,
         boost::asio::buffer(&messageSize, sizeof(int)),
         error);
 
@@ -58,7 +58,7 @@ void Client::continuouslyReceiveBallPositions(ReceiveHandler receiveCallback)
       }
 
       std::vector<uint8_t> protobufRaw(messageSize);
-      boost::asio::read(sock,
+      boost::asio::read(this->sock,
         boost::asio::buffer(&protobufRaw[0], messageSize));
     
       if (storage.ParseFromArray(&protobufRaw[0], messageSize)) {
@@ -82,6 +82,7 @@ void Client::continuouslyReceiveBallPositions(ReceiveHandler receiveCallback)
       }
     }
   });
+  t.detach();
 }
 
 void Client::continuouslyReceiveDebugHeartbeat() {
@@ -93,7 +94,7 @@ void Client::continuouslyReceiveDebugHeartbeat() {
     int clientScore
   ) {
     if (success) {
-      std::cout << "Heartbeat received\n";
+      std::cout << "(" << hostScore << ") Heartbeat received\n";
     } else {
       std::cout << "Error while receiving heartbeat\n";
     }
