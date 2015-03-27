@@ -81,7 +81,6 @@ void Client::continuouslyReceiveBallPositions(
             ballMessage.make_noise(),
             ballMessage.host_score(),
             ballMessage.client_score());
-          return;
         }
       }
     }
