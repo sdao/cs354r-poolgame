@@ -121,7 +121,7 @@ void Server::debugHeartbeat() {
       std::vector<Ogre::Vector3> empty;
       postBallPositions(empty, false, counter, counter);
       std::cout << "----Heartbeat---\n";
-      std::this_thread::sleep_for(std::chrono::seconds(1));
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
       counter++;
     }
   });

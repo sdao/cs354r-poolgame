@@ -5,6 +5,7 @@
 #include <OgreVector3.h>
 #include <vector>
 #include "GameObject.h"
+#include <mutex>
 //#include "Physics.h"
 //#include "PhysicsBoxCollider.h"
 //#include "PhysicsSphereCollider.h"
@@ -18,7 +19,9 @@ struct GameInfo{
 	int scoreP2;
 	int playerturn;
 	Ogre::Vector3 dimensions;
+	Ogre::Vector3 cueBallPosition;
 	std::vector<Ogre::Vector3> ballPositions;
+	std::mutex mutex;
 };
 
 //GameInfo SetupField(float, float, float, Ogre::SceneManager*, Physics&, std::vector<std::shared_ptr<GameObject> >&);

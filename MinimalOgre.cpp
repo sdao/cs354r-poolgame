@@ -241,25 +241,106 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	if(state == GameState::Play){
 
-		
-    	// Run physics.
-    	physics.stepSimulation(evt.timeSinceLastFrame);
+		//Server runs physics and updates
+		if(!client){
+	    	// Run physics.
+	    	physics.stepSimulation(evt.timeSinceLastFrame);
 
 
-    	// Update components.
-		UpdateInfo info;
-	    info.physics = &physics;
-	    info.deltaTime = evt.timeSinceLastFrame;
-    	for (auto go : sceneObjects) {
-	      go->update(info);
-    	}
-	
+    		// Update components.
+			UpdateInfo info;
+		    info.physics = &physics;
+		    info.deltaTime = evt.timeSinceLastFrame;
+	    	for (auto go : sceneObjects) {
+		      go->update(info);
+    		}			
+		}
+		else{
+			//hit msg
+		}	
 
-		//TODO come back for multiplayer
-		if( !client && !setPositions(gameinfo, sceneObjects) && player->isInState(PlayerState::Wait)){
-			player->setState(PlayerState::Hit);
+		//Multiplayer if server, set turnstate
+		if( !client && !setPositions(gameinfo, sceneObjects)){
+			//setting turn
+			if(gameinfo->playerturn == 0){
+				//P1
+				if(player->isInState(PlayerState::Wait)){
+					player->setState(PlayerState::Hit);
+				}
+			}
+			//let P2 hit
+			else if(gameinfo->playerturn == 1){
+				//P2
+				serverManager.endHostTurn();
+				serverManager.waitForClientHit(
+					[=] (int strength, Ogre::Vector3 dir, int ballindx){
+						
+					}
+				);
+				gameinfo->playerturn = -1;
+			}
+			//waiting for P2 to hit
+			else if(gameinfo->playerturn == -1){
+				
+			}
+			
+
+			//serverManager
+			
 		}
 
+		
+		//Server - set ballpositions
+		if(!client){
+			serverManager.postBallPositions(gameinfo->ballPositions,
+											false,
+											gameinfo->scoreP1,
+											gameinfo->scoreP2);
+		}
+		else{
+			clientManager.continuouslyReceiveBallPositions(
+				[=](bool success,
+					const std::vector<Ogre::Vector3> pos, 
+					bool make_noise, 
+					int hostScore, 
+					int clientScore) {
+					//TODO makeNOISE
+						//success = read
+						if(success){
+							{
+								std::lock_guard<std::mutex>lock(gameinfo->mutex);
+								gameinfo->ballPositions.clear();
+								for(auto ball : pos){
+									gameinfo->ballPositions.push_back(ball);
+								}
+							}
+						}
+						else{
+							//something went terribly terribly wrong
+							exit(0);
+						}
+					},
+				[=] (){
+					//{
+					//std::lock_guard<std::mutex>lock(gameinfo->mutex);
+					//gameinfo->playerturn = 1;
+					//}
+					player->setState(Hit);
+				}
+			);
+			
+			//gameinfo -> sceneobjects
+			{
+				std::lock_guard<std::mutex> lock(gameinfo->mutex);
+				for(auto go : sceneObjects){
+					if(go->getTag() == 2){
+						int i;	
+					}
+				}
+			}
+			
+
+		}
         //update player
         player->update();
         
@@ -284,6 +365,11 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     return true;
 }
+
+void recieveHit(){
+
+}
+
 //-------------------------------------------------------------------------------------
 bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 {
@@ -514,12 +600,11 @@ bool MinimalOgre::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID 
 
 void MinimalOgre::setupField(bool singleplayer, float length, float width, float height){
 
-	if(!singleplayer){
-		GameInfo tempgameinfo = {0, 0, 0, Ogre::Vector3(length, height, width)};
-		tempgameinfo.ballPositions = std::vector<Ogre::Vector3>();
-
-		gameinfo = std::make_shared<GameInfo>(GameInfo(tempgameinfo));
-	}
+	//if(!singleplayer){
+	//GameInfo tempgameinfo = {0, 0, 0, Ogre::Vector3(length, height, width)};
+	//tempgameinfo.ballPositions = std::vector<Ogre::Vector3>();
+	gameinfo = std::make_shared<GameInfo>();
+	//}
 
     //make the walls
     Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);

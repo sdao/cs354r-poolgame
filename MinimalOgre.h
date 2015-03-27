@@ -45,6 +45,7 @@ This source file is part of the
 #include <vector>
 #include <memory>
 #include <atomic>
+#include <mutex>
 
 class MinimalOgre : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener
 {
@@ -118,6 +119,8 @@ protected:
 	Server serverManager;
 	Client clientManager;
     std::atomic_bool isConnectedHost;
+    std::atomic_bool clientHit;
+    std::atomic_bool clientRecieveBallPos;
 
 
     // SDKTrayListener Functions
