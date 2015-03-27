@@ -7,7 +7,7 @@ noinst_HEADERS = MinimalOgre.h Component.h RootGameObject.h GameObject.h \
 bin_PROGRAMS = assignment2
 assignment2_CPPFLAGS = -I$(top_srcdir) \
                        -I$(top_srcdir)/protobuf-2.5.0/src \
-                       -std=c++11
+                       -std=c++11 -g
 assignment2_SOURCES = MinimalOgre.cpp RootGameObject.cpp GameObject.cpp \
 	              PhysicsSphereCollider.cpp PhysicsCollider.cpp \
 		      Physics.cpp Player.cpp PhysicsBoxCollider.cpp Ball.cpp \

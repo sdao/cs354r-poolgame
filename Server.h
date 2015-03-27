@@ -5,6 +5,7 @@
 #include <iostream>
 #include <mutex>
 #include <vector>
+#include <atomic>
 #include <OgreVector3.h>
 #include "GameMessage.pb.h"
 
@@ -15,6 +16,7 @@ class Server {
   tcp::socket sock;
   std::mutex mutex;
   bool connectStatus;
+  std::atomic<bool> attemptingAccept;
 
   GameMessage storage;
 
@@ -22,7 +24,13 @@ public:
   Server();
 
   void accept(int port, std::function<void()> completionCallback);
-  void postBallPositions(const std::vector<Ogre::Vector3>& ballPositions);
+  void postBallPositions(
+    const std::vector<Ogre::Vector3>& ballPositions,
+    bool makeNoise,
+    int hostScore,
+    int clientScore
+  );
+  void debugHeartbeat();
   bool connected() const;
 };
 

@@ -870,6 +870,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
         serverManager.accept(67309, [=]() {
           std::cout << "server accept callback\n";
           isConnectedHost = true;
+          this->serverManager.debugHeartbeat();
         });
         waitLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Wait", "Waiting For Connection", 400);
     }
@@ -881,6 +882,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
           if (connected) {
             std::cout << "connected!\n";
             isConnectedHost = true;
+            this->clientManager.continuouslyReceiveDebugHeartbeat();
           } else {
             std::cout << ":( :( :( no server :( :( :(\n";
           }

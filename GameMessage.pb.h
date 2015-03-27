@@ -35,14 +35,12 @@ void protobuf_ShutdownFile_GameMessage_2eproto();
 class GameMessage;
 class Vector3f;
 class BallPositions;
-class Score;
 class HitInfo;
 
 enum GameMessage_Type {
   GameMessage_Type_BALL_POSITIONS = 1,
-  GameMessage_Type_SCORE = 2,
-  GameMessage_Type_SERVER_RELEASE_CONTROL = 3,
-  GameMessage_Type_CLIENT_HIT = 4
+  GameMessage_Type_SERVER_RELEASE_CONTROL = 2,
+  GameMessage_Type_CLIENT_HIT = 3
 };
 bool GameMessage_Type_IsValid(int value);
 const GameMessage_Type GameMessage_Type_Type_MIN = GameMessage_Type_BALL_POSITIONS;
@@ -135,7 +133,6 @@ class GameMessage : public ::google::protobuf::Message {
 
   typedef GameMessage_Type Type;
   static const Type BALL_POSITIONS = GameMessage_Type_BALL_POSITIONS;
-  static const Type SCORE = GameMessage_Type_SCORE;
   static const Type SERVER_RELEASE_CONTROL = GameMessage_Type_SERVER_RELEASE_CONTROL;
   static const Type CLIENT_HIT = GameMessage_Type_CLIENT_HIT;
   static inline bool Type_IsValid(int value) {
@@ -177,19 +174,10 @@ class GameMessage : public ::google::protobuf::Message {
   inline ::BallPositions* release_ball_positions();
   inline void set_allocated_ball_positions(::BallPositions* ball_positions);
 
-  // optional .Score score = 3;
-  inline bool has_score() const;
-  inline void clear_score();
-  static const int kScoreFieldNumber = 3;
-  inline const ::Score& score() const;
-  inline ::Score* mutable_score();
-  inline ::Score* release_score();
-  inline void set_allocated_score(::Score* score);
-
-  // optional .HitInfo client_hit = 4;
+  // optional .HitInfo client_hit = 3;
   inline bool has_client_hit() const;
   inline void clear_client_hit();
-  static const int kClientHitFieldNumber = 4;
+  static const int kClientHitFieldNumber = 3;
   inline const ::HitInfo& client_hit() const;
   inline ::HitInfo* mutable_client_hit();
   inline ::HitInfo* release_client_hit();
@@ -201,20 +189,17 @@ class GameMessage : public ::google::protobuf::Message {
   inline void clear_has_type();
   inline void set_has_ball_positions();
   inline void clear_has_ball_positions();
-  inline void set_has_score();
-  inline void clear_has_score();
   inline void set_has_client_hit();
   inline void clear_has_client_hit();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::BallPositions* ball_positions_;
-  ::Score* score_;
   ::HitInfo* client_hit_;
   int type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_GameMessage_2eproto();
   friend void protobuf_AssignDesc_GameMessage_2eproto();
@@ -393,95 +378,31 @@ class BallPositions : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::Vector3f >*
       mutable_ball();
 
-  // @@protoc_insertion_point(class_scope:BallPositions)
- private:
+  // required bool make_noise = 2;
+  inline bool has_make_noise() const;
+  inline void clear_make_noise();
+  static const int kMakeNoiseFieldNumber = 2;
+  inline bool make_noise() const;
+  inline void set_make_noise(bool value);
 
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::RepeatedPtrField< ::Vector3f > ball_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
-
-  friend void  protobuf_AddDesc_GameMessage_2eproto();
-  friend void protobuf_AssignDesc_GameMessage_2eproto();
-  friend void protobuf_ShutdownFile_GameMessage_2eproto();
-
-  void InitAsDefaultInstance();
-  static BallPositions* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class Score : public ::google::protobuf::Message {
- public:
-  Score();
-  virtual ~Score();
-
-  Score(const Score& from);
-
-  inline Score& operator=(const Score& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Score& default_instance();
-
-  void Swap(Score* other);
-
-  // implements Message ----------------------------------------------
-
-  Score* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Score& from);
-  void MergeFrom(const Score& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required float host_score = 1;
+  // required float host_score = 3;
   inline bool has_host_score() const;
   inline void clear_host_score();
-  static const int kHostScoreFieldNumber = 1;
+  static const int kHostScoreFieldNumber = 3;
   inline float host_score() const;
   inline void set_host_score(float value);
 
-  // required float client_score = 2;
+  // required float client_score = 4;
   inline bool has_client_score() const;
   inline void clear_client_score();
-  static const int kClientScoreFieldNumber = 2;
+  static const int kClientScoreFieldNumber = 4;
   inline float client_score() const;
   inline void set_client_score(float value);
 
-  // @@protoc_insertion_point(class_scope:Score)
+  // @@protoc_insertion_point(class_scope:BallPositions)
  private:
+  inline void set_has_make_noise();
+  inline void clear_has_make_noise();
   inline void set_has_host_score();
   inline void clear_has_host_score();
   inline void set_has_client_score();
@@ -489,18 +410,20 @@ class Score : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::google::protobuf::RepeatedPtrField< ::Vector3f > ball_;
+  bool make_noise_;
   float host_score_;
   float client_score_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_GameMessage_2eproto();
   friend void protobuf_AssignDesc_GameMessage_2eproto();
   friend void protobuf_ShutdownFile_GameMessage_2eproto();
 
   void InitAsDefaultInstance();
-  static Score* default_instance_;
+  static BallPositions* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -689,53 +612,15 @@ inline void GameMessage::set_allocated_ball_positions(::BallPositions* ball_posi
   }
 }
 
-// optional .Score score = 3;
-inline bool GameMessage::has_score() const {
+// optional .HitInfo client_hit = 3;
+inline bool GameMessage::has_client_hit() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void GameMessage::set_has_score() {
+inline void GameMessage::set_has_client_hit() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void GameMessage::clear_has_score() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void GameMessage::clear_score() {
-  if (score_ != NULL) score_->::Score::Clear();
-  clear_has_score();
-}
-inline const ::Score& GameMessage::score() const {
-  return score_ != NULL ? *score_ : *default_instance_->score_;
-}
-inline ::Score* GameMessage::mutable_score() {
-  set_has_score();
-  if (score_ == NULL) score_ = new ::Score;
-  return score_;
-}
-inline ::Score* GameMessage::release_score() {
-  clear_has_score();
-  ::Score* temp = score_;
-  score_ = NULL;
-  return temp;
-}
-inline void GameMessage::set_allocated_score(::Score* score) {
-  delete score_;
-  score_ = score;
-  if (score) {
-    set_has_score();
-  } else {
-    clear_has_score();
-  }
-}
-
-// optional .HitInfo client_hit = 4;
-inline bool GameMessage::has_client_hit() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void GameMessage::set_has_client_hit() {
-  _has_bits_[0] |= 0x00000008u;
-}
 inline void GameMessage::clear_has_client_hit() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void GameMessage::clear_client_hit() {
   if (client_hit_ != NULL) client_hit_->::HitInfo::Clear();
@@ -864,50 +749,68 @@ BallPositions::mutable_ball() {
   return &ball_;
 }
 
-// -------------------------------------------------------------------
+// required bool make_noise = 2;
+inline bool BallPositions::has_make_noise() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void BallPositions::set_has_make_noise() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void BallPositions::clear_has_make_noise() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void BallPositions::clear_make_noise() {
+  make_noise_ = false;
+  clear_has_make_noise();
+}
+inline bool BallPositions::make_noise() const {
+  return make_noise_;
+}
+inline void BallPositions::set_make_noise(bool value) {
+  set_has_make_noise();
+  make_noise_ = value;
+}
 
-// Score
-
-// required float host_score = 1;
-inline bool Score::has_host_score() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+// required float host_score = 3;
+inline bool BallPositions::has_host_score() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void Score::set_has_host_score() {
-  _has_bits_[0] |= 0x00000001u;
+inline void BallPositions::set_has_host_score() {
+  _has_bits_[0] |= 0x00000004u;
 }
-inline void Score::clear_has_host_score() {
-  _has_bits_[0] &= ~0x00000001u;
+inline void BallPositions::clear_has_host_score() {
+  _has_bits_[0] &= ~0x00000004u;
 }
-inline void Score::clear_host_score() {
+inline void BallPositions::clear_host_score() {
   host_score_ = 0;
   clear_has_host_score();
 }
-inline float Score::host_score() const {
+inline float BallPositions::host_score() const {
   return host_score_;
 }
-inline void Score::set_host_score(float value) {
+inline void BallPositions::set_host_score(float value) {
   set_has_host_score();
   host_score_ = value;
 }
 
-// required float client_score = 2;
-inline bool Score::has_client_score() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+// required float client_score = 4;
+inline bool BallPositions::has_client_score() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Score::set_has_client_score() {
-  _has_bits_[0] |= 0x00000002u;
+inline void BallPositions::set_has_client_score() {
+  _has_bits_[0] |= 0x00000008u;
 }
-inline void Score::clear_has_client_score() {
-  _has_bits_[0] &= ~0x00000002u;
+inline void BallPositions::clear_has_client_score() {
+  _has_bits_[0] &= ~0x00000008u;
 }
-inline void Score::clear_client_score() {
+inline void BallPositions::clear_client_score() {
   client_score_ = 0;
   clear_has_client_score();
 }
-inline float Score::client_score() const {
+inline float BallPositions::client_score() const {
   return client_score_;
 }
-inline void Score::set_client_score(float value) {
+inline void BallPositions::set_client_score(float value) {
   set_has_client_score();
   client_score_ = value;
 }

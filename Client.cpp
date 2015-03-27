@@ -40,6 +40,66 @@ void Client::connect(std::string hostname,
   t.detach();
 }
 
+void Client::continuouslyReceiveBallPositions(ReceiveHandler receiveCallback)
+{
+  std::thread t([=]() {
+    while (true) {
+      boost::system::error_code error;
+
+      int messageSize;
+      boost::asio::read(sock,
+        boost::asio::buffer(&messageSize, sizeof(int)),
+        error);
+
+      if (error == boost::asio::error::eof) {
+        std::cout << "Connection forcibly closed by server\n";
+        receiveCallback(false, std::vector<Ogre::Vector3>(), false, 0, 0);
+        return;
+      }
+
+      std::vector<uint8_t> protobufRaw(messageSize);
+      boost::asio::read(sock,
+        boost::asio::buffer(&protobufRaw[0], messageSize));
+    
+      if (storage.ParseFromArray(&protobufRaw[0], messageSize)) {
+        if (storage.type() == GameMessage_Type_SERVER_RELEASE_CONTROL) {
+          std::cout << "Server released control; client's time to shine!\n";
+          return;
+        } else if (storage.type() == GameMessage_Type_BALL_POSITIONS) {
+          std::cout << "Server sent update info\n";
+          auto ballMessage = storage.ball_positions();
+          std::vector<Ogre::Vector3> data;
+          for (int i = 0; i < ballMessage.ball_size(); ++i) {
+            auto v = ballMessage.ball(i);
+            data.push_back(Ogre::Vector3(v.x(), v.y(), v.z()));
+          }
+          receiveCallback(true,
+            data,
+            ballMessage.make_noise(),
+            ballMessage.host_score(),
+            ballMessage.client_score());
+        }
+      }
+    }
+  });
+}
+
+void Client::continuouslyReceiveDebugHeartbeat() {
+  continuouslyReceiveBallPositions([](
+    bool success,
+    const std::vector<Ogre::Vector3> pos,
+    bool makeNoise,
+    int hostScore,
+    int clientScore
+  ) {
+    if (success) {
+      std::cout << "Heartbeat received\n";
+    } else {
+      std::cout << "Error while receiving heartbeat\n";
+    }
+  });
+}
+
 bool Client::connected() const {
   return connectStatus;
 }

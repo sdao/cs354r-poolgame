@@ -1,5 +1,7 @@
 #include "Server.h"
 
+#include <chrono>
+
 Server::Server() : io_service(),
                    sock(io_service),
                    connectStatus(false) {}
@@ -23,10 +25,14 @@ void Server::accept(int port, std::function<void()> completionCallback) {
 }
 
 void
-Server::postBallPositions(const std::vector<Ogre::Vector3>& ballPositions) {
+Server::postBallPositions(
+    const std::vector<Ogre::Vector3>& ballPositions,
+    bool makeNoise,
+    int hostScore,
+    int clientScore
+) {
   storage.set_type(GameMessage_Type_BALL_POSITIONS);
   storage.clear_ball_positions();
-  storage.clear_score();
   storage.clear_client_hit();
 
   auto ballMessage = storage.mutable_ball_positions();
@@ -37,6 +43,10 @@ Server::postBallPositions(const std::vector<Ogre::Vector3>& ballPositions) {
     vMsg->set_z(v.z);
   }
 
+  ballMessage->set_make_noise(makeNoise);
+  ballMessage->set_host_score(hostScore);
+  ballMessage->set_client_score(clientScore);
+
   std::thread t([&]() {
     std::lock_guard<std::mutex> lock(mutex);
     int size = ballMessage->ByteSize();
@@ -45,6 +55,17 @@ Server::postBallPositions(const std::vector<Ogre::Vector3>& ballPositions) {
     ballMessage->SerializeToArray(&data[sizeof(int)], size);
     boost::asio::write(sock, boost::asio::buffer(data));
   }); 
+}
+
+void Server::debugHeartbeat() {
+  std::thread t([this]() {
+    while (true) {
+      std::vector<Ogre::Vector3> empty;
+      postBallPositions(empty, false, 42, 42);
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+  });
+  t.detach();
 }
 
 bool Server::connected() const {

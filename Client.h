@@ -3,6 +3,7 @@
 #include <boost/asio.hpp>
 #include <thread>
 #include <iostream>
+#include <OgreVector3.h>
 #include "GameMessage.pb.h"
 
 using boost::asio::ip::tcp;
@@ -15,11 +16,17 @@ class Client {
   GameMessage storage;
 
 public:
+  typedef
+    std::function<void(bool, const std::vector<Ogre::Vector3>, bool, int, int)>
+    ReceiveHandler;
+
   Client();
 
   void connect(std::string hostname,
     int port,
     std::function<void(bool)> completionCallback);
+  void continuouslyReceiveBallPositions(ReceiveHandler receiveCallback);
+  void continuouslyReceiveDebugHeartbeat();
   bool connected() const;
 };
 

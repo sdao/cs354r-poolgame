@@ -1,16 +1,14 @@
 message GameMessage {
   enum Type {
     BALL_POSITIONS = 1;
-    SCORE = 2;
-    SERVER_RELEASE_CONTROL = 3;
-    CLIENT_HIT = 4;
+    SERVER_RELEASE_CONTROL = 2;
+    CLIENT_HIT = 3;
   }
 
   required Type type = 1;
 
   optional BallPositions ball_positions = 2;
-  optional Score score = 3;
-  optional HitInfo client_hit = 4;
+  optional HitInfo client_hit = 3;
 }
 
 message Vector3f {
@@ -21,11 +19,9 @@ message Vector3f {
 
 message BallPositions {
   repeated Vector3f ball = 1;
-}
-
-message Score {
-  required float host_score = 1;
-  required float client_score = 2;
+  required bool make_noise = 2;
+  required float host_score = 3;
+  required float client_score = 4;
 }
 
 message HitInfo {
