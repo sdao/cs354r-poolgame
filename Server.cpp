@@ -57,6 +57,60 @@ Server::postBallPositions(
   t.detach(); 
 }
 
+void Server::endHostTurn() {
+  storage.set_type(GameMessage_Type_SERVER_RELEASE_CONTROL);
+  storage.clear_ball_positions();
+  storage.clear_client_hit();
+
+  std::thread t([this]() {
+    std::lock_guard<std::mutex> lock(this->mutex);
+    int size = this->storage.ByteSize();
+    std::vector<std::uint8_t> data(sizeof(int) + size);
+    *reinterpret_cast<int*>(&data[0]) = size;
+    this->storage.SerializeToArray(&data[sizeof(int)], size);
+    boost::asio::write(this->sock, boost::asio::buffer(data));
+  });
+  t.detach();
+}
+
+void Server::waitForClientHit(
+  std::function<void(int, Ogre::Vector3)> completionCallback
+) {
+  std::thread t([=]() {
+    boost::system::error_code error;
+
+    int messageSize;
+    boost::asio::read(this->sock,
+      boost::asio::buffer(&messageSize, sizeof(int)),
+      error);
+
+    if (error == boost::asio::error::eof) {
+      std::cout << "Connection forcibly closed by client\n";
+      completionCallback(0, Ogre::Vector3::ZERO);
+      return;
+    }
+
+    std::vector<uint8_t> protobufRaw(messageSize);
+    boost::asio::read(this->sock,
+      boost::asio::buffer(&protobufRaw[0], messageSize));
+    
+    if (storage.ParseFromArray(&protobufRaw[0], messageSize)) {
+      if (storage.type() == GameMessage_Type_CLIENT_HIT) {
+        std::cout << "Server's turn again!\n";
+        auto hitMessage = storage.client_hit();
+        int strength = hitMessage.strength() + 1;
+        auto dir = hitMessage.direction();
+        completionCallback(strength, Ogre::Vector3(dir.x(), dir.y(), dir.z()));
+        return;
+      } else {
+        completionCallback(0, Ogre::Vector3::ZERO);
+        return;
+      }
+    }
+  });
+  t.detach();
+}
+
 void Server::debugHeartbeat() {
   std::thread t([this]() {
     int counter = 0;
