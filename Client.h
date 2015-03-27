@@ -19,14 +19,18 @@ public:
   typedef
     std::function<void(bool, const std::vector<Ogre::Vector3>, bool, int, int)>
     ReceiveHandler;
+  typedef std::function<void()> BeginTurnHandler;
 
   Client();
 
   void connect(std::string hostname,
     int port,
     std::function<void(bool)> completionCallback);
-  void continuouslyReceiveBallPositions(ReceiveHandler receiveCallback);
+  void continuouslyReceiveBallPositions(
+    ReceiveHandler receiveCallback,
+    BeginTurnHandler beginTurnCallback);
   void continuouslyReceiveDebugHeartbeat();
+  void sendHit(int strength, Ogre::Vector3 direction, int ballIdx);
   bool connected() const;
 };
 

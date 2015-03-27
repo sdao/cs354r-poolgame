@@ -522,20 +522,30 @@ class HitInfo : public ::google::protobuf::Message {
   inline ::Vector3f* release_direction();
   inline void set_allocated_direction(::Vector3f* direction);
 
+  // required int32 ball_index = 3;
+  inline bool has_ball_index() const;
+  inline void clear_ball_index();
+  static const int kBallIndexFieldNumber = 3;
+  inline ::google::protobuf::int32 ball_index() const;
+  inline void set_ball_index(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:HitInfo)
  private:
   inline void set_has_strength();
   inline void clear_has_strength();
   inline void set_has_direction();
   inline void clear_has_direction();
+  inline void set_has_ball_index();
+  inline void clear_has_ball_index();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::Vector3f* direction_;
   int strength_;
+  ::google::protobuf::int32 ball_index_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_GameMessage_2eproto();
   friend void protobuf_AssignDesc_GameMessage_2eproto();
@@ -878,6 +888,28 @@ inline void HitInfo::set_allocated_direction(::Vector3f* direction) {
   } else {
     clear_has_direction();
   }
+}
+
+// required int32 ball_index = 3;
+inline bool HitInfo::has_ball_index() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void HitInfo::set_has_ball_index() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void HitInfo::clear_has_ball_index() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void HitInfo::clear_ball_index() {
+  ball_index_ = 0;
+  clear_has_ball_index();
+}
+inline ::google::protobuf::int32 HitInfo::ball_index() const {
+  return ball_index_;
+}
+inline void HitInfo::set_ball_index(::google::protobuf::int32 value) {
+  set_has_ball_index();
+  ball_index_ = value;
 }
 
 

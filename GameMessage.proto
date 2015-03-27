@@ -28,5 +28,6 @@ message HitInfo {
   enum Strength { LOW = 1; MEDIUM = 2; HIGH = 3; }
   required Strength strength = 1;
   required Vector3f direction = 2;
+  required int32 ball_index = 3;
 }
 

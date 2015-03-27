@@ -40,8 +40,10 @@ void Client::connect(std::string hostname,
   t.detach();
 }
 
-void Client::continuouslyReceiveBallPositions(ReceiveHandler receiveCallback)
-{
+void Client::continuouslyReceiveBallPositions(
+  ReceiveHandler receiveCallback,
+  BeginTurnHandler beginTurnCallback
+) {
   std::thread t([=]() {
     while (true) {
       boost::system::error_code error;
@@ -64,6 +66,7 @@ void Client::continuouslyReceiveBallPositions(ReceiveHandler receiveCallback)
       if (storage.ParseFromArray(&protobufRaw[0], messageSize)) {
         if (storage.type() == GameMessage_Type_SERVER_RELEASE_CONTROL) {
           std::cout << "Server released control; client's time to shine!\n";
+          beginTurnCallback();
           return;
         } else if (storage.type() == GameMessage_Type_BALL_POSITIONS) {
           std::cout << "Server sent update info\n";
@@ -78,6 +81,7 @@ void Client::continuouslyReceiveBallPositions(ReceiveHandler receiveCallback)
             ballMessage.make_noise(),
             ballMessage.host_score(),
             ballMessage.client_score());
+          return;
         }
       }
     }
@@ -98,7 +102,38 @@ void Client::continuouslyReceiveDebugHeartbeat() {
     } else {
       std::cout << "Error while receiving heartbeat\n";
     }
+  }, []() {});
+}
+
+void Client::sendHit(int strength, Ogre::Vector3 direction, int ballIdx) {
+  storage.set_type(GameMessage_Type_CLIENT_HIT);
+  storage.clear_ball_positions();
+  storage.clear_client_hit();
+  
+  auto hitMessage = storage.mutable_client_hit();
+  if (strength == 1) {
+    hitMessage->set_strength(HitInfo_Strength_LOW);
+  } else if (strength == 2) {
+    hitMessage->set_strength(HitInfo_Strength_MEDIUM);
+  } else if (strength == 3) {
+    hitMessage->set_strength(HitInfo_Strength_HIGH);
+  } else {
+    assert(false && "hit strength was not 1, 2, or 3");
+  }
+  auto hitPos = hitMessage->mutable_direction();
+  hitPos->set_x(direction.x);
+  hitPos->set_y(direction.y);
+  hitPos->set_z(direction.z);
+  hitMessage->set_ball_index(ballIdx);
+
+  std::thread t([this]() {
+    int size = this->storage.ByteSize();
+    std::vector<std::uint8_t> data(sizeof(int) + size);
+    *reinterpret_cast<int*>(&data[0]) = size;
+    this->storage.SerializeToArray(&data[sizeof(int)], size);
+    boost::asio::write(this->sock, boost::asio::buffer(data));
   });
+  t.detach();
 }
 
 bool Client::connected() const {

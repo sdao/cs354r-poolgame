@@ -96,9 +96,10 @@ void protobuf_AssignDesc_GameMessage_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BallPositions));
   HitInfo_descriptor_ = file->message_type(3);
-  static const int HitInfo_offsets_[2] = {
+  static const int HitInfo_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HitInfo, strength_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HitInfo, direction_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(HitInfo, ball_index_),
   };
   HitInfo_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -163,9 +164,10 @@ void protobuf_AddDesc_GameMessage_2eproto() {
     " \002(\002\022\t\n\001z\030\003 \002(\002\"f\n\rBallPositions\022\027\n\004ball"
     "\030\001 \003(\0132\t.Vector3f\022\022\n\nmake_noise\030\002 \002(\010\022\022\n"
     "\nhost_score\030\003 \002(\002\022\024\n\014client_score\030\004 \002(\002\""
-    "w\n\007HitInfo\022#\n\010strength\030\001 \002(\0162\021.HitInfo.S"
-    "trength\022\034\n\tdirection\030\002 \002(\0132\t.Vector3f\")\n"
-    "\010Strength\022\007\n\003LOW\020\001\022\n\n\006MEDIUM\020\002\022\010\n\004HIGH\020\003", 480);
+    "\213\001\n\007HitInfo\022#\n\010strength\030\001 \002(\0162\021.HitInfo."
+    "Strength\022\034\n\tdirection\030\002 \002(\0132\t.Vector3f\022\022"
+    "\n\nball_index\030\003 \002(\005\")\n\010Strength\022\007\n\003LOW\020\001\022"
+    "\n\n\006MEDIUM\020\002\022\010\n\004HIGH\020\003", 501);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "GameMessage.proto", &protobuf_RegisterTypes);
   GameMessage::default_instance_ = new GameMessage();
@@ -1158,6 +1160,7 @@ const int HitInfo::Strength_ARRAYSIZE;
 #ifndef _MSC_VER
 const int HitInfo::kStrengthFieldNumber;
 const int HitInfo::kDirectionFieldNumber;
+const int HitInfo::kBallIndexFieldNumber;
 #endif  // !_MSC_VER
 
 HitInfo::HitInfo()
@@ -1179,6 +1182,7 @@ void HitInfo::SharedCtor() {
   _cached_size_ = 0;
   strength_ = 1;
   direction_ = NULL;
+  ball_index_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1219,6 +1223,7 @@ void HitInfo::Clear() {
     if (has_direction()) {
       if (direction_ != NULL) direction_->::Vector3f::Clear();
     }
+    ball_index_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1260,6 +1265,22 @@ bool HitInfo::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(24)) goto parse_ball_index;
+        break;
+      }
+
+      // required int32 ball_index = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_ball_index:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &ball_index_)));
+          set_has_ball_index();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1294,6 +1315,11 @@ void HitInfo::SerializeWithCachedSizes(
       2, this->direction(), output);
   }
 
+  // required int32 ball_index = 3;
+  if (has_ball_index()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->ball_index(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1313,6 +1339,11 @@ void HitInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->direction(), target);
+  }
+
+  // required int32 ball_index = 3;
+  if (has_ball_index()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->ball_index(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1337,6 +1368,13 @@ int HitInfo::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->direction());
+    }
+
+    // required int32 ball_index = 3;
+    if (has_ball_index()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->ball_index());
     }
 
   }
@@ -1372,6 +1410,9 @@ void HitInfo::MergeFrom(const HitInfo& from) {
     if (from.has_direction()) {
       mutable_direction()->::Vector3f::MergeFrom(from.direction());
     }
+    if (from.has_ball_index()) {
+      set_ball_index(from.ball_index());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1389,7 +1430,7 @@ void HitInfo::CopyFrom(const HitInfo& from) {
 }
 
 bool HitInfo::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
 
   if (has_direction()) {
     if (!this->direction().IsInitialized()) return false;
@@ -1401,6 +1442,7 @@ void HitInfo::Swap(HitInfo* other) {
   if (other != this) {
     std::swap(strength_, other->strength_);
     std::swap(direction_, other->direction_);
+    std::swap(ball_index_, other->ball_index_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

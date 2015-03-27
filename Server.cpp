@@ -74,7 +74,7 @@ void Server::endHostTurn() {
 }
 
 void Server::waitForClientHit(
-  std::function<void(int, Ogre::Vector3)> completionCallback
+  std::function<void(int, Ogre::Vector3, int)> completionCallback
 ) {
   std::thread t([=]() {
     boost::system::error_code error;
@@ -86,7 +86,7 @@ void Server::waitForClientHit(
 
     if (error == boost::asio::error::eof) {
       std::cout << "Connection forcibly closed by client\n";
-      completionCallback(0, Ogre::Vector3::ZERO);
+      completionCallback(-1, Ogre::Vector3::ZERO, -1);
       return;
     }
 
@@ -98,12 +98,15 @@ void Server::waitForClientHit(
       if (storage.type() == GameMessage_Type_CLIENT_HIT) {
         std::cout << "Server's turn again!\n";
         auto hitMessage = storage.client_hit();
-        int strength = hitMessage.strength() + 1;
+        int strength = hitMessage.strength();
         auto dir = hitMessage.direction();
-        completionCallback(strength, Ogre::Vector3(dir.x(), dir.y(), dir.z()));
+        int ballIdx = hitMessage.ball_index();
+        completionCallback(strength,
+          Ogre::Vector3(dir.x(), dir.y(), dir.z()),
+          ballIdx);
         return;
       } else {
-        completionCallback(0, Ogre::Vector3::ZERO);
+        completionCallback(-1, Ogre::Vector3::ZERO, -1);
         return;
       }
     }
