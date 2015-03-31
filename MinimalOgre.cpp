@@ -59,6 +59,7 @@ MinimalOgre::MinimalOgre(void)
     back(0),
     host(0),
     connect(0),
+	connectText(0),
 	state(GameState::Main),
 	physics(),
 	sceneObjects(),
@@ -394,6 +395,15 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 
 	switch(state){
 		case Main:
+			if(connectText != NULL){
+				Ogre::DisplayString txt = connectText->getText();
+				if(arg.key != OIS::KC_BACK){
+					connectText->setText(txt + arg.text);
+				}
+				else{
+					connectText->setText(txt.substr(0, txt.length()-1));
+				}
+			}
 			break;
 		case Play:
 			//pass keypress to player Object
@@ -924,6 +934,8 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
         mTrayMgr->destroyAllWidgets();
         host = mTrayMgr->createButton(OgreBites::TL_CENTER, "Host", "Host");
         connect = mTrayMgr->createButton(OgreBites::TL_CENTER, "Connect", "Connect");
+        connectText = mTrayMgr->createTextBox(OgreBites::TL_CENTER, "connectText", "HostName: ", 150, 75);
+	//createTextBox(TrayLocation trayLoc, const Ogre::String& name, const Ogre::DisplayString& caption, Ogre::Real width, Ogre::Real height)
         back = mTrayMgr->createButton(OgreBites::TL_CENTER, "Back", "Back");
         // Setup Multiplayer
     }
@@ -963,7 +975,8 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         // Pick Port and Host
         client = true;
-        clientManager.connect("barrow-wight", 67309, [=](bool connected) {
+        //clientManager.connect("barrow-wight", 67309, [=](bool connected) {
+        clientManager.connect(connectText->getText(), 67309, [=](bool connected) {
           if (connected) {
             std::cout << "connected!\n";
             isConnectedHost = true;

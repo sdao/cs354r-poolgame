@@ -109,6 +109,7 @@ protected:
     OgreBites::Button* back;
     OgreBites::Button* host;
     OgreBites::Button* connect;
+    OgreBites::TextBox* connectText;
 	GameState state;
 	Physics physics;
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
