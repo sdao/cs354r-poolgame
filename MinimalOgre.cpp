@@ -320,6 +320,8 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
         //set param values on GUI
         std::string buffer = std::to_string(gameinfo.get()->scoreP1);
         scoreboard->setParamValue(0, buffer);
+        buffer = std::to_string(gameinfo.get()->scoreP2);
+        scoreboard->setParamValue(1, buffer);
         buffer = std::to_string(gameinfo.get()->ballPositions.size());
         scoreboard->setParamValue(2, buffer);
 	}
@@ -839,8 +841,8 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
     l->setPosition(20,80,50);
 
     Ogre::StringVector scores;
-    scores.push_back("P1 Score");
-    scores.push_back("P2 Score");
+    scores.push_back("Player 1 Score");
+    scores.push_back("Player 2 Score");
     scores.push_back("Balls Remaining");
     scores.push_back("Hit Strength");
     scores.push_back("Gravity");
