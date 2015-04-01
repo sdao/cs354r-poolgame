@@ -353,7 +353,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
         std::string buffer = std::to_string(gameinfo.get()->scoreP1);
         scoreboard->setParamValue(0, buffer);
         buffer = std::to_string(gameinfo.get()->ballPositions.size());
-        scoreboard->setParamValue(1, buffer);
+        scoreboard->setParamValue(2, buffer);
 	}
 
     else if (state == GameState::Main)
@@ -450,7 +450,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	    	    if (player && player->isInState(PlayerState::Hit) &&
 					gameinfo.get()->playerturn == 0) {
 					
-                    std::string strength = scoreboard->getParamValue(2);
+                    std::string strength = scoreboard->getParamValue(3);
 		            auto cueController = player->getComponent<CueStickController>();
 		            cueController->hit(strength);
 	  	    		player->setState(PlayerState::Wait);
@@ -505,17 +505,17 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
             else if (arg.key == OIS::KC_RIGHT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {
-                    if (scoreboard->getParamValue(2) == "Low")
+                    if (scoreboard->getParamValue(3) == "Low")
                     {
-                        scoreboard->setParamValue(2, "Medium");
+                        scoreboard->setParamValue(3, "Medium");
                     }
-                    else if (scoreboard->getParamValue(2) == "Medium")
+                    else if (scoreboard->getParamValue(3) == "Medium")
                     {
-                        scoreboard->setParamValue(2, "High");
+                        scoreboard->setParamValue(3, "High");
                     }
-                    else if (scoreboard->getParamValue(2) == "High")
+                    else if (scoreboard->getParamValue(3) == "High")
                     {
-                        scoreboard->setParamValue(2, "Low");
+                        scoreboard->setParamValue(3, "Low");
                     }
                 }
             }
@@ -523,17 +523,17 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
             else if (arg.key == OIS::KC_LEFT)
             {
                 if (player && player->isInState(PlayerState::Hit)) {
-                    if (scoreboard->getParamValue(2) == "Low")
+                    if (scoreboard->getParamValue(3) == "Low")
                     {
-                        scoreboard->setParamValue(2, "High");
+                        scoreboard->setParamValue(3, "High");
                     }
-                    else if (scoreboard->getParamValue(2) == "Medium")
+                    else if (scoreboard->getParamValue(3) == "Medium")
                     {
-                        scoreboard->setParamValue(2, "Low");
+                        scoreboard->setParamValue(3, "Low");
                     }
-                    else if (scoreboard->getParamValue(2) == "High")
+                    else if (scoreboard->getParamValue(3) == "High")
                     {
-                        scoreboard->setParamValue(2, "Medium");
+                        scoreboard->setParamValue(3, "Medium");
                     }
                 }
             }
@@ -870,7 +870,8 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
     l->setPosition(20,80,50);
 
     Ogre::StringVector scores;
-    scores.push_back("Score");
+    scores.push_back("P1 Score");
+    scores.push_back("P2 Score");
     scores.push_back("Balls Remaining");
     scores.push_back("Hit Strength");
     scores.push_back("Gravity");
@@ -897,9 +898,10 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 
     scoreboard = mTrayMgr->createParamsPanel(OgreBites::TL_TOPLEFT, "Scoreboard", 250, scores);
     scoreboard->setParamValue(1, "0");
-    scoreboard->setParamValue(2, "Low");
-    scoreboard->setParamValue(3, "Off");
-    scoreboard->setParamValue(4, "On");
+    scoreboard->setParamValue(2, "N/A");
+    scoreboard->setParamValue(3, "Low");
+    scoreboard->setParamValue(4, "Off");
+    scoreboard->setParamValue(5, "On");
     mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
     scoreboard->show();
 
