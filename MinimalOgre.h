@@ -115,7 +115,7 @@ protected:
 	std::vector<std::shared_ptr<GameObject>> sceneObjects;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<GameInfo> gameinfo;
-	bool multiplayer;
+	std::atomic_bool multiplayer;
 	bool client;
 	Server serverManager;
 	Client clientManager;

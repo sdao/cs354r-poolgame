@@ -290,46 +290,14 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 		
 		//Server - set ballpositions
-		if(!client){
+		if(!client && multiplayer){
 			serverManager.postBallPositions(gameinfo->ballPositions,
 											false,
 											gameinfo->scoreP1,
 											gameinfo->scoreP2);
 		}
-		else{
-			/*
-			clientManager.continuouslyReceiveBallPositions(
-				[=](bool success,
-					const std::vector<Ogre::Vector3> pos, 
-					bool make_noise, 
-					int hostScore, 
-					int clientScore) {
-					//TODO makeNOISE
-						//success = read
-						if(success){
-							{
-								std::lock_guard<std::mutex>lock(gameinfo->mutex);
-								gameinfo->ballPositions.clear();
-								for(auto ball : pos){
-									gameinfo->ballPositions.push_back(ball);
-								}
-							}
-						}
-						else{
-							//something went terribly terribly wrong
-							exit(0);
-						}
-					},
-				[=] (){
-					//{
-					//std::lock_guard<std::mutex>lock(gameinfo->mutex);
-					//gameinfo->playerturn = 1;
-					//}
-					player->setState(Hit);
-				}
-			);
-			*/
-			//gameinfo -> sceneobjects
+		else if (client && multiplayer){
+		//gameinfo -> sceneobjects
 			{
 				std::lock_guard<std::mutex> lock(gameinfo->mutex);
 				int i = 0;
@@ -339,7 +307,6 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 					for(auto go : sceneObjects){
 						std::cout <<"object\n";
 						if(go->getTag() == 2){
-//						std::cout << "ballpos: " << gameinfo.get()->ballPositions[i].toString() << "\n";
 							go->setPosition(gameinfo.get()->ballPositions[i++]);	
 						}
 					}
@@ -1010,6 +977,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
         serverManager.accept(67309, [=]() {
           std::cout << "server accept callback\n";
           isConnectedHost = true;
+		  multiplayer = true;
           //this->serverManager.debugHeartbeat();
         });
         waitLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Wait", "Waiting For Connection", 400);
@@ -1022,6 +990,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
         clientManager.connect(connectText->getText(), 67309, [=](bool connected) {
           if (connected) {
             std::cout << "connected!\n";
+			multiplayer = true;
             isConnectedHost = true;
             //this->clientManager.continuouslyReceiveDebugHeartbeat();
           } else {
