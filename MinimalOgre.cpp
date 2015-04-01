@@ -262,22 +262,20 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 		//Multiplayer if server, set turnstate
 		if( !client && !setPositions(gameinfo, sceneObjects)){
-			//setting turn
 			if(gameinfo->playerturn == 0){
 				//P1
 				if(player->isInState(PlayerState::Wait)){
 					player->setState(PlayerState::Hit);
 				}
 			}
-			//let P2 hit
 			else if(gameinfo->playerturn == 1){
 				//P2
-				serverManager.endHostTurn();
-				serverManager.waitForClientHit(
+				//serverManager.endHostTurn();
+				/*serverManager.waitForClientHit(
 					[=] (int strength, Ogre::Vector3 dir, int ballindx){
 						
 					}
-				);
+				);*/
 				gameinfo->playerturn = -1;
 			}
 			//waiting for P2 to hit
@@ -298,7 +296,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 											gameinfo->scoreP1,
 											gameinfo->scoreP2);
 		}
-		else{
+		/*else{
 			clientManager.continuouslyReceiveBallPositions(
 				[=](bool success,
 					const std::vector<Ogre::Vector3> pos, 
@@ -340,8 +338,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 				}
 			}
 			
-
-		}
+		}*/
         //update player
         player->update();
         
@@ -360,7 +357,39 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
             // Create the scene
             mTrayMgr->clearTray(OgreBites::TL_CENTER);
             mTrayMgr->destroyAllWidgets();
-            setupField(false, 1000, 1000, 1000);
+			setupField(client, 1000, 1000, 1000);
+			if(client){
+				clientManager.continuouslyReceiveBallPositions(
+					[=](bool success,
+						const std::vector<Ogre::Vector3> pos, 
+						bool make_noise, 
+						int hostScore, 
+						int clientScore) {
+						//TODO makeNOISE
+							//success = read
+							if(success){
+								{
+									std::lock_guard<std::mutex>lock(gameinfo->mutex);
+									gameinfo->ballPositions.clear();
+									for(auto ball : pos){
+										gameinfo->ballPositions.push_back(ball);
+									}
+								}
+							}
+							else{
+								//something went terribly terribly wrong
+								exit(0);
+							}
+						},
+					[=] (){
+						//{
+						//std::lock_guard<std::mutex>lock(gameinfo->mutex);
+						//gameinfo->playerturn = 1;
+						//}
+						player->setState(Hit);
+					}
+				);
+			}
         }
     }
 
@@ -614,6 +643,13 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 	//GameInfo tempgameinfo = {0, 0, 0, Ogre::Vector3(length, height, width)};
 	//tempgameinfo.ballPositions = std::vector<Ogre::Vector3>();
 	gameinfo = std::make_shared<GameInfo>();
+	gameinfo->scoreP1 = 0;
+	gameinfo->scoreP2 = 0;
+	gameinfo->playerturn = 0;
+	gameinfo->dimensions = Ogre::Vector3(length, width, height);
+	gameinfo->cueBallPosition = Ogre::Vector3::ZERO;
+	gameinfo->ballPositions = std::vector<Ogre::Vector3>();
+	//gameinfo->ballPositions = std::mutex();
 	//}
 
     //make the walls
@@ -967,7 +1003,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
         serverManager.accept(67309, [=]() {
           std::cout << "server accept callback\n";
           isConnectedHost = true;
-          this->serverManager.debugHeartbeat();
+          //this->serverManager.debugHeartbeat();
         });
         waitLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Wait", "Waiting For Connection", 400);
     }
@@ -980,7 +1016,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
           if (connected) {
             std::cout << "connected!\n";
             isConnectedHost = true;
-            this->clientManager.continuouslyReceiveDebugHeartbeat();
+            //this->clientManager.continuouslyReceiveDebugHeartbeat();
           } else {
             std::cout << ":( :( :( no server :( :( :(\n";
           }
