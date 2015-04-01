@@ -296,7 +296,8 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 											gameinfo->scoreP1,
 											gameinfo->scoreP2);
 		}
-		/*else{
+		else{
+			/*
 			clientManager.continuouslyReceiveBallPositions(
 				[=](bool success,
 					const std::vector<Ogre::Vector3> pos, 
@@ -327,18 +328,24 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 					player->setState(Hit);
 				}
 			);
-			
+			*/
 			//gameinfo -> sceneobjects
 			{
 				std::lock_guard<std::mutex> lock(gameinfo->mutex);
-				for(auto go : sceneObjects){
-					if(go->getTag() == 2){
-						int i;	
+				int i = 0;
+				std::cout << "running through objects\n";
+				std::cout << "ballPosition: " << gameinfo.get()->ballPositions.size() << " \n";
+				if(gameinfo.get()->ballPositions.size() != 0){
+					for(auto go : sceneObjects){
+						std::cout <<"object\n";
+						if(go->getTag() == 2){
+//						std::cout << "ballpos: " << gameinfo.get()->ballPositions[i].toString() << "\n";
+							go->setPosition(gameinfo.get()->ballPositions[i++]);	
+						}
 					}
 				}
-			}
-			
-		}*/
+			}	
+		}
         //update player
         player->update();
         
