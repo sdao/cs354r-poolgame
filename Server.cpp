@@ -27,6 +27,7 @@ void Server::accept(int port, std::function<void()> completionCallback) {
 void
 Server::postBallPositions(
     const std::vector<Ogre::Vector3>& ballPositions,
+    const Ogre::Vector3& cueBallPosition,
     bool makeNoise,
     int hostScore,
     int clientScore
@@ -42,6 +43,10 @@ Server::postBallPositions(
     vMsg->set_y(v.y);
     vMsg->set_z(v.z);
   }
+  auto cueBallPos = ballMessage->mutable_cue_ball();
+  cueBallPos->set_x(cueBallPosition.x);
+  cueBallPos->set_y(cueBallPosition.y);
+  cueBallPos->set_z(cueBallPosition.z);
   ballMessage->set_make_noise(makeNoise);
   ballMessage->set_host_score(hostScore);
   ballMessage->set_client_score(clientScore);
@@ -120,7 +125,7 @@ void Server::debugHeartbeat() {
     int counter = 0;
     while (true) {
       std::vector<Ogre::Vector3> empty;
-      postBallPositions(empty, false, counter, counter);
+      postBallPositions(empty, Ogre::Vector3::ZERO, false, counter, counter);
       std::cout << "----Heartbeat---\n";
       std::this_thread::sleep_for(std::chrono::seconds(1));
       counter++;

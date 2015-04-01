@@ -17,7 +17,8 @@ class Client {
 
 public:
   typedef
-    std::function<void(bool, const std::vector<Ogre::Vector3>, bool, int, int)>
+    std::function<void(bool, const std::vector<Ogre::Vector3>,
+      Ogre::Vector3, bool, int, int)>
     ReceiveHandler;
   typedef std::function<void()> BeginTurnHandler;
 

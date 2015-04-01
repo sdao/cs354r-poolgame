@@ -55,7 +55,8 @@ void Client::continuouslyReceiveBallPositions(
 
       if (error == boost::asio::error::eof) {
         std::cout << "Connection forcibly closed by server\n";
-        receiveCallback(false, std::vector<Ogre::Vector3>(), false, 0, 0);
+        receiveCallback(false, std::vector<Ogre::Vector3>(),
+          Ogre::Vector3::ZERO, false, 0, 0);
         return;
       }
 
@@ -76,8 +77,10 @@ void Client::continuouslyReceiveBallPositions(
             auto v = ballMessage.ball(i);
             data.push_back(Ogre::Vector3(v.x(), v.y(), v.z()));
           }
+          auto cuePos = ballMessage.cue_ball();
           receiveCallback(true,
             data,
+            Ogre::Vector3(cuePos.x(), cuePos.y(), cuePos.z()),
             ballMessage.make_noise(),
             ballMessage.host_score(),
             ballMessage.client_score());
@@ -93,6 +96,7 @@ void Client::continuouslyReceiveDebugHeartbeat() {
   continuouslyReceiveBallPositions([](
     bool success,
     const std::vector<Ogre::Vector3> pos,
+    Ogre::Vector3 cueBallPosition,
     bool makeNoise,
     int hostScore,
     int clientScore

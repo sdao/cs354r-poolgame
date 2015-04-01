@@ -378,29 +378,40 @@ class BallPositions : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::Vector3f >*
       mutable_ball();
 
-  // required bool make_noise = 2;
+  // required .Vector3f cue_ball = 2;
+  inline bool has_cue_ball() const;
+  inline void clear_cue_ball();
+  static const int kCueBallFieldNumber = 2;
+  inline const ::Vector3f& cue_ball() const;
+  inline ::Vector3f* mutable_cue_ball();
+  inline ::Vector3f* release_cue_ball();
+  inline void set_allocated_cue_ball(::Vector3f* cue_ball);
+
+  // required bool make_noise = 3;
   inline bool has_make_noise() const;
   inline void clear_make_noise();
-  static const int kMakeNoiseFieldNumber = 2;
+  static const int kMakeNoiseFieldNumber = 3;
   inline bool make_noise() const;
   inline void set_make_noise(bool value);
 
-  // required float host_score = 3;
+  // required float host_score = 4;
   inline bool has_host_score() const;
   inline void clear_host_score();
-  static const int kHostScoreFieldNumber = 3;
+  static const int kHostScoreFieldNumber = 4;
   inline float host_score() const;
   inline void set_host_score(float value);
 
-  // required float client_score = 4;
+  // required float client_score = 5;
   inline bool has_client_score() const;
   inline void clear_client_score();
-  static const int kClientScoreFieldNumber = 4;
+  static const int kClientScoreFieldNumber = 5;
   inline float client_score() const;
   inline void set_client_score(float value);
 
   // @@protoc_insertion_point(class_scope:BallPositions)
  private:
+  inline void set_has_cue_ball();
+  inline void clear_has_cue_ball();
   inline void set_has_make_noise();
   inline void clear_has_make_noise();
   inline void set_has_host_score();
@@ -411,12 +422,13 @@ class BallPositions : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::Vector3f > ball_;
+  ::Vector3f* cue_ball_;
   bool make_noise_;
   float host_score_;
   float client_score_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_GameMessage_2eproto();
   friend void protobuf_AssignDesc_GameMessage_2eproto();
@@ -759,15 +771,53 @@ BallPositions::mutable_ball() {
   return &ball_;
 }
 
-// required bool make_noise = 2;
-inline bool BallPositions::has_make_noise() const {
+// required .Vector3f cue_ball = 2;
+inline bool BallPositions::has_cue_ball() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void BallPositions::set_has_make_noise() {
+inline void BallPositions::set_has_cue_ball() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void BallPositions::clear_has_make_noise() {
+inline void BallPositions::clear_has_cue_ball() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void BallPositions::clear_cue_ball() {
+  if (cue_ball_ != NULL) cue_ball_->::Vector3f::Clear();
+  clear_has_cue_ball();
+}
+inline const ::Vector3f& BallPositions::cue_ball() const {
+  return cue_ball_ != NULL ? *cue_ball_ : *default_instance_->cue_ball_;
+}
+inline ::Vector3f* BallPositions::mutable_cue_ball() {
+  set_has_cue_ball();
+  if (cue_ball_ == NULL) cue_ball_ = new ::Vector3f;
+  return cue_ball_;
+}
+inline ::Vector3f* BallPositions::release_cue_ball() {
+  clear_has_cue_ball();
+  ::Vector3f* temp = cue_ball_;
+  cue_ball_ = NULL;
+  return temp;
+}
+inline void BallPositions::set_allocated_cue_ball(::Vector3f* cue_ball) {
+  delete cue_ball_;
+  cue_ball_ = cue_ball;
+  if (cue_ball) {
+    set_has_cue_ball();
+  } else {
+    clear_has_cue_ball();
+  }
+}
+
+// required bool make_noise = 3;
+inline bool BallPositions::has_make_noise() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void BallPositions::set_has_make_noise() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void BallPositions::clear_has_make_noise() {
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void BallPositions::clear_make_noise() {
   make_noise_ = false;
@@ -781,15 +831,15 @@ inline void BallPositions::set_make_noise(bool value) {
   make_noise_ = value;
 }
 
-// required float host_score = 3;
+// required float host_score = 4;
 inline bool BallPositions::has_host_score() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void BallPositions::set_has_host_score() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void BallPositions::clear_has_host_score() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void BallPositions::clear_host_score() {
   host_score_ = 0;
@@ -803,15 +853,15 @@ inline void BallPositions::set_host_score(float value) {
   host_score_ = value;
 }
 
-// required float client_score = 4;
+// required float client_score = 5;
 inline bool BallPositions::has_client_score() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void BallPositions::set_has_client_score() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void BallPositions::clear_has_client_score() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void BallPositions::clear_client_score() {
   client_score_ = 0;

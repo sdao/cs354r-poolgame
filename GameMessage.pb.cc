@@ -78,8 +78,9 @@ void protobuf_AssignDesc_GameMessage_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector3f));
   BallPositions_descriptor_ = file->message_type(2);
-  static const int BallPositions_offsets_[4] = {
+  static const int BallPositions_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BallPositions, ball_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BallPositions, cue_ball_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BallPositions, make_noise_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BallPositions, host_score_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BallPositions, client_score_),
@@ -161,13 +162,14 @@ void protobuf_AddDesc_GameMessage_2eproto() {
     "it\030\003 \001(\0132\010.HitInfo\"F\n\004Type\022\022\n\016BALL_POSIT"
     "IONS\020\001\022\032\n\026SERVER_RELEASE_CONTROL\020\002\022\016\n\nCL"
     "IENT_HIT\020\003\"+\n\010Vector3f\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002"
-    " \002(\002\022\t\n\001z\030\003 \002(\002\"f\n\rBallPositions\022\027\n\004ball"
-    "\030\001 \003(\0132\t.Vector3f\022\022\n\nmake_noise\030\002 \002(\010\022\022\n"
-    "\nhost_score\030\003 \002(\002\022\024\n\014client_score\030\004 \002(\002\""
-    "\213\001\n\007HitInfo\022#\n\010strength\030\001 \002(\0162\021.HitInfo."
-    "Strength\022\034\n\tdirection\030\002 \002(\0132\t.Vector3f\022\022"
-    "\n\nball_index\030\003 \002(\005\")\n\010Strength\022\007\n\003LOW\020\001\022"
-    "\n\n\006MEDIUM\020\002\022\010\n\004HIGH\020\003", 501);
+    " \002(\002\022\t\n\001z\030\003 \002(\002\"\203\001\n\rBallPositions\022\027\n\004bal"
+    "l\030\001 \003(\0132\t.Vector3f\022\033\n\010cue_ball\030\002 \002(\0132\t.V"
+    "ector3f\022\022\n\nmake_noise\030\003 \002(\010\022\022\n\nhost_scor"
+    "e\030\004 \002(\002\022\024\n\014client_score\030\005 \002(\002\"\213\001\n\007HitInf"
+    "o\022#\n\010strength\030\001 \002(\0162\021.HitInfo.Strength\022\034"
+    "\n\tdirection\030\002 \002(\0132\t.Vector3f\022\022\n\nball_ind"
+    "ex\030\003 \002(\005\")\n\010Strength\022\007\n\003LOW\020\001\022\n\n\006MEDIUM\020"
+    "\002\022\010\n\004HIGH\020\003", 531);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "GameMessage.proto", &protobuf_RegisterTypes);
   GameMessage::default_instance_ = new GameMessage();
@@ -809,6 +811,7 @@ void Vector3f::Swap(Vector3f* other) {
 
 #ifndef _MSC_VER
 const int BallPositions::kBallFieldNumber;
+const int BallPositions::kCueBallFieldNumber;
 const int BallPositions::kMakeNoiseFieldNumber;
 const int BallPositions::kHostScoreFieldNumber;
 const int BallPositions::kClientScoreFieldNumber;
@@ -820,6 +823,7 @@ BallPositions::BallPositions()
 }
 
 void BallPositions::InitAsDefaultInstance() {
+  cue_ball_ = const_cast< ::Vector3f*>(&::Vector3f::default_instance());
 }
 
 BallPositions::BallPositions(const BallPositions& from)
@@ -830,6 +834,7 @@ BallPositions::BallPositions(const BallPositions& from)
 
 void BallPositions::SharedCtor() {
   _cached_size_ = 0;
+  cue_ball_ = NULL;
   make_noise_ = false;
   host_score_ = 0;
   client_score_ = 0;
@@ -842,6 +847,7 @@ BallPositions::~BallPositions() {
 
 void BallPositions::SharedDtor() {
   if (this != default_instance_) {
+    delete cue_ball_;
   }
 }
 
@@ -868,6 +874,9 @@ BallPositions* BallPositions::New() const {
 
 void BallPositions::Clear() {
   if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    if (has_cue_ball()) {
+      if (cue_ball_ != NULL) cue_ball_->::Vector3f::Clear();
+    }
     make_noise_ = false;
     host_score_ = 0;
     client_score_ = 0;
@@ -894,12 +903,26 @@ bool BallPositions::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(10)) goto parse_ball;
-        if (input->ExpectTag(16)) goto parse_make_noise;
+        if (input->ExpectTag(18)) goto parse_cue_ball;
         break;
       }
 
-      // required bool make_noise = 2;
+      // required .Vector3f cue_ball = 2;
       case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_cue_ball:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_cue_ball()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_make_noise;
+        break;
+      }
+
+      // required bool make_noise = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_make_noise:
@@ -910,12 +933,12 @@ bool BallPositions::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(29)) goto parse_host_score;
+        if (input->ExpectTag(37)) goto parse_host_score;
         break;
       }
 
-      // required float host_score = 3;
-      case 3: {
+      // required float host_score = 4;
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_host_score:
@@ -926,12 +949,12 @@ bool BallPositions::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(37)) goto parse_client_score;
+        if (input->ExpectTag(45)) goto parse_client_score;
         break;
       }
 
-      // required float client_score = 4;
-      case 4: {
+      // required float client_score = 5;
+      case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_client_score:
@@ -970,19 +993,25 @@ void BallPositions::SerializeWithCachedSizes(
       1, this->ball(i), output);
   }
 
-  // required bool make_noise = 2;
+  // required .Vector3f cue_ball = 2;
+  if (has_cue_ball()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->cue_ball(), output);
+  }
+
+  // required bool make_noise = 3;
   if (has_make_noise()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->make_noise(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->make_noise(), output);
   }
 
-  // required float host_score = 3;
+  // required float host_score = 4;
   if (has_host_score()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->host_score(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->host_score(), output);
   }
 
-  // required float client_score = 4;
+  // required float client_score = 5;
   if (has_client_score()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->client_score(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(5, this->client_score(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1000,19 +1029,26 @@ void BallPositions::SerializeWithCachedSizes(
         1, this->ball(i), target);
   }
 
-  // required bool make_noise = 2;
+  // required .Vector3f cue_ball = 2;
+  if (has_cue_ball()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->cue_ball(), target);
+  }
+
+  // required bool make_noise = 3;
   if (has_make_noise()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->make_noise(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->make_noise(), target);
   }
 
-  // required float host_score = 3;
+  // required float host_score = 4;
   if (has_host_score()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->host_score(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->host_score(), target);
   }
 
-  // required float client_score = 4;
+  // required float client_score = 5;
   if (has_client_score()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->client_score(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(5, this->client_score(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1026,17 +1062,24 @@ int BallPositions::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
-    // required bool make_noise = 2;
+    // required .Vector3f cue_ball = 2;
+    if (has_cue_ball()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->cue_ball());
+    }
+
+    // required bool make_noise = 3;
     if (has_make_noise()) {
       total_size += 1 + 1;
     }
 
-    // required float host_score = 3;
+    // required float host_score = 4;
     if (has_host_score()) {
       total_size += 1 + 4;
     }
 
-    // required float client_score = 4;
+    // required float client_score = 5;
     if (has_client_score()) {
       total_size += 1 + 4;
     }
@@ -1077,6 +1120,9 @@ void BallPositions::MergeFrom(const BallPositions& from) {
   GOOGLE_CHECK_NE(&from, this);
   ball_.MergeFrom(from.ball_);
   if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    if (from.has_cue_ball()) {
+      mutable_cue_ball()->::Vector3f::MergeFrom(from.cue_ball());
+    }
     if (from.has_make_noise()) {
       set_make_noise(from.make_noise());
     }
@@ -1103,10 +1149,13 @@ void BallPositions::CopyFrom(const BallPositions& from) {
 }
 
 bool BallPositions::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000000e) != 0x0000000e) return false;
+  if ((_has_bits_[0] & 0x0000001e) != 0x0000001e) return false;
 
   for (int i = 0; i < ball_size(); i++) {
     if (!this->ball(i).IsInitialized()) return false;
+  }
+  if (has_cue_ball()) {
+    if (!this->cue_ball().IsInitialized()) return false;
   }
   return true;
 }
@@ -1114,6 +1163,7 @@ bool BallPositions::IsInitialized() const {
 void BallPositions::Swap(BallPositions* other) {
   if (other != this) {
     ball_.Swap(&other->ball_);
+    std::swap(cue_ball_, other->cue_ball_);
     std::swap(make_noise_, other->make_noise_);
     std::swap(host_score_, other->host_score_);
     std::swap(client_score_, other->client_score_);

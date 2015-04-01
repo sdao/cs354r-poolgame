@@ -292,6 +292,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		//Server - set ballpositions
 		if(!client && multiplayer){
 			serverManager.postBallPositions(gameinfo->ballPositions,
+											gameinfo->cueBallPosition,
 											false,
 											gameinfo->scoreP1,
 											gameinfo->scoreP2);
@@ -336,6 +337,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 				clientManager.continuouslyReceiveBallPositions(
 					[=](bool success,
 						const std::vector<Ogre::Vector3> pos, 
+						Ogre::Vector3 cueBallPosition,
 						bool make_noise, 
 						int hostScore, 
 						int clientScore) {

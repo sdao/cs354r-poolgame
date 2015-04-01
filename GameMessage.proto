@@ -19,9 +19,10 @@ message Vector3f {
 
 message BallPositions {
   repeated Vector3f ball = 1;
-  required bool make_noise = 2;
-  required float host_score = 3;
-  required float client_score = 4;
+  required Vector3f cue_ball = 2;
+  required bool make_noise = 3;
+  required float host_score = 4;
+  required float client_score = 5;
 }
 
 message HitInfo {

@@ -26,6 +26,7 @@ public:
   void accept(int port, std::function<void()> completionCallback);
   void postBallPositions(
     const std::vector<Ogre::Vector3>& ballPositions,
+    const Ogre::Vector3& cueBallPosition,
     bool makeNoise,
     int hostScore,
     int clientScore
