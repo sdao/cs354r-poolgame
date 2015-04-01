@@ -44,6 +44,7 @@ MinimalOgre::MinimalOgre(void)
     scoreboard(0),
     controls(0),
     pauseLabel(0),
+    endLabel(0),
     waitLabel(0),
     mCursorWasVisible(false),
     mShutDown(false),
@@ -254,7 +255,25 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		    info.deltaTime = evt.timeSinceLastFrame;
 	    	for (auto go : sceneObjects) {
 		      go->update(info);
-    		}			
+    		}
+
+            if (gameinfo.get()->ballPositions.size() == 0)  {
+                state = GameState::End;
+                if (gameinfo.get()->scoreP1 > gameinfo.get()->scoreP2) {
+                    endLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Win", "You Win! :)", 400);
+                    pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "End", "Press <space> to continue", 400);
+                }
+                else if (gameinfo.get()->scoreP1 == gameinfo.get()->scoreP2) {
+                    endLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Tie", "You Tie! :|", 400);
+                    pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "End", "Press <space> to continue", 400);
+
+                }
+                else {
+                    endLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Lose", "You Lose! :(", 400);
+                    pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "End", "Press <space> to continue", 400);
+                }
+                mTrayMgr->showCursor();
+            }	
 		}
 		else{
 			//hit msg
@@ -325,7 +344,9 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
         buffer = std::to_string(gameinfo.get()->ballPositions.size());
         scoreboard->setParamValue(2, buffer);
 	}
-
+    else if (state == GameState::End)
+    {
+    }
     else if (state == GameState::Main)
     {
         if (isConnectedHost.load())
@@ -558,7 +579,13 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 			//show pause menu
 			break;
 		case End:
-			//show "win/loss" menu
+			if (arg.key == OIS::KC_SPACE)
+            {
+                state = Main;
+                sp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Single Player", "Solo");
+                mp = mTrayMgr->createButton(OgreBites::TL_CENTER, "Multi Player", "Multiplayer");
+                ex = mTrayMgr->createButton(OgreBites::TL_CENTER, "Exit", "Quit");
+            }
 			break;
 		default:
 			break;
@@ -739,7 +766,7 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 	std::mt19937 rng(time(0));
 	std::uniform_real_distribution<float> xzDist(-300.0f, 300.0f); 
 	std::uniform_real_distribution<float> yDist(-300.0f, 300.0f);
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 2; i++) {
 		const std::string sphereEntityName = "sph";
 		auto sph = std::make_shared<Ball>(
 			mSceneMgr,
@@ -992,6 +1019,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         // Pick Port and Host
         client = true;
+        gameinfo->playerturn == -1;
         //clientManager.connect("barrow-wight", 67309, [=](bool connected) {
         clientManager.connect(connectText->getText(), 67309, [=](bool connected) {
           if (connected) {

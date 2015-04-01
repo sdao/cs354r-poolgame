@@ -70,6 +70,7 @@ protected:
     OgreBites::ParamsPanel* scoreboard;    // displays scores
     OgreBites::ParamsPanel* controls;    // displays controls
     OgreBites::Label* pauseLabel;          // Label saying Pause
+    OgreBites::Label* endLabel;          // Label saying Win/Lose
     OgreBites::Label* waitLabel;          // Label saying waiting for connection
     bool mCursorWasVisible;                   // was cursor visible before dialog appeared
     bool mShutDown;
