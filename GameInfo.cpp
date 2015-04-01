@@ -197,6 +197,7 @@ bool setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::sh
 		}
 		//include cueball in movement check
 		if(go.get()->getTag() == 1){
+			gameinfo.get()->cueBallPosition = go.get()->getWorldPosition();
 			std::shared_ptr<PhysicsSphereCollider> collider = go.get()->getComponent<PhysicsSphereCollider>();
 			if(collider != NULL && !moving){
 				if(collider->getVelocity() > 7.0f){
