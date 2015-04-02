@@ -289,12 +289,14 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			}
 			else if(gameinfo->playerturn == 1){
 				//P2
-				//serverManager.endHostTurn();
-				/*serverManager.waitForClientHit(
+				serverManager.endHostTurn();
+				serverManager.waitForClientHit(
 					[=] (int strength, Ogre::Vector3 dir, int ballindx){
-						
+						std::cout << "stre " << strength << " dir: " << dir << " ball: " << ballindx << "\n";
+						gameinfo->playerturn = 0;
+						//player->setState(PlayerState::Hit);
 					}
-				);*/
+				);
 				gameinfo->playerturn = -1;
 			}
 			//waiting for P2 to hit
@@ -302,9 +304,18 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 				
 			}
 			
-
-			//serverManager
-			
+		}
+		else if(client){
+			if(clientsTurn.load()){
+				std::cout << "clientsTURNNNNNNNNNNNNNNT\n";
+				gameinfo->playerturn = 0;
+				player->setState(PlayerState::Hit);
+				clientsTurn = false;
+			}
+			if(gameinfo->playerturn == 1){
+				player->setState(PlayerState::Wait);
+				gameinfo->playerturn = -1;
+			}
 		}
 
 		
@@ -321,14 +332,20 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			{
 				std::lock_guard<std::mutex> lock(gameinfo->mutex);
 				int i = 0;
-				std::cout << "running through objects\n";
-				std::cout << "ballPosition: " << gameinfo.get()->ballPositions.size() << " \n";
+				//std::cout << "running through objects\n";
+				//std::cout << "ballPosition: " << gameinfo.get()->ballPositions.size() << " \n";
 				if(gameinfo.get()->ballPositions.size() != 0){
 					for(auto go : sceneObjects){
-						std::cout <<"object\n";
+						//std::cout <<"object\n";
 						if(go->getTag() == 2){
 							go->setPosition(gameinfo.get()->ballPositions[i++]);	
 						}
+						if(go->getTag() == 1 && 
+						   gameinfo.get()->cueBallPosition != Ogre::Vector3::ZERO){
+							go->setPosition(gameinfo.get()->cueBallPosition);
+							
+						}
+						//TODO when ballPositions runs out, start deleting balls
 					}
 				}
 			}	
@@ -369,7 +386,10 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 							if(success){
 								{
 									std::lock_guard<std::mutex>lock(gameinfo->mutex);
-									gameinfo->ballPositions.clear();
+									gameinfo.get()->ballPositions.clear();
+									//std::cout << "cue1 " << gameinfo.get()->cueBallPosition << "\n";
+									gameinfo.get()->cueBallPosition = cueBallPosition;
+									//std::cout << "cue2 " << gameinfo.get()->cueBallPosition << "\n";
 									for(auto ball : pos){
 										gameinfo->ballPositions.push_back(ball);
 									}
@@ -381,11 +401,11 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 							}
 						},
 					[=] (){
-						//{
-						//std::lock_guard<std::mutex>lock(gameinfo->mutex);
-						//gameinfo->playerturn = 1;
-						//}
-						player->setState(Hit);
+						{
+							std::lock_guard<std::mutex>lock(gameinfo->mutex);
+							clientsTurn = true;
+						}
+						//player->setState(PlayerState::Hit);
 					}
 				);
 			}
@@ -393,10 +413,6 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
 
     return true;
-}
-
-void recieveHit(){
-
 }
 
 //-------------------------------------------------------------------------------------
@@ -442,10 +458,17 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	    	    if (player && player->isInState(PlayerState::Hit) &&
 					gameinfo.get()->playerturn == 0) {
 					
-                    std::string strength = scoreboard->getParamValue(3);
-		            auto cueController = player->getComponent<CueStickController>();
-		            cueController->hit(strength);
-	  	    		player->setState(PlayerState::Wait);
+					if(!client){
+	                    std::string strength = scoreboard->getParamValue(3);
+			            auto cueController = player->getComponent<CueStickController>();
+		  	          cueController->hit(strength);
+	  	    			player->setState(PlayerState::Wait);
+					}
+					else{
+						clientManager.sendHit(2, Ogre::Vector3::UNIT_Z, 2);
+						player->setState(PlayerState::Wait);
+						gameinfo->playerturn = 1;
+					}
 					if(multiplayer){
 						gameinfo.get()->playerturn = (gameinfo.get()->playerturn+1)%2;
 					}

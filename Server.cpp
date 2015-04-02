@@ -54,7 +54,7 @@ Server::postBallPositions(
   std::thread t([=]() {
     std::lock_guard<std::mutex> lock(this->mutex);
     int size = this->storage.ByteSize();
-	std::cout << "size: " << size << "\n";
+//std::cout << "size: " << size << "\n";
     std::vector<std::uint8_t> data(sizeof(int) + size);
     *reinterpret_cast<int*>(&data[0]) = size;
     this->storage.SerializeToArray(&data[sizeof(int)], size);

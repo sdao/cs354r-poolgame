@@ -109,6 +109,7 @@ void Player::setState(PlayerState pstate){
 	if(pstate == PlayerState::Hit){
 		setMaterial("Balls/White");
 	}
+	std::cout << "WE CHANGED STATES!: " << pstate <<  "\n";
 	pState = pstate;
 }
 

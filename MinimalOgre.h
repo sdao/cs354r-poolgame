@@ -123,6 +123,7 @@ protected:
     std::atomic_bool isConnectedHost;
     std::atomic_bool clientHit;
     std::atomic_bool clientRecieveBallPos;
+    std::atomic_bool clientsTurn;
 
 
     // SDKTrayListener Functions
