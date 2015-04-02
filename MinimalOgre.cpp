@@ -289,11 +289,13 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			}
 			else if(gameinfo->playerturn == 1){
 				//P2
+				std::cout << "DID WE REACH HERE?\n";
 				serverManager.endHostTurn();
 				serverManager.waitForClientHit(
 					[=] (int strength, Ogre::Vector3 dir, int ballindx){
 						std::cout << "stre " << strength << " dir: " << dir << " ball: " << ballindx << "\n";
 						gameinfo->playerturn = 0;
+						//TODO
 						//player->setState(PlayerState::Hit);
 					}
 				);
@@ -320,7 +322,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 		
 		//Server - set ballpositions
-		if(!client && multiplayer){
+		if(!client && multiplayer && gameinfo->playerturn == 1){
 			serverManager.postBallPositions(gameinfo->ballPositions,
 											gameinfo->cueBallPosition,
 											false,
@@ -374,45 +376,49 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mTrayMgr->destroyAllWidgets();
 			setupField(client, 1000, 1000, 1000);
 			if(client){
-				clientManager.continuouslyReceiveBallPositions(
-					[=](bool success,
-						const std::vector<Ogre::Vector3> pos, 
-						Ogre::Vector3 cueBallPosition,
-						bool make_noise, 
-						int hostScore, 
-						int clientScore) {
-						//TODO makeNOISE
-							//success = read
-							if(success){
-								{
-									std::lock_guard<std::mutex>lock(gameinfo->mutex);
-									gameinfo.get()->ballPositions.clear();
-									//std::cout << "cue1 " << gameinfo.get()->cueBallPosition << "\n";
-									gameinfo.get()->cueBallPosition = cueBallPosition;
-									//std::cout << "cue2 " << gameinfo.get()->cueBallPosition << "\n";
-									for(auto ball : pos){
-										gameinfo->ballPositions.push_back(ball);
-									}
-								}
-							}
-							else{
-								//something went terribly terribly wrong
-								exit(0);
-							}
-						},
-					[=] (){
-						{
-							std::lock_guard<std::mutex>lock(gameinfo->mutex);
-							clientsTurn = true;
-						}
-						//player->setState(PlayerState::Hit);
-					}
-				);
+				recieveBallPositions();
 			}
         }
     }
 
     return true;
+}
+
+void MinimalOgre::recieveBallPositions(){
+	clientManager.continuouslyReceiveBallPositions(
+				[=](bool success,
+					const std::vector<Ogre::Vector3> pos, 
+					Ogre::Vector3 cueBallPosition,
+					bool make_noise, 
+					int hostScore, 
+					int clientScore) {
+						//TODO makeNOISE
+						//success = read
+						if(success){
+							{
+								std::lock_guard<std::mutex>lock(gameinfo->mutex);
+								gameinfo.get()->ballPositions.clear();
+								//std::cout << "cue1 " << gameinfo.get()->cueBallPosition << "\n";
+								gameinfo.get()->cueBallPosition = cueBallPosition;
+								//std::cout << "cue2 " << gameinfo.get()->cueBallPosition << "\n";
+								for(auto ball : pos){
+									gameinfo->ballPositions.push_back(ball);
+								}
+							}
+						}
+						else{
+							//something went terribly terribly wrong
+							exit(0);
+						}
+					},
+				[=] (){
+					{
+						std::lock_guard<std::mutex>lock(gameinfo->mutex);
+						clientsTurn = true;
+					}
+					//player->setState(PlayerState::Hit);
+				}
+	);
 }
 
 //-------------------------------------------------------------------------------------
@@ -463,15 +469,24 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 			            auto cueController = player->getComponent<CueStickController>();
 		  	          cueController->hit(strength);
 	  	    			player->setState(PlayerState::Wait);
+
+						if(multiplayer){
+							std::cout << "changingplayerturn!!!!\n!\n!\n!";
+							gameinfo.get()->playerturn = (gameinfo.get()->playerturn+1)%2;
+						}
 					}
 					else{
-						clientManager.sendHit(2, Ogre::Vector3::UNIT_Z, 2);
+						clientManager.sendHit(2, Ogre::Vector3::UNIT_Z, 2,
+						[this]()
+							{
+								recieveBallPositions();
+							}
+						);
 						player->setState(PlayerState::Wait);
 						gameinfo->playerturn = 1;
+
 					}
-					if(multiplayer){
-						gameinfo.get()->playerturn = (gameinfo.get()->playerturn+1)%2;
-					}
+					
         		}
     		}
             else if (arg.key == OIS::KC_O)   // toggle visibility of scoreboard
@@ -673,7 +688,10 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 	gameinfo = std::make_shared<GameInfo>();
 	gameinfo->scoreP1 = 0;
 	gameinfo->scoreP2 = 0;
-	gameinfo->playerturn = 0;
+	if(!singleplayer)
+		gameinfo->playerturn = 0;
+	else
+		gameinfo->playerturn = 1;
 	gameinfo->dimensions = Ogre::Vector3(length, width, height);
 	gameinfo->cueBallPosition = Ogre::Vector3::ZERO;
 	gameinfo->ballPositions = std::vector<Ogre::Vector3>();

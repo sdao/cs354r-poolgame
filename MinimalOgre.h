@@ -94,6 +94,7 @@ protected:
 	//Assignment3 methods
 	void setupField(bool, float, float, float);
     void destroyField(); 
+	void recieveBallPositions();
 
     // Ogre::WindowEventListener
     virtual void windowResized(Ogre::RenderWindow* rw);
