@@ -109,7 +109,9 @@ void Client::continuouslyReceiveDebugHeartbeat() {
   }, []() {});
 }
 
-void Client::sendHit(int strength, Ogre::Vector3 direction, int ballIdx) {
+void Client::sendHit(int strength, Ogre::Vector3 direction, int ballIdx,
+  DidSendHitHandler callback)
+{
   storage.set_type(GameMessage_Type_CLIENT_HIT);
   storage.clear_ball_positions();
   storage.clear_client_hit();
@@ -130,12 +132,13 @@ void Client::sendHit(int strength, Ogre::Vector3 direction, int ballIdx) {
   hitPos->set_z(direction.z);
   hitMessage->set_ball_index(ballIdx);
 
-  std::thread t([this]() {
+  std::thread t([this, callback]() {
     int size = this->storage.ByteSize();
     std::vector<std::uint8_t> data(sizeof(int) + size);
     *reinterpret_cast<int*>(&data[0]) = size;
     this->storage.SerializeToArray(&data[sizeof(int)], size);
     boost::asio::write(this->sock, boost::asio::buffer(data));
+    callback();
   });
   t.detach();
 }

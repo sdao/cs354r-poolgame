@@ -21,6 +21,7 @@ public:
       Ogre::Vector3, bool, int, int)>
     ReceiveHandler;
   typedef std::function<void()> BeginTurnHandler;
+  typedef std::function<void()> DidSendHitHandler;
 
   Client();
 
@@ -31,7 +32,8 @@ public:
     ReceiveHandler receiveCallback,
     BeginTurnHandler beginTurnCallback);
   void continuouslyReceiveDebugHeartbeat();
-  void sendHit(int strength, Ogre::Vector3 direction, int ballIdx);
+  void sendHit(int strength, Ogre::Vector3 direction, int ballIdx,
+    DidSendHitHandler callback);
   bool connected() const;
 };
 
