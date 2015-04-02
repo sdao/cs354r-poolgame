@@ -32,7 +32,7 @@ public:
     ReceiveHandler receiveCallback,
     BeginTurnHandler beginTurnCallback);
   void continuouslyReceiveDebugHeartbeat();
-  void sendHit(int strength, Ogre::Vector3 direction, int ballIdx,
+  void sendHit(int strength, Ogre::Vector3 direction,
     DidSendHitHandler callback);
   bool connected() const;
 };

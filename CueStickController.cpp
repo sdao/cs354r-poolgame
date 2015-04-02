@@ -71,3 +71,35 @@ void CueStickController::hit(std::string strength) {
   }
 }
 
+void CueStickController::hitInfo(std::string strength,
+  Ogre::Vector3* dirOut, int* powerOut)
+{
+  std::shared_ptr<GameObject> gameObjPtr = gameObject.lock();
+  std::shared_ptr<GameObject> currentObjPtr = currentObj.lock();
+  int power = 0;
+  if (strength == "Low")
+    power = 0;
+  else if (strength == "Medium")
+    power = 1;
+  else if (strength == "High")
+    power = 2;
+  if (currentObjPtr) {
+    Ogre::Vector3 goWorldPosition =
+      gameObjPtr->localToWorldPosition(Ogre::Vector3::ZERO);
+    Ogre::Vector3 targetWorldPosition =
+      gameObjPtr->localToWorldPosition(Ogre::Vector3::UNIT_Y);
+    Ogre::Vector3 dirGoToTarget = (targetWorldPosition - goWorldPosition)
+      .normalisedCopy();
+    *dirOut = dirGoToTarget;
+    *powerOut = power;
+    /*
+    auto sound = gameObjPtr->getComponent<ObjectSound>();
+    if (sound) {
+      sound->collision(1);
+    }
+    */
+  } else {
+    *powerOut = -1;
+  }
+}
+

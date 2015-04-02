@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include <OgreVector3.h>
 
 class CueStickController : public Component {
   std::weak_ptr<GameObject> currentObj;
@@ -17,5 +18,6 @@ public:
    * @param strength the strength of the hit; "Low", "Medium", or "High"
    */
   void hit(std::string strength);
+  void hitInfo(std::string strength, Ogre::Vector3* dirOut, int* powerOut);
 };
 

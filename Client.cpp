@@ -109,7 +109,7 @@ void Client::continuouslyReceiveDebugHeartbeat() {
   }, []() {});
 }
 
-void Client::sendHit(int strength, Ogre::Vector3 direction, int ballIdx,
+void Client::sendHit(int strength, Ogre::Vector3 direction,
   DidSendHitHandler callback)
 {
   storage.set_type(GameMessage_Type_CLIENT_HIT);
@@ -130,7 +130,6 @@ void Client::sendHit(int strength, Ogre::Vector3 direction, int ballIdx,
   hitPos->set_x(direction.x);
   hitPos->set_y(direction.y);
   hitPos->set_z(direction.z);
-  hitMessage->set_ball_index(ballIdx);
 
   std::thread t([this, callback]() {
     int size = this->storage.ByteSize();

@@ -292,8 +292,8 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 				std::cout << "DID WE REACH HERE?\n";
 				serverManager.endHostTurn();
 				serverManager.waitForClientHit(
-					[=] (int strength, Ogre::Vector3 dir, int ballindx){
-						std::cout << "stre " << strength << " dir: " << dir << " ball: " << ballindx << "\n";
+					[=] (int strength, Ogre::Vector3 dir){
+						std::cout << "stre " << strength << " dir: " << dir << "\n";
 						gameinfo->playerturn = 0;
 						//TODO
 						//player->setState(PlayerState::Hit);
@@ -463,10 +463,9 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 		    {
 	    	    if (player && player->isInState(PlayerState::Hit) &&
 					gameinfo.get()->playerturn == 0) {
-					
-					if(!client){
 	                    std::string strength = scoreboard->getParamValue(3);
-			            auto cueController = player->getComponent<CueStickController>();
+			    auto cueController = player->getComponent<CueStickController>();					
+					if(!client){
 		  	          cueController->hit(strength);
 	  	    			player->setState(PlayerState::Wait);
 
@@ -476,7 +475,10 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 						}
 					}
 					else{
-						clientManager.sendHit(2, Ogre::Vector3::UNIT_Z, 2,
+						int strengthInfo;
+						Ogre::Vector3 dirInfo;
+						cueController->hitInfo(strength, &dirInfo, &strengthInfo);
+						clientManager.sendHit(strengthInfo, dirInfo,
 						[this]()
 							{
 								recieveBallPositions();

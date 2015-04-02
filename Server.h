@@ -33,7 +33,7 @@ public:
   );
   void endHostTurn();
   void waitForClientHit(
-    std::function<void(int, Ogre::Vector3, int)> completionCallback);
+    std::function<void(int, Ogre::Vector3)> completionCallback);
   void debugHeartbeat();
   bool connected() const;
 };
