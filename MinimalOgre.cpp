@@ -261,15 +261,15 @@ std::lock_guard<std::mutex> lock(gameinfo->mutex);
 
             if (gameinfo.get()->ballPositions.size() == 0)  {
                 state = GameState::End;
-                if (gameinfo.get()->scoreP1 > gameinfo.get()->scoreP2) {
+                if (gameinfo.get()->scoreP1 > 0) {
                     endLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Win", "You Win! :)", 400);
                     pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "End", "Press <space> to continue", 400);
                 }
-                else if (gameinfo.get()->scoreP1 == gameinfo.get()->scoreP2) {
+                /*else if (gameinfo.get()->scoreP1 == gameinfo.get()->scoreP2) {
                     endLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Tie", "You Tie! :|", 400);
                     pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "End", "Press <space> to continue", 400);
 
-                }
+                }*/
                 else {
                     endLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "Lose", "You Lose! :(", 400);
                     pauseLabel = mTrayMgr->createLabel(OgreBites::TL_CENTER, "End", "Press <space> to continue", 400);
@@ -290,10 +290,11 @@ std::lock_guard<std::mutex> lock(gameinfo->mutex);
 			}
 			else if(gameinfo->playerturn == 1){
 				//P2
+				clientsTurn = true;
 				serverManager.endHostTurn();
 				serverManager.waitForClientHit(
 					[=] (int strength, Ogre::Vector3 dir){
-						std::cout << "stre " << strength << " dir: " << dir << "\n";
+						//std::cout << "stre " << strength << " dir: " << dir << "\n";
 						gameinfo->playerturn = 0;
 						std::shared_ptr<CueStickController> controller = player->getComponent<CueStickController>();
 						std::weak_ptr<GameObject> cueBall;
@@ -344,12 +345,17 @@ std::lock_guard<std::mutex> lock(gameinfo->mutex);
 				std::lock_guard<std::mutex> lock(gameinfo->mutex);
 				int i = 0;
 				//std::cout << "running through objects\n";
-				//std::cout << "ballPosition: " << gameinfo.get()->ballPositions.size() << " \n";
+				std::cout << "ballPosition: " << gameinfo.get()->ballPositions.size() << " sceneobj: " << sceneObjects.size() << "\n";
 				if(gameinfo.get()->ballPositions.size() != 0){
 					for(auto go : sceneObjects){
 						//std::cout <<"object\n";
 						if(go->getTag() == 2){
-							go->setPosition(gameinfo.get()->ballPositions[i++]);	
+							if(i < gameinfo.get()->ballPositions.size())
+								go->setPosition(gameinfo.get()->ballPositions[i++]);	
+							else{
+								go->setTag(0x0);
+								go->setVisible(false);	
+							}
 						}
 						if(go->getTag() == 1 && 
 						   gameinfo.get()->cueBallPosition != Ogre::Vector3::ZERO){
@@ -367,7 +373,7 @@ std::lock_guard<std::mutex> lock(gameinfo->mutex);
         //set param values on GUI
         std::string buffer = std::to_string(gameinfo.get()->scoreP1);
         scoreboard->setParamValue(0, buffer);
-        buffer = std::to_string(gameinfo.get()->scoreP2);
+        buffer = " ";//std::to_string(" ");
         scoreboard->setParamValue(1, buffer);
         buffer = std::to_string(gameinfo.get()->ballPositions.size());
         scoreboard->setParamValue(2, buffer);
@@ -886,18 +892,18 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 			location,
 			BallType::BALL_GOAL);
 		goal->setMaterial("Balls/Blue");
-		//if(!singleplayer){
-		auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
-			goal,
-			physics,
-			90.0f,
-			0.0f,
-   	             	true
-		);
-		auto goalController = std::make_shared<GoalController>(gameinfo);
-			goal->addComponent(triggerCollider);
-			goal->addComponent(goalController);
-		//}
+		if(!singleplayer){
+			auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
+				goal,
+				physics,
+				90.0f,
+				0.0f,
+   	            true
+			);
+			auto goalController = std::make_shared<GoalController>(gameinfo);
+				goal->addComponent(triggerCollider);
+				goal->addComponent(goalController);
+		}
 		sceneObjects.push_back(goal);
 	}
 
@@ -931,7 +937,7 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 
     Ogre::StringVector scores;
     scores.push_back("Player 1 Score");
-    scores.push_back("Player 2 Score");
+    scores.push_back("-------------");
     scores.push_back("Balls Remaining");
     scores.push_back("Hit Strength");
     scores.push_back("Gravity");

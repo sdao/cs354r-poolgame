@@ -36,7 +36,10 @@ void GoalController::didCollide(PhysicsCollider& collider) {
     std::cout << "*************************\n";
     std::cout << "you suck. MINUS 1 FOR YOU   \n";
     std::cout << "*************************\n";
-    gameinfo->scoreP1 -= 1;
+    //if(gameinfo.get()->playerturn == 1)
+    gameinfo.get()->scoreP1 -= 1;
+    //else if(gameinfo.get()->playerturn == -1)
+    //	gameinfo.get()->scoreP2 -= 1;
   }
 }
 
