@@ -78,11 +78,11 @@ void CueStickController::hitInfo(std::string strength,
   std::shared_ptr<GameObject> currentObjPtr = currentObj.lock();
   int power = 0;
   if (strength == "Low")
-    power = 0;
-  else if (strength == "Medium")
     power = 1;
-  else if (strength == "High")
+  else if (strength == "Medium")
     power = 2;
+  else if (strength == "High")
+    power = 3;
   if (currentObjPtr) {
     Ogre::Vector3 goWorldPosition =
       gameObjPtr->localToWorldPosition(Ogre::Vector3::ZERO);
@@ -99,6 +99,7 @@ void CueStickController::hitInfo(std::string strength,
     }
     */
   } else {
+     std::cout << "powerout-1\n";
     *powerOut = -1;
   }
 }

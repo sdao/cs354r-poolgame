@@ -276,7 +276,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
             }	
 		//}
 
-		//Multiplayer if server, set turnstate
+		//Multiplayer: if server, set turnstate
 		if( !client && !setPositions(gameinfo, sceneObjects)){
 			if(gameinfo->playerturn == 0){
 				//P1
@@ -286,7 +286,6 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			}
 			else if(gameinfo->playerturn == 1){
 				//P2
-				//std::cout << "DID WE REACH HERE?\n";
 				serverManager.endHostTurn();
 				serverManager.waitForClientHit(
 					[=] (int strength, Ogre::Vector3 dir){
@@ -479,6 +478,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 						int strengthInfo;
 						Ogre::Vector3 dirInfo;
 						cueController->hitInfo(strength, &dirInfo, &strengthInfo);
+						std::cout << "strenghtinfo: " << strengthInfo<< " strenght: " << strength << " \n";
 						clientManager.sendHit(strengthInfo, dirInfo,
 						[this]()
 							{
@@ -827,13 +827,24 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 			sph->setMaterial("Examples/Hilite/Yellow");
 		}
 
-		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
-			sph,
-			physics,
-			i == 0 ? 50.0f : 40.0f, /* collider radius */
-           	i == 0 ? 15.0f : 10.0f /* cue ball heavier */
-		);
-		sph->addComponent(sphCollider);
+		if(!singleplayer){
+			auto sphCollider = std::make_shared<PhysicsSphereCollider>(
+				sph,
+				physics,
+				i == 0 ? 50.0f : 40.0f, /* collider radius */
+   	        	i == 0 ? 15.0f : 10.0f /* cue ball heavier */
+			);
+			sph->addComponent(sphCollider);
+		}
+		else{
+			auto sphCollider = std::make_shared<PhysicsSphereCollider>(
+				sph,
+				physics,
+				i == 0 ? 50.0f : 40.0f, /* collider radius */
+   	        	0
+			);
+			sph->addComponent(sphCollider);
+		}
 		auto ballSound = std::make_shared<ObjectSound>(sph);
 		sph->addComponent(ballSound);
 		if(sph->getTag() == 0x2)
