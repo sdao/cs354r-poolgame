@@ -243,19 +243,19 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	if(state == GameState::Play){
 
-		//Server runs physics and updates
-		if(!client){
-	    	// Run physics.
-	    	physics.stepSimulation(evt.timeSinceLastFrame);
+	    //Server runs physics and updates
+	    //if(!client){
+	    // Run physics.
+	    physics.stepSimulation(evt.timeSinceLastFrame);
 
 
-    		// Update components.
-			UpdateInfo info;
-		    info.physics = &physics;
-		    info.deltaTime = evt.timeSinceLastFrame;
-	    	for (auto go : sceneObjects) {
-		      go->update(info);
-    		}
+    	    // Update components.
+	    UpdateInfo info;
+	    info.physics = &physics;
+	    info.deltaTime = evt.timeSinceLastFrame;
+	    for (auto go : sceneObjects) {
+	        go->update(info);
+    	}
 
             if (gameinfo.get()->ballPositions.size() == 0)  {
                 state = GameState::End;
@@ -274,10 +274,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 }
                 mTrayMgr->showCursor();
             }	
-		}
-		else{
-			//hit msg
-		}	
+		//}
 
 		//Multiplayer if server, set turnstate
 		if( !client && !setPositions(gameinfo, sceneObjects)){
@@ -866,18 +863,18 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 			location,
 			BallType::BALL_GOAL);
 		goal->setMaterial("Balls/Blue");
-		if(!singleplayer){
-			auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
-				goal,
-				physics,
-				90.0f,
-				0.0f,
+		//if(!singleplayer){
+		auto triggerCollider = std::make_shared<PhysicsSphereCollider>(
+			goal,
+			physics,
+			90.0f,
+			0.0f,
    	             	true
-			);
-			auto goalController = std::make_shared<GoalController>(gameinfo);
+		);
+		auto goalController = std::make_shared<GoalController>(gameinfo);
 			goal->addComponent(triggerCollider);
 			goal->addComponent(goalController);
-		}
+		//}
 		sceneObjects.push_back(goal);
 	}
 
