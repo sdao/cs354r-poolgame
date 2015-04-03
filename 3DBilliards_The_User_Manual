@@ -6,8 +6,12 @@ stick to hit the cue ball and knock the other balls into the pockets located at 
 corners of the cube room. When a neutral ball hits a pocket, you gain a point, but
 if you're cue ball hits a pocket, you lose a point! Let the soothing background music
 play while you aim for your goal to get the highest score, or turn the music off
-altogether! Lastly, we're giving the player the option to turn the gravity on/off with 
-a push of a button!
+altogether!
+	Since version 1.0, we added multiplayer! To play with a friend have both programs
+open and click on multiplayer. Decide who will be host and that person can hit 'Host'
+the client will need to input the computers hostname and click 'Connect' then the game
+will start with player 1's hit. The next player's turn will be indicated by change in
+color of the CueStick. Enjoy!
 
 Controls
 ================
@@ -26,6 +30,5 @@ spacebar - hit ball
 c - toggle controls menu
 o - toggle Score Board
 m - toggle music
-g - toggle gravity
 p - pause/unpause game
 r - cycles polygon rendering

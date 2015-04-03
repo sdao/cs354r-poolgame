@@ -121,6 +121,7 @@ protected:
 	bool client;
 	Server serverManager;
 	Client clientManager;
+	std::atomic_bool postBalls;
     std::atomic_bool isConnectedHost;
     std::atomic_bool clientHit;
     std::atomic_bool clientRecieveBallPos;

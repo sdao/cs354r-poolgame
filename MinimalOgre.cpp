@@ -278,6 +278,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 		//Multiplayer: if server, set turnstate
 		if( !client && !setPositions(gameinfo, sceneObjects)){
+			postBalls = false;
 			if(gameinfo->playerturn == 0){
 				//P1
 				if(player->isInState(PlayerState::Wait)){
@@ -300,6 +301,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 							}
 						}
 						controller->remoteHit(strength, dir, cueBall);
+						postBalls = true;
 					}
 				);
 				gameinfo->playerturn = -1;
@@ -321,7 +323,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 		
 		//Server - set ballpositions
-		if(!client && multiplayer && gameinfo->playerturn == 1){
+		if(!client && multiplayer && postBalls.load() ){// gameinfo->playerturn == 1){
 			serverManager.postBallPositions(gameinfo->ballPositions,
 											gameinfo->cueBallPosition,
 											false,
@@ -472,6 +474,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	                    std::string strength = scoreboard->getParamValue(3);
 			    auto cueController = player->getComponent<CueStickController>();					
 					if(!client){
+					  postBalls = true;
 		  	          cueController->hit(strength);
 	  	    			player->setState(PlayerState::Wait);
 
