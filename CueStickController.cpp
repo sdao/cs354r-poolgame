@@ -92,15 +92,42 @@ void CueStickController::hitInfo(std::string strength,
       .normalisedCopy();
     *dirOut = dirGoToTarget;
     *powerOut = power;
-    /*
     auto sound = gameObjPtr->getComponent<ObjectSound>();
     if (sound) {
       sound->collision(1);
     }
-    */
   } else {
      std::cout << "powerout-1\n";
     *powerOut = -1;
   }
+}
+
+void CueStickController::remoteHit(int strength, const Ogre::Vector3& dir,
+  std::weak_ptr<GameObject> cueBall)
+{
+  std::shared_ptr<GameObject> gameObjPtr = gameObject.lock();
+  std::shared_ptr<GameObject> currentObjPtr = cueBall.lock();
+
+  float power;
+  if (strength == 1)
+    power = 16000.0;
+  else if (strength == 2)
+    power = 32000.0;
+  else if (strength == 3)
+    power = 48000.0;
+  else
+    return;
+
+  if (currentObjPtr) {
+    auto collider = currentObjPtr->getComponent<PhysicsCollider>();
+    if (collider) {
+      collider->applyWorldImpulse(dir * power);
+      auto sound = gameObjPtr->getComponent<ObjectSound>();
+      if (sound) {
+        sound->collision(1);
+      }
+    }
+  }
+
 }
 

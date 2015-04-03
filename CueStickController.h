@@ -19,5 +19,7 @@ public:
    */
   void hit(std::string strength);
   void hitInfo(std::string strength, Ogre::Vector3* dirOut, int* powerOut);
+  void remoteHit(int strength, const Ogre::Vector3& dir,
+    std::weak_ptr<GameObject> cueBall);
 };
 

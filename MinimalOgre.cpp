@@ -291,9 +291,15 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 					[=] (int strength, Ogre::Vector3 dir){
 						std::cout << "stre " << strength << " dir: " << dir << "\n";
 						gameinfo->playerturn = 0;
-						//TODO
-						//std::shared_ptr<CueStickController> controller = player.get()->getComponent<CueStickController>();
-						//controller.get()->hit(strength, dir);
+						std::shared_ptr<CueStickController> controller = player->getComponent<CueStickController>();
+						std::weak_ptr<GameObject> cueBall;
+						for (auto obj : sceneObjects) {
+							if (obj->getTag() == 1) {
+								cueBall = obj;
+								break;
+							}
+						}
+						controller->remoteHit(strength, dir, cueBall);
 					}
 				);
 				gameinfo->playerturn = -1;
