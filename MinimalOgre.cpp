@@ -256,6 +256,8 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	    for (auto go : sceneObjects) {
 	        go->update(info);
     	}
+{
+std::lock_guard<std::mutex> lock(gameinfo->mutex);
 
             if (gameinfo.get()->ballPositions.size() == 0)  {
                 state = GameState::End;
@@ -274,6 +276,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
                 }
                 mTrayMgr->showCursor();
             }	
+}
 		//}
 
 		//Multiplayer: if server, set turnstate
