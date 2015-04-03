@@ -92,6 +92,7 @@ void Server::waitForClientHit(
 
     if (error == boost::asio::error::eof) {
       std::cout << "Connection forcibly closed by client\n";
+      exit(0);
       completionCallback(-1, Ogre::Vector3::ZERO);
       return;
     }
