@@ -1069,7 +1069,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
     {
         //Wait for Connection
         client = false;
-        serverManager.accept(67309, [=]() {
+        serverManager.accept(63709, [=]() {
           std::cout << "server accept callback\n";
           isConnectedHost = true;
 		  multiplayer = true;
@@ -1083,7 +1083,7 @@ void MinimalOgre::buttonHit (OgreBites::Button *button)
         client = true;
         gameinfo->playerturn == -1;
         //clientManager.connect("barrow-wight", 67309, [=](bool connected) {
-        clientManager.connect(connectText->getText(), 67309, [=](bool connected) {
+        clientManager.connect(connectText->getText(), 63709, [=](bool connected) {
           if (connected) {
             std::cout << "connected!\n";
 			multiplayer = true;
