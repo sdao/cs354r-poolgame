@@ -296,14 +296,11 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 						std::cout << "stre " << strength << " dir: " << dir << "\n";
 						gameinfo->playerturn = 0;
 						//TODO
-						//player->setState(PlayerState::Hit);
+						//std::shared_ptr<CueStickController> controller = player.get()->getComponent<CueStickController>();
+						//controller.get()->hit(strength, dir);
 					}
 				);
 				gameinfo->playerturn = -1;
-			}
-			//waiting for P2 to hit
-			else if(gameinfo->playerturn == -1){
-				
 			}
 			
 		}
@@ -330,6 +327,11 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 											gameinfo->scoreP2);
 		}
 		else if (client && multiplayer){
+			UpdateInfo info;
+		    info.physics = &physics;
+		    info.deltaTime = evt.timeSinceLastFrame;
+
+			player->getComponent<CueStickController>()->update(info);
 		//gameinfo -> sceneobjects
 			{
 				std::lock_guard<std::mutex> lock(gameinfo->mutex);
@@ -826,22 +828,17 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 			sph->setMaterial("Examples/Hilite/Yellow");
 		}
 
-		if(!singleplayer){
-			auto sphCollider = std::make_shared<PhysicsSphereCollider>(
-				sph,
-				physics,
-				i == 0 ? 50.0f : 40.0f, /* collider radius */
-           	     	i == 0 ? 15.0f : 10.0f /* cue ball heavier */
-			);
-			sph->addComponent(sphCollider);
-			auto ballSound = std::make_shared<ObjectSound>(sph);
-			sph->addComponent(ballSound);
-			if(sph->getTag() == 0x2)
-				gameinfo.get()->ballPositions.push_back(sph->getWorldPosition());
-		}
-		else{
-			//TODO network components instead of physics on balls
-		}
+		auto sphCollider = std::make_shared<PhysicsSphereCollider>(
+			sph,
+			physics,
+			i == 0 ? 50.0f : 40.0f, /* collider radius */
+           	i == 0 ? 15.0f : 10.0f /* cue ball heavier */
+		);
+		sph->addComponent(sphCollider);
+		auto ballSound = std::make_shared<ObjectSound>(sph);
+		sph->addComponent(ballSound);
+		if(sph->getTag() == 0x2)
+			gameinfo.get()->ballPositions.push_back(sph->getWorldPosition());
 		sceneObjects.push_back(sph);
 	}
 

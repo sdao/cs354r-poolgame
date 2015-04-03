@@ -212,9 +212,9 @@ bool setPositions(std::shared_ptr<GameInfo>& gameinfo, const std::vector<std::sh
 	//else
 	//	std::cout << "we stopped!"<<std::endl;
 	
-	if(gameinfo.get()->playerturn == 0)
+	if(gameinfo.get()->playerturn == 1)
 		gameinfo.get()->scoreP1 += startscore - gameinfo.get()->ballPositions.size();
-	else
+	else if(gameinfo.get()->playerturn == -1)
 		gameinfo.get()->scoreP2 += startscore - gameinfo.get()->ballPositions.size();
 	return moving;
 }
