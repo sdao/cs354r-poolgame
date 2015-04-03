@@ -289,7 +289,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			}
 			else if(gameinfo->playerturn == 1){
 				//P2
-				std::cout << "DID WE REACH HERE?\n";
+				//std::cout << "DID WE REACH HERE?\n";
 				serverManager.endHostTurn();
 				serverManager.waitForClientHit(
 					[=] (int strength, Ogre::Vector3 dir){
@@ -306,7 +306,7 @@ bool MinimalOgre::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		}
 		else if(client){
 			if(clientsTurn.load()){
-				std::cout << "clientsTURNNNNNNNNNNNNNNT\n";
+				//std::cout << "clientsTURNNNNNNNNNNNNNNT\n";
 				gameinfo->playerturn = 0;
 				player->setState(PlayerState::Hit);
 				clientsTurn = false;
@@ -406,6 +406,8 @@ void MinimalOgre::recieveBallPositions(){
 								for(auto ball : pos){
 									gameinfo->ballPositions.push_back(ball);
 								}
+								gameinfo.get()->scoreP1 = hostScore;
+								gameinfo.get()->scoreP2 = clientScore;
 							}
 						}
 						else{
@@ -472,7 +474,7 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	  	    			player->setState(PlayerState::Wait);
 
 						if(multiplayer){
-							std::cout << "changingplayerturn!!!!\n!\n!\n!";
+							//std::cout << "changingplayerturn!!!!\n!\n!\n!";
 							gameinfo.get()->playerturn = (gameinfo.get()->playerturn+1)%2;
 						}
 					}
@@ -811,7 +813,7 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
 	std::mt19937 rng(time(0));
 	std::uniform_real_distribution<float> xzDist(-300.0f, 300.0f); 
 	std::uniform_real_distribution<float> yDist(-300.0f, 300.0f);
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 16; i++) {
 		const std::string sphereEntityName = "sph";
 		auto sph = std::make_shared<Ball>(
 			mSceneMgr,
