@@ -294,7 +294,6 @@ std::lock_guard<std::mutex> lock(gameinfo->mutex);
 				serverManager.endHostTurn();
 				serverManager.waitForClientHit(
 					[=] (int strength, Ogre::Vector3 dir){
-						//std::cout << "stre " << strength << " dir: " << dir << "\n";
 						gameinfo->playerturn = 0;
 						std::shared_ptr<CueStickController> controller = player->getComponent<CueStickController>();
 						std::weak_ptr<GameObject> cueBall;
@@ -314,7 +313,6 @@ std::lock_guard<std::mutex> lock(gameinfo->mutex);
 		}
 		else if(client){
 			if(clientsTurn.load()){
-				//std::cout << "clientsTURNNNNNNNNNNNNNNT\n";
 				gameinfo->playerturn = 0;
 				player->setState(PlayerState::Hit);
 				clientsTurn = false;
@@ -344,11 +342,8 @@ std::lock_guard<std::mutex> lock(gameinfo->mutex);
 			{
 				std::lock_guard<std::mutex> lock(gameinfo->mutex);
 				int i = 0;
-				//std::cout << "running through objects\n";
-				std::cout << "ballPosition: " << gameinfo.get()->ballPositions.size() << " sceneobj: " << sceneObjects.size() << "\n";
 				if(gameinfo.get()->ballPositions.size() != 0){
 					for(auto go : sceneObjects){
-						//std::cout <<"object\n";
 						if(go->getTag() == 2){
 							if(i < gameinfo.get()->ballPositions.size())
 								go->setPosition(gameinfo.get()->ballPositions[i++]);	
@@ -413,9 +408,7 @@ void MinimalOgre::recieveBallPositions(){
 							{
 								std::lock_guard<std::mutex>lock(gameinfo->mutex);
 								gameinfo.get()->ballPositions.clear();
-								//std::cout << "cue1 " << gameinfo.get()->cueBallPosition << "\n";
 								gameinfo.get()->cueBallPosition = cueBallPosition;
-								//std::cout << "cue2 " << gameinfo.get()->cueBallPosition << "\n";
 								for(auto ball : pos){
 									gameinfo->ballPositions.push_back(ball);
 								}
@@ -488,7 +481,6 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 	  	    			player->setState(PlayerState::Wait);
 
 						if(multiplayer){
-							//std::cout << "changingplayerturn!!!!\n!\n!\n!";
 							gameinfo.get()->playerturn = (gameinfo.get()->playerturn+1)%2;
 						}
 					}
@@ -496,7 +488,6 @@ bool MinimalOgre::keyPressed( const OIS::KeyEvent &arg )
 						int strengthInfo;
 						Ogre::Vector3 dirInfo;
 						cueController->hitInfo(strength, &dirInfo, &strengthInfo);
-						std::cout << "strenghtinfo: " << strengthInfo<< " strenght: " << strength << " \n";
 						clientManager.sendHit(strengthInfo, dirInfo,
 						[this]()
 							{
@@ -936,11 +927,11 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
     l->setPosition(20,80,50);
 
     Ogre::StringVector scores;
-    scores.push_back("Player 1 Score");
+    scores.push_back("Players Score");
     scores.push_back("-------------");
     scores.push_back("Balls Remaining");
     scores.push_back("Hit Strength");
-    scores.push_back("Gravity");
+    scores.push_back("-------------");
     scores.push_back("Music");
 
     Ogre::StringVector cList;
@@ -966,7 +957,7 @@ void MinimalOgre::setupField(bool singleplayer, float length, float width, float
     scoreboard->setParamValue(1, "0");
     scoreboard->setParamValue(2, "N/A");
     scoreboard->setParamValue(3, "Low");
-    scoreboard->setParamValue(4, "Off");
+    scoreboard->setParamValue(4, " ");
     scoreboard->setParamValue(5, "On");
     mTrayMgr->moveWidgetToTray(scoreboard, OgreBites::TL_TOPLEFT, 0);
     scoreboard->show();
